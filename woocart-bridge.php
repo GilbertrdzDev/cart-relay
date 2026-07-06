@@ -32,6 +32,7 @@
 use WoocartBridge\App\Core\Plugin;
 use WoocartBridge\App\Core\Activator;
 use WoocartBridge\App\Core\Deactivator;
+use WoocartBridge\App\Components\RequirementsCheck;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -56,5 +57,7 @@ register_activation_hook( __FILE__, [ Activator::class, 'activate' ] );
 register_deactivation_hook( __FILE__, [ Deactivator::class, 'deactivate' ] );
 
 add_action( 'plugins_loaded', function() {
-	( new Plugin )->run();
+	( new Plugin() )
+		->addComponents( RequirementsCheck::class )
+		->run();
 } );
