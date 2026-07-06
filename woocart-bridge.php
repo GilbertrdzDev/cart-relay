@@ -34,6 +34,7 @@ use WoocartBridge\App\Core\Activator;
 use WoocartBridge\App\Core\Deactivator;
 use WoocartBridge\App\Components\CartButtons\CartButtonsComponent;
 use WoocartBridge\App\Components\CartExport\CartExportComponent;
+use WoocartBridge\App\Components\CartImport\CartImportComponent;
 use WoocartBridge\App\Components\RequirementsCheck;
 
 // If this file is called directly, abort.
@@ -63,6 +64,7 @@ add_action( 'plugins_loaded', function() {
 		->addComponents(
 			RequirementsCheck::class,
 			CartExportComponent::class,
+			CartImportComponent::class,
 			CartButtonsComponent::class
 		)
 		->run();

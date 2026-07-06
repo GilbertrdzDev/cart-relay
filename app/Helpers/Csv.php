@@ -40,20 +40,29 @@ class Csv {
 		$csv = new SplFileObject( $file['tmp_name'] );
 		$csv->setFlags( SplFileObject::READ_CSV | SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE );
 
-		$rows            = [];
-		$has_read_header = false;
+		$rows    = [];
+		$headers = [];
 
 		foreach ( $csv as $row ) {
-			if ( ! $has_read_header ) {
-				$has_read_header = true;
+			if ( $row === [ null ] || $row === false || self::is_empty_row( $row ) ) {
 				continue;
 			}
 
-			if ( $row === [ null ] || $row === false ) {
+			if ( $headers === [] ) {
+				$headers = array_map( [ self::class, 'normalize_header' ], $row );
+				$headers = array_values( array_filter( $headers ) );
 				continue;
 			}
 
-			$rows[] = $row;
+			$item = [
+				'__row' => $csv->key() + 1,
+			];
+
+			foreach ( $headers as $index => $header ) {
+				$item[ $header ] = isset( $row[ $index ] ) ? trim( (string) $row[ $index ] ) : '';
+			}
+
+			$rows[] = $item;
 		}
 
 		return $rows;
@@ -82,6 +91,23 @@ class Csv {
 		}
 
 		return $content;
+	}
+
+	private static function normalize_header( mixed $header ): string {
+		$header = strtolower( trim( (string) $header ) );
+		$header = preg_replace( '/[^a-z0-9]+/', '_', $header ) ?? '';
+
+		return trim( $header, '_' );
+	}
+
+	private static function is_empty_row( array $row ): bool {
+		foreach ( $row as $value ) {
+			if ( trim( (string) $value ) !== '' ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

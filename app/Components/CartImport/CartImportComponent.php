@@ -215,9 +215,9 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 		$csv = Csv::build(
 			[
-				[ 'sku', 'quantity' ],
-				[ 'ABC-123', '2' ],
-				[ 'XYZ-456', '1' ],
+				[ 'product_id', 'variation_id', 'sku', 'product_name', 'quantity', 'price', 'subtotal' ],
+				[ '123', '', 'ABC-123', 'Producto simple de ejemplo', '2', '19.99', '39.98' ],
+				[ '456', '789', 'XYZ-456-RED-M', 'Producto variable de ejemplo - Rojo / M', '1', '24.99', '24.99' ],
 			]
 		);
 

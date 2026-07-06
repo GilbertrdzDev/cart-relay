@@ -36,7 +36,7 @@ class CartButtonsComponent implements HasActions, Shortcode {
 	}
 
 	public static function render( array $atts = [], string $content = '' ): string {
-		$export = CartExportComponent::render( [], '' );
+		$export = CartExportComponent::render([]);
 		$import = self::render_import_form();
 
 		if ( $export === '' && $import === '' ) {

@@ -233,6 +233,8 @@ class AssetManager {
 	}
 
 	private function dispatch_vite_assets( array $assets, bool $admin = false ): void {
+		$dispatched = [];
+
 		foreach ( $assets as $asset ) {
 			if ( $admin && ! $this->should_enqueue_for_screen( $asset['options']['screens'] ?? null ) ) {
 				continue;
@@ -241,6 +243,14 @@ class AssetManager {
 			if ( ! $this->should_enqueue_for_condition( $asset['options']['condition'] ?? null ) ) {
 				continue;
 			}
+
+			$asset_key = $asset['handle'] . '|' . $asset['entry'];
+
+			if ( isset( $dispatched[ $asset_key ] ) ) {
+				continue;
+			}
+
+			$dispatched[ $asset_key ] = true;
 
 			$options = array_merge(
 				[
