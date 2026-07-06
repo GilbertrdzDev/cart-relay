@@ -238,6 +238,10 @@ class AssetManager {
 				continue;
 			}
 
+			if ( ! $this->should_enqueue_for_condition( $asset['options']['condition'] ?? null ) ) {
+				continue;
+			}
+
 			$options = array_merge(
 				[
 					'handle'    => $asset['handle'],
@@ -245,7 +249,7 @@ class AssetManager {
 				],
 				$asset['options']
 			);
-			unset( $options['screens'] );
+			unset( $options['screens'], $options['condition'] );
 
 			Vite\enqueue_asset(
 				$this->trailingslash( $this->base_path ) . trim( $this->dist_path, '/\\' ),
@@ -343,6 +347,18 @@ class AssetManager {
 		$screens_list = is_array( $screens ) ? $screens : [ $screens ];
 
 		return in_array( $screen_id, $screens_list, true );
+	}
+
+	private function should_enqueue_for_condition( callable|bool|null $condition ): bool {
+		if ( $condition === null ) {
+			return true;
+		}
+
+		if ( is_bool( $condition ) ) {
+			return $condition;
+		}
+
+		return (bool) call_user_func( $condition );
 	}
 
 	private function trailingslash( string $path ): string {

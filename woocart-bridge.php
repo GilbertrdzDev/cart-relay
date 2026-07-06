@@ -32,6 +32,8 @@
 use WoocartBridge\App\Core\Plugin;
 use WoocartBridge\App\Core\Activator;
 use WoocartBridge\App\Core\Deactivator;
+use WoocartBridge\App\Components\CartButtons\CartButtonsComponent;
+use WoocartBridge\App\Components\CartExport\CartExportComponent;
 use WoocartBridge\App\Components\RequirementsCheck;
 
 // If this file is called directly, abort.
@@ -58,6 +60,10 @@ register_deactivation_hook( __FILE__, [ Deactivator::class, 'deactivate' ] );
 
 add_action( 'plugins_loaded', function() {
 	( new Plugin() )
-		->addComponents( RequirementsCheck::class )
+		->addComponents(
+			RequirementsCheck::class,
+			CartExportComponent::class,
+			CartButtonsComponent::class
+		)
 		->run();
 } );

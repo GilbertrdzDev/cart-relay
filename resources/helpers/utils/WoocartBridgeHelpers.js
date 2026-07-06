@@ -1,3 +1,5 @@
+import Swal from 'sweetalert2';
+
 class WoocartBridgeHelpers {
 
 	static swalShowLoading( title = 'Loading...' ) {
@@ -5,11 +7,11 @@ class WoocartBridgeHelpers {
 		Swal.fire( {
 			// title             : "Success",
 			title,
-			onBeforeOpen      : () => {
+			didOpen           : () => {
 				Swal.showLoading();
 			},
 			showConfirmButton : false,
-			type              : 'info',
+			icon              : 'info',
 		} );
 
 	}
@@ -28,11 +30,11 @@ class WoocartBridgeHelpers {
 
 			text = 'Not connect: Verify Network.';
 
-		} else if ( jqXhr.status == 404 ) {
+		} else if ( jqXhr.status === 404 ) {
 
 			text = 'Requested page not found [404].';
 
-		} else if ( jqXhr.status == 500 ) {
+		} else if ( jqXhr.status === 500 ) {
 
 			text = 'Internal Server Error [500].';
 
@@ -59,7 +61,7 @@ class WoocartBridgeHelpers {
 		 * @param {Function} Swal.fire
 		 */
 
-		if ( jqXhr.status == 422 ) {
+		if ( jqXhr.status === 422 ) {
 
 			let errs       = jqXhr.responseJSON,
 				{ errors } = errs;
@@ -146,16 +148,16 @@ class WoocartBridgeHelpers {
 				if ( typeof paramValue === 'string' ) paramValue = paramValue.toLowerCase();
 
 				// if the paramName ends with square brackets, e.g. colors[] or colors[2]
-				if ( paramName.match( /\[(\d+)?\]$/ ) ) {
+				if ( paramName.match( /\[(\d+)?]$/ ) ) {
 
 					// create key if it doesn't exist
-					var key = paramName.replace( /\[(\d+)?\]/, '' );
+					var key = paramName.replace( /\[(\d+)?]/, '' );
 					if ( !obj[ key ] ) obj[ key ] = [];
 
 					// if it's an indexed array e.g. colors[2]
-					if ( paramName.match( /\[\d+\]$/ ) ) {
+					if ( paramName.match( /\[\d+]$/ ) ) {
 						// get the index value and add the entry at the appropriate position
-						var index = /\[(\d+)\]/.exec( paramName )[ 1 ];
+						var index = /\[(\d+)]/.exec( paramName )[ 1 ];
 						obj[ key ][ index ] = paramValue;
 					} else {
 						// otherwise add the value to the end of the array

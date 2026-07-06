@@ -1,0 +1,31 @@
+.wcb-cart-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	align-items: center;
+	margin: 1rem 0;
+}
+
+.wcb-export-button {
+	display: inline-flex !important;
+	align-items: center;
+	gap: 0.45rem;
+	transition:
+		transform 160ms ease,
+		box-shadow 160ms ease,
+		filter 160ms ease;
+}
+
+.wcb-export-button:hover {
+	filter: brightness( 1.04 );
+	transform: translateY( -1px );
+}
+
+.wcb-export-button:active {
+	filter: brightness( 0.98 );
+	transform: translateY( 0 );
+}
+
+.wcb-export-button__icon {
+	flex: 0 0 auto;
+}

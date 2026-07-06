@@ -13,13 +13,7 @@ class Front {
 	}
 
 	public function registerAssets(): void {
-		$this->plugin->getAssetManager()->frontend_vite(
-			"{$this->plugin->getName()}-front-js",
-			'resources/assets/front/js/app-front.js',
-			[
-				'in-footer' => true,
-			]
-		);
+		// Frontend assets are registered by feature components so they can load conditionally.
 	}
 
 	public function registerHooks(): void {}
