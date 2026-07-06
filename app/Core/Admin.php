@@ -20,7 +20,7 @@ class Admin {
 	public function registerAssets(): void {
 		$this->plugin->getAssetManager()->admin_vite(
 			"{$this->plugin->getName()}-admin-js",
-			'resources/assets/admin/js/app-admin.js',
+			'resources/assets/admin/js/app-admin.ts',
 			[
 				'in-footer' => true,
 			]

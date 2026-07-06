@@ -24,7 +24,7 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 	public function enqueue_scripts( AssetManager $asset_manager ): void {
 		$asset_manager->frontend_vite(
 			'woocart-bridge-front-js',
-			'resources/assets/front/js/app-front.js',
+			'resources/assets/front/js/app-front.ts',
 			[
 				'in-footer' => true,
 				'condition' => [ self::class, 'should_enqueue_assets' ],
