@@ -1,0 +1,27 @@
+{
+    "name": "woocart-bridge/app",
+    "description": "WooCart Bridge Free permite importar y exportar carritos de WooCommerce usando archivos CSV simples con SKU y cantidad.",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=8.2.0",
+        "composer/installers": "^2.2.0",
+        "kucrut/vite-for-wp": "^0.12.0"
+    },
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Gilbert Rodríguez",
+            "email": "gilbertrdz.dev@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "WoocartBridge\\App\\": "app/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

@@ -1,0 +1,44 @@
+<?php
+
+namespace WoocartBridge\App\Core;
+
+use WoocartBridge\App\Helpers\PageTemplater;
+
+
+defined( 'ABSPATH' ) || exit;
+
+class Admin {
+
+	private Plugin $plugin;
+	private PageTemplater $pageTemplater;
+
+	public function __construct( Plugin $plugin ) {
+		$this->plugin        = $plugin;
+		$this->pageTemplater = new PageTemplater();
+	}
+
+	public function registerAssets(): void {
+		$this->plugin->getAssetManager()->admin_vite(
+			"{$this->plugin->getName()}-admin-js",
+			'resources/assets/admin/js/app-admin.js',
+			[
+				'in-footer' => true,
+			]
+		);
+	}
+
+	public function registerHooks(): void {
+		$this->plugin->getLoader()->add_action( 'after_setup_theme', [ $this, 'templates' ] );
+	}
+
+	public function enqueueStyles(): void {}
+
+	public function enqueueScripts(): void {}
+
+	public function templates(): void {
+		$this->pageTemplater->addTemplates( [
+			// 'templates/template-blank.php' => 'Blank template',
+		] )->run();
+	}
+
+}
