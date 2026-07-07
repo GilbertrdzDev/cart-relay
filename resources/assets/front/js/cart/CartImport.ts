@@ -29,6 +29,7 @@ interface ImportItem {
 	price: string;
 	subtotal: string;
 	image: string;
+	permalink: string;
 }
 
 interface PreviewResponse {
@@ -81,7 +82,7 @@ class CartImport {
 	private bindEvents( form: HTMLElement ): void {
 		const input = form.querySelector<HTMLInputElement>( '[data-wcb-import-file]' );
 		const dropzone = form.querySelector<HTMLElement>( '[data-wcb-import-dropzone]' );
-		const removeButton = form.querySelector<HTMLButtonElement>( '[data-wcb-import-remove]' );
+		const removeButton = form.querySelector<HTMLElement>( '[data-wcb-import-remove]' );
 		const previewButton = form.querySelector<HTMLButtonElement>( '[data-wcb-import-preview]' );
 
 		dropzone?.addEventListener( 'click', () => input?.click() );
@@ -89,7 +90,11 @@ class CartImport {
 		dropzone?.addEventListener( 'dragleave', () => dropzone.classList.remove( 'is-dragging' ) );
 		dropzone?.addEventListener( 'drop', ( event ) => this.handleDrop( event, form, input, dropzone ) );
 		input?.addEventListener( 'change', () => this.handleFileSelect( form, input.files?.[0] ) );
-		removeButton?.addEventListener( 'click', () => this.removeFile( form, input ) );
+		removeButton?.addEventListener( 'click', ( event ) => {
+			event.preventDefault();
+			event.stopPropagation();
+			this.removeFile( form, input );
+		} );
 		previewButton?.addEventListener( 'click', () => void this.previewImport( form ) );
 	}
 
@@ -147,8 +152,7 @@ class CartImport {
 			input.value = '';
 		}
 
-		const meta = form.querySelector<HTMLElement>( '[data-wcb-import-file-meta]' );
-		meta?.setAttribute( 'hidden', 'hidden' );
+		this.setDropzoneEmpty( form );
 		this.clearSummary( form );
 	}
 
@@ -182,15 +186,23 @@ class CartImport {
 	private async openPreviewModal( form: HTMLElement, response: PreviewResponse ): Promise<void> {
 		const canImport = response.items.length > 0;
 		const result = await Swal.fire( {
-			title: 'Vista previa de importación',
+			title: '',
 			html: this.renderPreviewModal( response ),
 			width: 'min(960px, 96vw)',
+			padding: 0,
+			showCloseButton: true,
 			showCancelButton: true,
 			showConfirmButton: canImport,
-			confirmButtonText: 'Importar productos',
+			confirmButtonText: `Importar ${response.items.length} productos`,
 			cancelButtonText: 'Cancelar',
+			buttonsStyling: false,
 			customClass: {
 				popup: 'wcb-import-preview-modal',
+				htmlContainer: 'wcb-import-preview-modal__html',
+				actions: 'wcb-import-preview-modal__actions',
+				cancelButton: 'wcb-import-preview-modal__cancel',
+				confirmButton: 'wcb-import-preview-modal__confirm',
+				closeButton: 'wcb-import-preview-modal__close',
 			},
 		} );
 
@@ -315,20 +327,43 @@ class CartImport {
 	}
 
 	private renderPreviewModal( response: PreviewResponse ): string {
+		const totalItems = response.items.length + response.errors.length;
+		const totalAmount = this.formatCurrency(
+			response.items.reduce( ( total, item ) => total + this.parseDecimal( item.subtotal ), 0 )
+		);
+
 		return `
 			<div class="wcb-import-preview">
-				<div class="wcb-import-preview__counts">
-					<span>Productos válidos: <strong>${response.items.length}</strong></span>
-					<span>Con error: <strong>${response.errors.length}</strong></span>
+				<div class="wcb-import-preview__header">
+					<h2>Vista previa de importación</h2>
+					<p>Revisa los productos antes de añadirlos a WooCommerce.</p>
+				</div>
+				<div class="wcb-import-preview__summary">
+					<div class="wcb-import-preview__badges">
+						<span class="wcb-import-preview__badge wcb-import-preview__badge--ok">
+							<span aria-hidden="true"></span>
+							<strong>${response.items.length}</strong> válidos
+						</span>
+						<span class="wcb-import-preview__badge wcb-import-preview__badge--error">
+							<span aria-hidden="true"></span>
+							<strong>${response.errors.length}</strong> con error
+						</span>
+						<span class="wcb-import-preview__badge wcb-import-preview__badge--total">
+							<strong>${totalItems}</strong> en total
+						</span>
+					</div>
+					<div class="wcb-import-preview__amount">
+						<span>Importe a importar</span>
+						<strong>${WoocartBridgeHelpers.escapeHtml( totalAmount )}</strong>
+					</div>
 				</div>
 				<div class="wcb-import-preview-table-wrapper">
 					<table class="wcb-import-preview-table">
 						<thead>
 							<tr>
-								<th>Imagen</th>
-								<th>SKU</th>
 								<th>Producto</th>
-								<th>Cantidad</th>
+								<th>Producto / variación</th>
+								<th>Cant.</th>
 								<th>Precio</th>
 								<th>Subtotal</th>
 								<th>Estado</th>
@@ -336,45 +371,92 @@ class CartImport {
 						</thead>
 						<tbody>
 							${response.items.map( ( item ) => this.renderPreviewRow( item ) ).join( '' )}
+							${response.errors.map( ( error ) => this.renderPreviewErrorRow( error ) ).join( '' )}
 						</tbody>
 					</table>
 				</div>
-				${this.renderPreviewErrors( response.errors )}
+				<div class="wcb-import-preview__footer-note">
+					${this.renderPreviewFooterNote( response.errors.length )}
+				</div>
 			</div>
 		`;
 	}
 
 	private renderPreviewRow( item: ImportItem ): string {
-		const image = item.image
-			? `<img src="${WoocartBridgeHelpers.escapeHtml( item.image )}" alt="">`
-			: '<span class="wcb-import-preview-table__empty">-</span>';
-
 		return `
 			<tr>
-				<td class="wcb-import-preview-table__image">${image}</td>
-				<td>${WoocartBridgeHelpers.escapeHtml( item.sku || '-' )}</td>
-				<td>${WoocartBridgeHelpers.escapeHtml( item.name )}</td>
-				<td>${item.quantity}</td>
-				<td>${WoocartBridgeHelpers.escapeHtml( item.price )}</td>
-				<td>${WoocartBridgeHelpers.escapeHtml( item.subtotal )}</td>
-				<td><span class="wcb-import-status wcb-import-status--ok">Listo</span></td>
+				<td>
+					${this.renderPreviewProduct( item )}
+				</td>
+				<td>${this.renderProductVariationLink( item )}</td>
+				<td class="wcb-import-preview-table__number">${item.quantity}</td>
+				<td class="wcb-import-preview-table__number">${WoocartBridgeHelpers.escapeHtml( item.price )}</td>
+				<td class="wcb-import-preview-table__number"><strong>${WoocartBridgeHelpers.escapeHtml( item.subtotal )}</strong></td>
+				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--ok">Listo</span></td>
 			</tr>
 		`;
 	}
 
-	private renderPreviewErrors( errors: RowError[] ): string {
-		if ( errors.length === 0 ) {
-			return '';
+	private renderPreviewErrorRow( error: RowError ): string {
+		return `
+			<tr class="wcb-import-preview-table__row--error">
+				<td>
+					<div class="wcb-import-preview-product">
+						<span class="wcb-import-preview-product__fallback">!</span>
+						<div class="wcb-import-preview-product__meta">
+							<strong>Fila ${error.row > 0 ? error.row : '-'}</strong>
+							<span class="wcb-import-preview-product__error">${WoocartBridgeHelpers.escapeHtml( error.message )}</span>
+						</div>
+					</div>
+				</td>
+				<td>-</td>
+				<td class="wcb-import-preview-table__number">-</td>
+				<td class="wcb-import-preview-table__number">-</td>
+				<td class="wcb-import-preview-table__number">-</td>
+				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--error">Con error</span></td>
+			</tr>
+		`;
+	}
+
+	private renderPreviewThumb( item: ImportItem ): string {
+		if ( item.image ) {
+			return `<img class="wcb-import-preview-product__image" src="${WoocartBridgeHelpers.escapeHtml( item.image )}" alt="">`;
+		}
+
+		return `<span class="wcb-import-preview-product__fallback">${WoocartBridgeHelpers.escapeHtml( this.getInitial( item.name ) )}</span>`;
+	}
+
+	private renderPreviewProduct( item: ImportItem ): string {
+		const content = `
+			${this.renderPreviewThumb( item )}
+			<div class="wcb-import-preview-product__meta">
+				<strong>${WoocartBridgeHelpers.escapeHtml( item.name )}</strong>
+				<span>SKU ${WoocartBridgeHelpers.escapeHtml( item.sku || '-' )}</span>
+			</div>
+		`;
+
+		if ( ! item.permalink ) {
+			return `<div class="wcb-import-preview-product">${content}</div>`;
 		}
 
 		return `
-			<div class="wcb-import-preview-errors">
-				<h3>Errores detectados</h3>
-				<ul>
-					${errors.map( ( error ) => `<li>${WoocartBridgeHelpers.escapeHtml( this.formatRowError( error ) )}</li>` ).join( '' )}
-				</ul>
-			</div>
+			<a
+				class="wcb-import-preview-product wcb-import-preview-product--link"
+				href="${WoocartBridgeHelpers.escapeHtml( item.permalink )}"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				${content}
+			</a>
 		`;
+	}
+
+	private renderPreviewFooterNote( errorCount: number ): string {
+		if ( errorCount === 0 ) {
+			return 'Todos los productos válidos se incluirán en la importación.';
+		}
+
+		return `Los ${errorCount} productos con error se omitirán en la importación.`;
 	}
 
 	private updateProgress( current: number, total: number, added: number, errorCount: number ): void {
@@ -427,11 +509,26 @@ class CartImport {
 
 	private setFileMeta( form: HTMLElement, file: File ): void {
 		const meta = form.querySelector<HTMLElement>( '[data-wcb-import-file-meta]' );
+		const emptyState = form.querySelector<HTMLElement>( '[data-wcb-import-empty-state]' );
+		const dropzone = form.querySelector<HTMLElement>( '[data-wcb-import-dropzone]' );
+		const icon = form.querySelector<SVGElement>( '.wcb-import-dropzone__icon' );
 		const name = form.querySelector<HTMLElement>( '[data-wcb-import-file-name]' );
 		const size = form.querySelector<HTMLElement>( '[data-wcb-import-file-size]' );
 
 		if ( meta ) {
 			meta.hidden = false;
+		}
+
+		if ( emptyState ) {
+			emptyState.hidden = true;
+		}
+
+		if ( dropzone ) {
+			dropzone.classList.add( 'has-file' );
+		}
+
+		if ( icon ) {
+			icon.innerHTML = this.getReadyIconPath();
 		}
 
 		if ( name ) {
@@ -440,6 +537,29 @@ class CartImport {
 
 		if ( size ) {
 			size.textContent = this.formatFileSize( file.size );
+		}
+	}
+
+	private setDropzoneEmpty( form: HTMLElement ): void {
+		const meta = form.querySelector<HTMLElement>( '[data-wcb-import-file-meta]' );
+		const emptyState = form.querySelector<HTMLElement>( '[data-wcb-import-empty-state]' );
+		const dropzone = form.querySelector<HTMLElement>( '[data-wcb-import-dropzone]' );
+		const icon = form.querySelector<SVGElement>( '.wcb-import-dropzone__icon' );
+
+		if ( meta ) {
+			meta.hidden = true;
+		}
+
+		if ( emptyState ) {
+			emptyState.hidden = false;
+		}
+
+		if ( dropzone ) {
+			dropzone.classList.remove( 'has-file' );
+		}
+
+		if ( icon ) {
+			icon.innerHTML = this.getUploadIconPath();
 		}
 	}
 
@@ -477,8 +597,61 @@ class CartImport {
 		return `${( size / 1024 / 1024 ).toFixed( 1 )} MB`;
 	}
 
+	private formatProductVariationId( item: ImportItem ): string {
+		if ( item.variation_id > 0 ) {
+			return `${item.product_id} / ${item.variation_id}`;
+		}
+
+		return `${item.product_id} / -`;
+	}
+
+	private renderProductVariationLink( item: ImportItem ): string {
+		const label = WoocartBridgeHelpers.escapeHtml( this.formatProductVariationId( item ) );
+
+		if ( ! item.permalink ) {
+			return label;
+		}
+
+		return `
+			<a
+				class="wcb-import-preview-table__product-link"
+				href="${WoocartBridgeHelpers.escapeHtml( item.permalink )}"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				${label}
+			</a>
+		`;
+	}
+
+	private parseDecimal( value: string ): number {
+		const normalized = value.replace( /[^\d,.-]/g, '' ).replace( ',', '.' );
+		const parsed = Number.parseFloat( normalized );
+
+		return Number.isFinite( parsed ) ? parsed : 0;
+	}
+
+	private formatCurrency( value: number ): string {
+		return value.toLocaleString( 'es-ES', {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		} );
+	}
+
+	private getInitial( value: string ): string {
+		return ( value.trim().charAt( 0 ) || '?' ).toUpperCase();
+	}
+
 	private formatRowError( error: RowError ): string {
 		return error.row > 0 ? `Fila ${error.row}: ${error.message}` : error.message;
+	}
+
+	private getUploadIconPath(): string {
+		return '<path d="M12 3a1 1 0 0 1 .7.29l4 4a1 1 0 1 1-1.4 1.42L13 6.41V16a1 1 0 1 1-2 0V6.41L8.7 8.71a1 1 0 1 1-1.4-1.42l4-4A1 1 0 0 1 12 3Zm-7 13a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z" fill="currentColor"/>';
+	}
+
+	private getReadyIconPath(): string {
+		return '<path d="M9.2 16.6a1 1 0 0 1-.7-.3l-3.2-3.2a1 1 0 1 1 1.4-1.42l2.48 2.47 7.77-7.78a1 1 0 0 1 1.42 1.42l-8.48 8.5a1 1 0 0 1-.69.31Z" fill="currentColor"/>';
 	}
 
 	private refreshCartFragments(): void {

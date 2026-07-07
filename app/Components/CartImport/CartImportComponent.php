@@ -293,6 +293,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			'price'        => wc_format_decimal( $price, wc_get_price_decimals() ),
 			'subtotal'     => wc_format_decimal( $subtotal, wc_get_price_decimals() ),
 			'image'        => self::get_product_image_url( $product ),
+			'permalink'    => $product->get_permalink(),
 		];
 	}
 

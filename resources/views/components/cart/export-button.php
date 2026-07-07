@@ -7,7 +7,7 @@ $export_url  = isset( $export_url ) ? (string) $export_url : '#';
 ?>
 <a
 	href="<?php echo esc_url( $export_url ); ?>"
-	class="button alt wcb-export-button"
+	class="button wcb-export-button"
 	data-woocart-bridge-export-button
 	data-export-url="<?php echo esc_url( $export_url ); ?>"
 >

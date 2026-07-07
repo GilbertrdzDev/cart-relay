@@ -37,8 +37,8 @@ $template_url   = isset( $template_url ) ? (string) $template_url : '#';
 	>
 		<svg
 			class="wcb-import-dropzone__icon"
-			width="22"
-			height="22"
+			width="18"
+			height="18"
 			viewBox="0 0 24 24"
 			aria-hidden="true"
 			focusable="false"
@@ -48,21 +48,45 @@ $template_url   = isset( $template_url ) ? (string) $template_url : '#';
 				fill="currentColor"
 			/>
 		</svg>
-		<span class="wcb-import-dropzone__text">
-			<?php esc_html_e( 'Arrastra tu CSV aquí o haz clic para seleccionar', 'woocart-bridge' ); ?>
+
+		<span class="wcb-import-dropzone__state" data-wcb-import-empty-state>
+			<span class="wcb-import-dropzone__text">
+				<?php esc_html_e( 'Arrastra tu CSV aquí', 'woocart-bridge' ); ?>
+				<span class="wcb-import-dropzone__separator"><?php esc_html_e( 'o', 'woocart-bridge' ); ?></span>
+				<span class="wcb-import-dropzone__link"><?php esc_html_e( 'haz clic para seleccionar', 'woocart-bridge' ); ?></span>
+			</span>
+			<span class="wcb-import-dropzone__hint">
+				<?php esc_html_e( 'Formato CSV · hasta 10 MB', 'woocart-bridge' ); ?>
+			</span>
+		</span>
+
+		<span class="wcb-import-dropzone__state" data-wcb-import-file-meta hidden>
+			<span class="wcb-import-file__name" data-wcb-import-file-name></span>
+			<span class="wcb-import-file__ready"><?php esc_html_e( 'Listo para importar', 'woocart-bridge' ); ?></span>
+			<span class="wcb-import-file__size" data-wcb-import-file-size></span>
+			<span class="wcb-import-file__remove-wrap">
+				<span class="wcb-import-file__remove" data-wcb-import-remove>
+					<?php esc_html_e( 'Quitar', 'woocart-bridge' ); ?>
+				</span>
+			</span>
 		</span>
 	</button>
 
-	<div class="wcb-import-file" data-wcb-import-file-meta hidden>
-		<span class="wcb-import-file__name" data-wcb-import-file-name></span>
-		<span class="wcb-import-file__size" data-wcb-import-file-size></span>
-		<button type="button" class="button wcb-import-file__remove" data-wcb-import-remove>
-			<?php esc_html_e( 'Quitar', 'woocart-bridge' ); ?>
-		</button>
-	</div>
-
 	<div class="wcb-import-actions">
 		<a class="wcb-import-template-link" href="<?php echo esc_url( $template_url ); ?>" data-wcb-import-template>
+			<svg
+				class="wcb-import-template-link__icon"
+				width="14"
+				height="14"
+				viewBox="0 0 24 24"
+				aria-hidden="true"
+				focusable="false"
+			>
+				<path
+					d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm0 2.5L17.5 8H14V4.5ZM6 4h6v5a1 1 0 0 0 1 1h5v10H6V4Z"
+					fill="currentColor"
+				/>
+			</svg>
 			<?php esc_html_e( 'Descargar plantilla CSV', 'woocart-bridge' ); ?>
 		</a>
 		<button type="button" class="button alt wcb-import-submit" data-wcb-import-preview>
