@@ -68,6 +68,7 @@ class CartImport {
 	private readonly formSelector: string;
 	private readonly chunkSize: number;
 	private readonly selectedFiles = new WeakMap<HTMLElement, File>();
+	private isListening = false;
 
 	constructor( {
 		formSelector = '[data-woocart-bridge-import-form]',
@@ -75,36 +76,128 @@ class CartImport {
 	}: CartImportOptions = {} ) {
 		this.formSelector = formSelector;
 		this.chunkSize = chunkSize;
+		this.handleDocumentClick = this.handleDocumentClick.bind( this );
+		this.handleDocumentChange = this.handleDocumentChange.bind( this );
+		this.handleDocumentDragOver = this.handleDocumentDragOver.bind( this );
+		this.handleDocumentDragLeave = this.handleDocumentDragLeave.bind( this );
+		this.handleDocumentDrop = this.handleDocumentDrop.bind( this );
 	}
 
 	init(): void {
-		document.querySelectorAll<HTMLElement>( this.formSelector ).forEach( ( form ) => {
-			if ( form.dataset.wcbImportReady === 'true' ) {
+		if ( this.isListening ) {
+			return;
+		}
+
+		this.isListening = true;
+		document.addEventListener( 'click', this.handleDocumentClick );
+		document.addEventListener( 'change', this.handleDocumentChange );
+		document.addEventListener( 'dragover', this.handleDocumentDragOver );
+		document.addEventListener( 'dragleave', this.handleDocumentDragLeave );
+		document.addEventListener( 'drop', this.handleDocumentDrop );
+	}
+
+	private handleDocumentClick( event: MouseEvent ): void {
+		const target = this.getEventTargetElement( event );
+
+		if ( ! target ) {
+			return;
+		}
+
+		const removeButton = target.closest<HTMLElement>( '[data-wcb-import-remove]' );
+
+		if ( removeButton ) {
+			const form = this.getImportForm( removeButton );
+
+			if ( ! form ) {
 				return;
 			}
 
-			form.dataset.wcbImportReady = 'true';
-			this.bindEvents( form );
-		} );
-	}
-
-	private bindEvents( form: HTMLElement ): void {
-		const input = form.querySelector<HTMLInputElement>( '[data-wcb-import-file]' );
-		const dropzone = form.querySelector<HTMLElement>( '[data-wcb-import-dropzone]' );
-		const removeButton = form.querySelector<HTMLElement>( '[data-wcb-import-remove]' );
-		const previewButton = form.querySelector<HTMLButtonElement>( '[data-wcb-import-preview]' );
-
-		dropzone?.addEventListener( 'click', () => input?.click() );
-		dropzone?.addEventListener( 'dragover', ( event ) => this.handleDragOver( event, dropzone ) );
-		dropzone?.addEventListener( 'dragleave', () => dropzone.classList.remove( 'is-dragging' ) );
-		dropzone?.addEventListener( 'drop', ( event ) => this.handleDrop( event, form, input, dropzone ) );
-		input?.addEventListener( 'change', () => this.handleFileSelect( form, input.files?.[0] ) );
-		removeButton?.addEventListener( 'click', ( event ) => {
 			event.preventDefault();
 			event.stopPropagation();
-			this.removeFile( form, input );
-		} );
-		previewButton?.addEventListener( 'click', () => void this.previewImport( form ) );
+			this.removeFile( form, this.getFileInput( form ) );
+			return;
+		}
+
+		const previewButton = target.closest<HTMLElement>( '[data-wcb-import-preview]' );
+
+		if ( previewButton ) {
+			const form = this.getImportForm( previewButton );
+
+			if ( ! form ) {
+				return;
+			}
+
+			event.preventDefault();
+			void this.previewImport( form );
+			return;
+		}
+
+		const dropzone = target.closest<HTMLElement>( '[data-wcb-import-dropzone]' );
+
+		if ( ! dropzone ) {
+			return;
+		}
+
+		const form = this.getImportForm( dropzone );
+
+		if ( ! form ) {
+			return;
+		}
+
+		event.preventDefault();
+		this.getFileInput( form )?.click();
+	}
+
+	private handleDocumentChange( event: Event ): void {
+		const target = event.target;
+
+		if ( ! ( target instanceof HTMLInputElement ) || ! target.matches( '[data-wcb-import-file]' ) ) {
+			return;
+		}
+
+		const form = this.getImportForm( target );
+
+		if ( ! form ) {
+			return;
+		}
+
+		this.handleFileSelect( form, target.files?.[0] );
+	}
+
+	private handleDocumentDragOver( event: DragEvent ): void {
+		const dropzone = this.getDropzoneFromEvent( event );
+
+		if ( ! dropzone ) {
+			return;
+		}
+
+		this.handleDragOver( event, dropzone );
+	}
+
+	private handleDocumentDragLeave( event: DragEvent ): void {
+		const dropzone = this.getDropzoneFromEvent( event );
+
+		if ( ! dropzone ) {
+			return;
+		}
+
+		dropzone.classList.remove( 'is-dragging' );
+	}
+
+	private handleDocumentDrop( event: DragEvent ): void {
+		const dropzone = this.getDropzoneFromEvent( event );
+
+		if ( ! dropzone ) {
+			return;
+		}
+
+		const form = this.getImportForm( dropzone );
+
+		if ( ! form ) {
+			return;
+		}
+
+		this.handleDrop( event, form, this.getFileInput( form ), dropzone );
 	}
 
 	private handleDragOver( event: DragEvent, dropzone: HTMLElement ): void {
@@ -134,6 +227,22 @@ class CartImport {
 		}
 
 		this.handleFileSelect( form, file );
+	}
+
+	private getDropzoneFromEvent( event: Event ): HTMLElement | null {
+		return this.getEventTargetElement( event )?.closest<HTMLElement>( '[data-wcb-import-dropzone]' ) || null;
+	}
+
+	private getEventTargetElement( event: Event ): Element | null {
+		return event.target instanceof Element ? event.target : null;
+	}
+
+	private getFileInput( form: HTMLElement ): HTMLInputElement | null {
+		return form.querySelector<HTMLInputElement>( '[data-wcb-import-file]' );
+	}
+
+	private getImportForm( element: Element ): HTMLElement | null {
+		return element.closest<HTMLElement>( this.formSelector );
 	}
 
 	private handleFileSelect( form: HTMLElement, file?: File ): void {
