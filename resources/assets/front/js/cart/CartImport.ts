@@ -240,14 +240,8 @@ class CartImport {
 			);
 		}
 
-		await Swal.fire( {
-			icon: errors.length > 0 ? 'warning' : 'success',
-			title: errors.length > 0 ? __( 'Import completed with issues' ) : __( 'Cart imported' ),
-			timer: 1700,
-			showConfirmButton: false,
-		} );
-
-		this.renderSummary( form, { added, errors } );
+		await this.showImportResult( added, errors );
+		this.clearSummary( form );
 		this.refreshCartFragments();
 	}
 
@@ -487,6 +481,59 @@ class CartImport {
 				</div>
 			`,
 		} );
+	}
+
+	private async showImportResult( added: number, errors: RowError[] ): Promise<void> {
+		if ( errors.length === 0 ) {
+			await Swal.fire( {
+				toast: true,
+				position: 'top-end',
+				icon: 'success',
+				title: __( 'Cart imported' ),
+				text: sprintf( __( 'Products added: %d' ), added ),
+				timer: 5000,
+				timerProgressBar: true,
+				showConfirmButton: false,
+				customClass: {
+					popup: 'wcb-import-result-toast',
+				},
+			} );
+
+			return;
+		}
+
+		await Swal.fire( {
+			icon: 'warning',
+			title: __( 'Import completed with issues' ),
+			html: this.renderImportResultIssues( added, errors ),
+			confirmButtonText: __( 'Close' ),
+			buttonsStyling: false,
+			customClass: {
+				popup: 'wcb-import-result-modal',
+				htmlContainer: 'wcb-import-result-modal__html',
+				confirmButton: 'wcb-import-result-modal__confirm',
+			},
+		} );
+	}
+
+	private renderImportResultIssues( added: number, errors: RowError[] ): string {
+		return `
+			<div class="wcb-import-result">
+				<div class="wcb-import-result__stats">
+					<span class="wcb-import-result__stat wcb-import-result__stat--ok">
+						<strong>${added}</strong>
+						${_n( 'product added', 'products added', added )}
+					</span>
+					<span class="wcb-import-result__stat wcb-import-result__stat--error">
+						<strong>${errors.length}</strong>
+						${_n( 'issue', 'issues', errors.length )}
+					</span>
+				</div>
+				<div class="wcb-import-result__errors">
+					${errors.map( ( error ) => `<p>${WoocartBridgeHelpers.escapeHtml( this.formatRowError( error ) )}</p>` ).join( '' )}
+				</div>
+			</div>
+		`;
 	}
 
 	private renderSummary( form: HTMLElement, summary: { added: number; errors: RowError[] } ): void {
