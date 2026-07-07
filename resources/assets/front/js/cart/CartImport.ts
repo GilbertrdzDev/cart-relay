@@ -5,7 +5,8 @@ import { __, _n, sprintf } from '@helpers/utils/i18n';
 declare global {
 	interface Window {
 		jQuery?: ( target: unknown ) => {
-			trigger: ( eventName: string ) => void;
+			one: ( eventName: string, handler: () => void ) => void;
+			trigger: ( eventName: string, extraParameters?: unknown[] ) => void;
 		};
 	}
 }
@@ -37,11 +38,20 @@ interface PreviewResponse {
 	import_mode: string;
 }
 
+interface UpdatedCartItem {
+	cart_item_key: string;
+	product_id: number;
+	variation_id: number;
+	sku: string;
+	quantity: number;
+}
+
 interface ChunkResponse {
 	chunk_index: number;
 	total_chunks: number;
 	added: number;
 	errors: RowError[];
+	updated_items?: UpdatedCartItem[];
 }
 
 interface AjaxErrorData {
@@ -216,6 +226,7 @@ class CartImport {
 	private async importChunks( form: HTMLElement, items: ImportItem[] ): Promise<void> {
 		const chunks = this.chunkItems( items );
 		const errors: RowError[] = [];
+		const updatedItems: UpdatedCartItem[] = [];
 		let added = 0;
 
 		WoocartBridgeHelpers.swalShowLoading( __( 'Importing products...' ) );
@@ -230,6 +241,7 @@ class CartImport {
 
 			added += chunkResponse.added;
 			errors.push( ...chunkResponse.errors );
+			updatedItems.push( ...( chunkResponse.updated_items || [] ) );
 			this.updateProgress(
 				Math.min( ( index + 1 ) * this.chunkSize, items.length ),
 				items.length,
@@ -238,9 +250,9 @@ class CartImport {
 			);
 		}
 
-		await this.showImportResult( added, errors );
 		this.clearSummary( form );
-		this.refreshCartFragments();
+		await this.refreshCartDisplay( updatedItems );
+		await this.showImportResult( added, errors );
 	}
 
 	private async importChunk(
@@ -681,6 +693,67 @@ class CartImport {
 
 	private getReadyIconPath(): string {
 		return '<path d="M9.2 16.6a1 1 0 0 1-.7-.3l-3.2-3.2a1 1 0 1 1 1.4-1.42l2.48 2.47 7.77-7.78a1 1 0 0 1 1.42 1.42l-8.48 8.5a1 1 0 0 1-.69.31Z" fill="currentColor"/>';
+	}
+
+	private async refreshCartDisplay( updatedItems: UpdatedCartItem[] ): Promise<void> {
+		this.syncVisibleCartQuantities( updatedItems );
+
+		if ( await this.triggerWooCartUpdate() ) {
+			return;
+		}
+
+		this.refreshCartFragments();
+	}
+
+	private syncVisibleCartQuantities( updatedItems: UpdatedCartItem[] ): void {
+		const cartForm = document.querySelector<HTMLFormElement>( '.woocommerce-cart-form' );
+
+		if ( ! cartForm || updatedItems.length === 0 ) {
+			return;
+		}
+
+		const quantitiesByKey = new Map(
+			updatedItems.map( ( item ) => [ item.cart_item_key, item.quantity ] )
+		);
+
+		cartForm.querySelectorAll<HTMLInputElement>( 'input.qty[name^="cart["][name$="[qty]"]' ).forEach( ( input ) => {
+			const itemKey = this.getCartItemKeyFromQuantityInput( input );
+
+			if ( ! itemKey || ! quantitiesByKey.has( itemKey ) ) {
+				return;
+			}
+
+			input.value = String( quantitiesByKey.get( itemKey ) );
+		} );
+	}
+
+	private getCartItemKeyFromQuantityInput( input: HTMLInputElement ): string {
+		const match = input.name.match( /^cart\[(.+)]\[qty]$/ );
+
+		return match ? match[1] : '';
+	}
+
+	private triggerWooCartUpdate(): Promise<boolean> {
+		if ( typeof window.jQuery !== 'function' || ! document.querySelector( '.woocommerce-cart-form' ) ) {
+			return Promise.resolve( false );
+		}
+
+		return new Promise( ( resolve ) => {
+			let settled = false;
+			const done = () => {
+				if ( settled ) {
+					return;
+				}
+
+				settled = true;
+				this.init();
+				resolve( true );
+			};
+
+			window.jQuery?.( document.body ).one( 'updated_wc_div', done );
+			window.setTimeout( done, 4000 );
+			window.jQuery?.( document ).trigger( 'wc_update_cart', [ true ] );
+		} );
 	}
 
 	private refreshCartFragments(): void {

@@ -163,8 +163,9 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			WC()->cart->empty_cart();
 		}
 
-		$added  = 0;
-		$errors = [];
+		$added         = 0;
+		$errors        = [];
+		$updated_items = [];
 
 		foreach ( $items as $item ) {
 			$row_number = absint( $item['row'] ?? 0 );
@@ -188,6 +189,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 			if ( $result ) {
 				$added++;
+				$updated_items[] = self::make_updated_cart_item( (string) $result, $resolved );
 				wc_clear_notices();
 				continue;
 			}
@@ -204,6 +206,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 				'total_chunks' => $total_chunks,
 				'added'        => $added,
 				'errors'       => $errors,
+				'updated_items' => $updated_items,
 			]
 		);
 	}
@@ -377,6 +380,18 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		return [
 			'row'     => $row_number,
 			'message' => $message,
+		];
+	}
+
+	private static function make_updated_cart_item( string $cart_item_key, array $resolved ): array {
+		$cart_item = WC()->cart->get_cart_item( $cart_item_key ) ?: [];
+
+		return [
+			'cart_item_key' => $cart_item_key,
+			'product_id'    => (int) $resolved['product_id'],
+			'variation_id'  => (int) $resolved['variation_id'],
+			'sku'           => (string) $resolved['sku'],
+			'quantity'      => (int) ( $cart_item['quantity'] ?? $resolved['quantity'] ),
 		];
 	}
 
