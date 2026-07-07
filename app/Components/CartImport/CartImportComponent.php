@@ -32,8 +32,10 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			'woocart-bridge-front-js',
 			'resources/assets/front/js/app-front.ts',
 			[
-				'in-footer' => true,
-				'condition' => [ self::class, 'should_enqueue_assets' ],
+				'in-footer'   => true,
+				'condition'   => [ self::class, 'should_enqueue_assets' ],
+				'dependencies' => [ 'wp-i18n' ],
+				'text-domain' => 'woocart-bridge',
 			]
 		);
 	}
@@ -71,7 +73,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			'cart.import-form',
 			[
 				'ajax_url'         => admin_url( 'admin-ajax.php' ),
-				'button_text'      => Settings::get( 'import_button_text', 'Importar carrito' ),
+				'button_text'      => Settings::get( 'import_button_text', __( 'Import cart', 'woocart-bridge' ) ),
 				'import_mode'      => self::get_import_mode(),
 				'preview_action'   => self::PREVIEW_ACTION,
 				'preview_nonce'    => wp_create_nonce( self::PREVIEW_ACTION ),
@@ -94,7 +96,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$rows = Csv::parse_upload( $_FILES['csv_file'] );
 
 		if ( $rows === [] ) {
-			self::send_validation_errors( [ 'El CSV está vacío o no tiene filas importables.' ] );
+			self::send_validation_errors( [ __( 'The CSV is empty or has no importable rows.', 'woocart-bridge' ) ] );
 		}
 
 		$items  = [];
@@ -120,7 +122,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			if ( ! $product instanceof WC_Product ) {
 				$errors[] = [
 					'row'     => $row_number,
-					'message' => 'Producto no encontrado.',
+					'message' => __( 'Product not found.', 'woocart-bridge' ),
 				];
 				continue;
 			}
@@ -145,7 +147,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		self::verify_post_nonce( self::IMPORT_CHUNK_ACTION );
 
 		if ( ! self::ensure_cart() ) {
-			wp_send_json_error( [ 'errors' => [ 'WooCommerce cart is not available.' ] ], 400 );
+			wp_send_json_error( [ 'errors' => [ __( 'WooCommerce cart is not available.', 'woocart-bridge' ) ] ], 400 );
 		}
 
 		$items        = self::get_posted_items();
@@ -154,7 +156,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$import_mode  = self::sanitize_import_mode( $_POST['import_mode'] ?? self::get_import_mode() );
 
 		if ( $items === [] ) {
-			self::send_validation_errors( [ 'No hay productos para importar en este chunk.' ] );
+			self::send_validation_errors( [ __( 'There are no products to import in this chunk.', 'woocart-bridge' ) ] );
 		}
 
 		if ( $import_mode === 'replace' && $chunk_index === 0 ) {
@@ -216,8 +218,8 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$csv = Csv::build(
 			[
 				[ 'product_id', 'variation_id', 'sku', 'product_name', 'quantity', 'price', 'subtotal' ],
-				[ '123', '', 'ABC-123', 'Producto simple de ejemplo', '2', '19.99', '39.98' ],
-				[ '456', '789', 'XYZ-456-RED-M', 'Producto variable de ejemplo - Rojo / M', '1', '24.99', '24.99' ],
+				[ '123', '', 'ABC-123', 'Example simple product', '2', '19.99', '39.98' ],
+				[ '456', '789', 'XYZ-456-RED-M', 'Example variable product - Red / M', '1', '24.99', '24.99' ],
 			]
 		);
 
@@ -251,27 +253,27 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 	private static function validate_upload(): array {
 		if ( empty( $_FILES['csv_file'] ) || ! is_array( $_FILES['csv_file'] ) ) {
-			return [ 'Debes seleccionar un archivo CSV.' ];
+			return [ __( 'You must select a CSV file.', 'woocart-bridge' ) ];
 		}
 
 		$file = $_FILES['csv_file'];
 
 		if ( (int) ( $file['error'] ?? UPLOAD_ERR_NO_FILE ) !== UPLOAD_ERR_OK ) {
-			return [ 'No se pudo subir el archivo CSV.' ];
+			return [ __( 'The CSV file could not be uploaded.', 'woocart-bridge' ) ];
 		}
 
 		if ( empty( $file['tmp_name'] ) || ! is_uploaded_file( $file['tmp_name'] ) ) {
-			return [ 'El archivo CSV no es válido.' ];
+			return [ __( 'The CSV file is not valid.', 'woocart-bridge' ) ];
 		}
 
 		if ( (int) ( $file['size'] ?? 0 ) > self::MAX_UPLOAD_SIZE ) {
-			return [ 'El archivo CSV no puede superar 10 MB.' ];
+			return [ __( 'The CSV file cannot exceed 10 MB.', 'woocart-bridge' ) ];
 		}
 
 		$filename = sanitize_file_name( (string) ( $file['name'] ?? '' ) );
 
 		if ( strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) ) !== 'csv' ) {
-			return [ 'El archivo debe tener extensión .csv.' ];
+			return [ __( 'The file must use the .csv extension.', 'woocart-bridge' ) ];
 		}
 
 		return [];
@@ -347,7 +349,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, $action ) ) {
-			wp_send_json_error( [ 'errors' => [ 'Solicitud inválida.' ] ], 403 );
+			wp_send_json_error( [ 'errors' => [ __( 'Invalid request.', 'woocart-bridge' ) ] ], 403 );
 		}
 	}
 
@@ -368,7 +370,11 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			return implode( ' ', $errors );
 		}
 
-		return sprintf( 'No se pudo agregar el producto %d al carrito.', (int) $resolved['product_id'] );
+		return sprintf(
+			/* translators: %d: WooCommerce product ID. */
+			__( 'Product %d could not be added to the cart.', 'woocart-bridge' ),
+			(int) $resolved['product_id']
+		);
 	}
 
 	private static function make_row_error( int $row_number, string $message ): array {
@@ -380,15 +386,22 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 	private static function format_row_errors( array $errors ): array {
 		if ( $errors === [] ) {
-			return [ 'No se encontraron productos válidos en el CSV.' ];
+			return [ __( 'No valid products were found in the CSV.', 'woocart-bridge' ) ];
 		}
 
 		return array_map(
 			static function( array $error ): string {
 				$row = absint( $error['row'] ?? 0 );
-				$message = (string) ( $error['message'] ?? 'Error desconocido.' );
+				$message = (string) ( $error['message'] ?? __( 'Unknown error.', 'woocart-bridge' ) );
 
-				return $row > 0 ? sprintf( 'Fila %d: %s', $row, $message ) : $message;
+				return $row > 0
+					? sprintf(
+						/* translators: 1: CSV row number, 2: validation error message. */
+						__( 'Row %1$d: %2$s', 'woocart-bridge' ),
+						$row,
+						$message
+					)
+					: $message;
 			},
 			$errors
 		);

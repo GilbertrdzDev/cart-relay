@@ -19,7 +19,7 @@
  * @wordpress-plugin
  * Plugin Name:       Woocart Bridge
  * Plugin URI:        https://gilbertrdz.dev
- * Description:       WooCart Bridge Free permite importar y exportar carritos de WooCommerce usando archivos CSV simples con SKU y cantidad.
+ * Description:       WooCart Bridge Free lets customers import and export WooCommerce carts with simple CSV files using SKU and quantity.
  * Version:           1.0.0
  * Author:            Gilbert Rodríguez
  * Author URI:        https://gilbertrdz.dev

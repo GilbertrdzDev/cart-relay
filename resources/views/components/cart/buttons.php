@@ -12,8 +12,8 @@ if ( $export_button === '' && $import_form === '' ) {
 <div class="wcb-cart-module">
 	<div class="wcb-cart-module__header">
 		<div class="wcb-cart-module__heading">
-			<h2 class="wcb-cart-module__title"><?php esc_html_e( 'Importar o exportar carrito', 'woocart-bridge' ); ?></h2>
-			<p class="wcb-cart-module__description"><?php esc_html_e( 'Guarda tu carrito o cárgalo desde un archivo CSV.', 'woocart-bridge' ); ?></p>
+			<h2 class="wcb-cart-module__title"><?php esc_html_e( 'Import or export cart', 'woocart-bridge' ); ?></h2>
+			<p class="wcb-cart-module__description"><?php esc_html_e( 'Save your cart or load it from a CSV file.', 'woocart-bridge' ); ?></p>
 		</div>
 
 		<?php if ( $export_button !== '' ) : ?>

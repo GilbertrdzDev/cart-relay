@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2';
+import { __ } from '@helpers/utils/i18n';
 
 type AjaxErrors = Record<string, unknown> | unknown[];
 
@@ -15,7 +16,7 @@ type UrlParameters = Record<string, UrlParameterValue>;
 
 class WoocartBridgeHelpers {
 
-	static swalShowLoading( title = 'Loading...' ): void {
+	static swalShowLoading( title = __( 'Loading...' ) ): void {
 		Swal.fire( {
 			title,
 			didOpen: () => {
@@ -34,19 +35,19 @@ class WoocartBridgeHelpers {
 		let text = '';
 
 		if ( jqXhr.status === 0 ) {
-			text = 'Not connect: Verify Network.';
+			text = __( 'Not connected. Verify your network connection.' );
 		} else if ( jqXhr.status === 404 ) {
-			text = 'Requested page not found [404].';
+			text = __( 'Requested page not found [404].' );
 		} else if ( jqXhr.status === 500 ) {
-			text = 'Internal Server Error [500].';
+			text = __( 'Internal server error [500].' );
 		} else if ( textStatus === 'parsererror' ) {
-			text = 'Requested JSON parse failed.';
+			text = __( 'Requested JSON parse failed.' );
 		} else if ( textStatus === 'timeout' ) {
-			text = 'Time out error.';
+			text = __( 'Timeout error.' );
 		} else if ( textStatus === 'abort' ) {
-			text = 'Ajax request aborted.';
+			text = __( 'Ajax request aborted.' );
 		} else {
-			text = 'Uncaught Error: ' + ( jqXhr.responseText ?? '' );
+			text = `${__( 'Uncaught error:' )} ${jqXhr.responseText ?? ''}`;
 		}
 
 		if ( jqXhr.status === 422 ) {
@@ -64,10 +65,10 @@ class WoocartBridgeHelpers {
 			}, '<ul class="list-group" style="text-align: left">' ) + '</ul>';
 
 			Swal.fire( {
-				title: 'Missing data to add and review',
+				title: __( 'Review the highlighted issues' ),
 				html: sanitizedErrorsHtml,
 				width: 'auto',
-				confirmButtonText: 'Ok',
+				confirmButtonText: __( 'OK' ),
 				icon: 'warning',
 			} );
 
@@ -76,9 +77,9 @@ class WoocartBridgeHelpers {
 
 		Swal.fire( {
 			icon: 'error',
-			title: 'Oops...',
+			title: __( 'Oops...' ),
 			text,
-			footer: '<a href>Why do I have this issue?</a>',
+			footer: `<a href>${__( 'Why do I have this issue?' )}</a>`,
 		} );
 	}
 

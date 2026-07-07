@@ -30,8 +30,8 @@ class Settings {
 	protected static array $defaults = [
 		'export_enabled'     => true,
 		'import_enabled'     => true,
-		'export_button_text' => 'Exportar carrito',
-		'import_button_text' => 'Importar carrito',
+		'export_button_text' => 'Export cart',
+		'import_button_text' => 'Import cart',
 		'logged_in_only'     => false,
 		'import_mode'        => 'merge',
 		'button_location'    => 'woocommerce_after_cart_table',
@@ -54,7 +54,31 @@ class Settings {
 
 		$settings = array_merge( static::$defaults, $options );
 
-		return array_key_exists( $key, $settings ) ? $settings[ $key ] : $default;
+		if ( ! array_key_exists( $key, $settings ) ) {
+			return $default;
+		}
+
+		if ( ! array_key_exists( $key, $options ) ) {
+			return static::translate_default( $key, $settings[ $key ] );
+		}
+
+		return $settings[ $key ];
+	}
+
+	/**
+	 * Translates visible default setting values while preserving saved options as-is.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return mixed
+	 */
+	private static function translate_default( string $key, mixed $value ): mixed {
+		return match ( $key ) {
+			'export_button_text' => __( 'Export cart', 'woocart-bridge' ),
+			'import_button_text' => __( 'Import cart', 'woocart-bridge' ),
+			default              => $value,
+		};
 	}
 
 }

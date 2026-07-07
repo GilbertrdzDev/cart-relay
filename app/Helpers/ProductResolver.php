@@ -85,14 +85,27 @@ class ProductResolver {
 			$product = self::find_by_id( $variation_id );
 
 			if ( ! $product ) {
-				$errors[] = sprintf( 'Variación no encontrada para el ID %d.', $variation_id );
+				$errors[] = sprintf(
+					/* translators: %d: WooCommerce variation ID. */
+					__( 'Variation not found for ID %d.', 'woocart-bridge' ),
+					$variation_id
+				);
 			} elseif ( ! $product->is_type( 'variation' ) ) {
-				$errors[] = sprintf( 'El ID %d no corresponde a una variación.', $variation_id );
+				$errors[] = sprintf(
+					/* translators: %d: WooCommerce product ID. */
+					__( 'ID %d does not match a variation.', 'woocart-bridge' ),
+					$variation_id
+				);
 			} else {
 				$parent_id = (int) $product->get_parent_id();
 
 				if ( $product_id > 0 && $parent_id !== $product_id ) {
-					$errors[] = sprintf( 'La variación %d no pertenece al producto %d.', $variation_id, $product_id );
+					$errors[] = sprintf(
+						/* translators: 1: WooCommerce variation ID, 2: WooCommerce product ID. */
+						__( 'Variation %1$d does not belong to product %2$d.', 'woocart-bridge' ),
+						$variation_id,
+						$product_id
+					);
 				}
 
 				$product_id = $parent_id;
@@ -101,7 +114,11 @@ class ProductResolver {
 			$product = self::find_by_id( $product_id );
 
 			if ( ! $product ) {
-				$errors[] = sprintf( 'Producto no encontrado para el ID %d.', $product_id );
+				$errors[] = sprintf(
+					/* translators: %d: WooCommerce product ID. */
+					__( 'Product not found for ID %d.', 'woocart-bridge' ),
+					$product_id
+				);
 			} elseif ( $product->is_type( 'variation' ) ) {
 				$variation_id = $product->get_id();
 				$product_id   = (int) $product->get_parent_id();
@@ -110,7 +127,11 @@ class ProductResolver {
 			$product = self::find_by_sku( $sku );
 
 			if ( ! $product ) {
-				$errors[] = sprintf( 'Producto no encontrado para el SKU %s.', $sku );
+				$errors[] = sprintf(
+					/* translators: %s: WooCommerce product SKU. */
+					__( 'Product not found for SKU %s.', 'woocart-bridge' ),
+					$sku
+				);
 			} elseif ( $product->is_type( 'variation' ) ) {
 				$variation_id = $product->get_id();
 				$product_id   = (int) $product->get_parent_id();
@@ -118,17 +139,17 @@ class ProductResolver {
 				$product_id = $product->get_id();
 			}
 		} else {
-			$errors[] = 'La fila debe incluir product_id, variation_id o sku.';
+			$errors[] = __( 'The row must include product_id, variation_id, or sku.', 'woocart-bridge' );
 		}
 
 		if ( $product && $variation_id === 0 && $product->is_type( 'variable' ) ) {
-			$errors[] = 'El producto variable requiere variation_id.';
+			$errors[] = __( 'Variable products require variation_id.', 'woocart-bridge' );
 		}
 
 		if ( $product ) {
 			$errors = array_merge( $errors, self::validate( $product, $quantity ) );
 		} elseif ( $quantity <= 0 ) {
-			$errors[] = 'La cantidad debe ser mayor que cero.';
+			$errors[] = __( 'Quantity must be greater than zero.', 'woocart-bridge' );
 		}
 
 		return [
@@ -153,29 +174,29 @@ class ProductResolver {
 		$errors = [];
 
 		if ( $product->get_id() <= 0 ) {
-			$errors[] = 'El producto no existe.';
+			$errors[] = __( 'The product does not exist.', 'woocart-bridge' );
 		}
 
 		if ( $product->get_status() !== 'publish' ) {
-			$errors[] = 'El producto no está publicado.';
+			$errors[] = __( 'The product is not published.', 'woocart-bridge' );
 		}
 
 		if ( ! $product->is_purchasable() ) {
-			$errors[] = 'El producto no se puede comprar.';
+			$errors[] = __( 'The product cannot be purchased.', 'woocart-bridge' );
 		}
 
 		if ( $quantity <= 0 ) {
-			$errors[] = 'La cantidad debe ser mayor que cero.';
+			$errors[] = __( 'Quantity must be greater than zero.', 'woocart-bridge' );
 		}
 
 		if ( ! $product->is_in_stock() ) {
-			$errors[] = 'El producto no tiene stock.';
+			$errors[] = __( 'The product is out of stock.', 'woocart-bridge' );
 		} elseif ( $quantity > 0 && ! $product->has_enough_stock( $quantity ) ) {
-			$errors[] = 'El producto no tiene stock suficiente.';
+			$errors[] = __( 'The product does not have enough stock.', 'woocart-bridge' );
 		}
 
 		if ( ! $product->is_type( [ 'simple', 'variation' ] ) ) {
-			$errors[] = 'Solo se soportan productos simples o variaciones específicas.';
+			$errors[] = __( 'Only simple products or specific variations are supported.', 'woocart-bridge' );
 		}
 
 		return $errors;

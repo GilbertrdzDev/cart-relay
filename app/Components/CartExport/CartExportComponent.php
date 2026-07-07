@@ -26,8 +26,10 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 			'woocart-bridge-front-js',
 			'resources/assets/front/js/app-front.ts',
 			[
-				'in-footer' => true,
-				'condition' => [ self::class, 'should_enqueue_assets' ],
+				'in-footer'   => true,
+				'condition'   => [ self::class, 'should_enqueue_assets' ],
+				'dependencies' => [ 'wp-i18n' ],
+				'text-domain' => 'woocart-bridge',
 			]
 		);
 	}
@@ -56,7 +58,7 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 		return ComponentCompiler::get_instance()->render(
 			'cart.export-button',
 			[
-				'button_text' => Settings::get( 'export_button_text', 'Exportar carrito' ),
+				'button_text' => Settings::get( 'export_button_text', __( 'Export cart', 'woocart-bridge' ) ),
 				'export_url'  => self::get_export_url(),
 			]
 		);

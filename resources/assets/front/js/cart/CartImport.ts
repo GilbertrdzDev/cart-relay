@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import { WoocartBridgeHelpers } from '@helpers/utils/WoocartBridgeHelpers';
+import { __, _n, sprintf } from '@helpers/utils/i18n';
 
 declare global {
 	interface Window {
@@ -135,7 +136,7 @@ class CartImport {
 		if ( ! this.isCsvFile( file ) ) {
 			this.renderSummary( form, {
 				added: 0,
-				errors: [ { row: 0, message: 'Selecciona un archivo .csv válido.' } ],
+				errors: [ { row: 0, message: __( 'Select a valid .csv file.' ) } ],
 			} );
 			return;
 		}
@@ -162,7 +163,7 @@ class CartImport {
 		if ( ! file ) {
 			this.renderSummary( form, {
 				added: 0,
-				errors: [ { row: 0, message: 'Selecciona un archivo CSV antes de continuar.' } ],
+				errors: [ { row: 0, message: __( 'Select a CSV file before continuing.' ) } ],
 			} );
 			return;
 		}
@@ -172,7 +173,7 @@ class CartImport {
 		formData.append( 'nonce', this.getDatasetValue( form, 'previewNonce' ) );
 		formData.append( 'csv_file', file );
 
-		WoocartBridgeHelpers.swalShowLoading( 'Leyendo CSV...' );
+		WoocartBridgeHelpers.swalShowLoading( __( 'Reading CSV...' ) );
 
 		const payload = await this.postFormData<PreviewResponse>( form, formData );
 
@@ -193,8 +194,11 @@ class CartImport {
 			showCloseButton: true,
 			showCancelButton: true,
 			showConfirmButton: canImport,
-			confirmButtonText: `Importar ${response.items.length} productos`,
-			cancelButtonText: 'Cancelar',
+			confirmButtonText: sprintf(
+				_n( 'Import %d product', 'Import %d products', response.items.length ),
+				response.items.length
+			),
+			cancelButtonText: __( 'Cancel' ),
 			buttonsStyling: false,
 			customClass: {
 				popup: 'wcb-import-preview-modal',
@@ -216,7 +220,7 @@ class CartImport {
 		const errors: RowError[] = [];
 		let added = 0;
 
-		WoocartBridgeHelpers.swalShowLoading( 'Importando productos...' );
+		WoocartBridgeHelpers.swalShowLoading( __( 'Importing products...' ) );
 		this.updateProgress( 0, items.length, added, errors.length );
 
 		for ( let index = 0; index < chunks.length; index++ ) {
@@ -238,7 +242,7 @@ class CartImport {
 
 		await Swal.fire( {
 			icon: errors.length > 0 ? 'warning' : 'success',
-			title: errors.length > 0 ? 'Importación finalizada con errores' : 'Carrito importado',
+			title: errors.length > 0 ? __( 'Import completed with issues' ) : __( 'Cart imported' ),
 			timer: 1700,
 			showConfirmButton: false,
 		} );
@@ -299,7 +303,7 @@ class CartImport {
 				status,
 				responseText,
 				responseJSON: {
-					errors: errors.length > 0 ? errors : [ 'No se pudo procesar la solicitud.' ],
+					errors: errors.length > 0 ? errors : [ __( 'The request could not be processed.' ) ],
 				},
 			},
 			'error'
@@ -335,25 +339,25 @@ class CartImport {
 		return `
 			<div class="wcb-import-preview">
 				<div class="wcb-import-preview__header">
-					<h2>Vista previa de importación</h2>
-					<p>Revisa los productos antes de añadirlos a WooCommerce.</p>
+					<h2>${__( 'Import preview' )}</h2>
+					<p>${__( 'Review products before adding them to WooCommerce.' )}</p>
 				</div>
 				<div class="wcb-import-preview__summary">
 					<div class="wcb-import-preview__badges">
 						<span class="wcb-import-preview__badge wcb-import-preview__badge--ok">
 							<span aria-hidden="true"></span>
-							<strong>${response.items.length}</strong> válidos
+							<strong>${response.items.length}</strong> ${__( 'valid' )}
 						</span>
 						<span class="wcb-import-preview__badge wcb-import-preview__badge--error">
 							<span aria-hidden="true"></span>
-							<strong>${response.errors.length}</strong> con error
+							<strong>${response.errors.length}</strong> ${_n( 'with issue', 'with issues', response.errors.length )}
 						</span>
 						<span class="wcb-import-preview__badge wcb-import-preview__badge--total">
-							<strong>${totalItems}</strong> en total
+							<strong>${totalItems}</strong> ${__( 'total' )}
 						</span>
 					</div>
 					<div class="wcb-import-preview__amount">
-						<span>Importe a importar</span>
+						<span>${__( 'Amount to import' )}</span>
 						<strong>${WoocartBridgeHelpers.escapeHtml( totalAmount )}</strong>
 					</div>
 				</div>
@@ -361,12 +365,12 @@ class CartImport {
 					<table class="wcb-import-preview-table">
 						<thead>
 							<tr>
-								<th>Producto</th>
-								<th>Producto / variación</th>
-								<th>Cant.</th>
-								<th>Precio</th>
-								<th>Subtotal</th>
-								<th>Estado</th>
+								<th>${__( 'Product' )}</th>
+								<th>${__( 'Product / variation' )}</th>
+								<th>${__( 'Qty.' )}</th>
+								<th>${__( 'Price' )}</th>
+								<th>${__( 'Subtotal' )}</th>
+								<th>${__( 'Status' )}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -392,7 +396,7 @@ class CartImport {
 				<td class="wcb-import-preview-table__number">${item.quantity}</td>
 				<td class="wcb-import-preview-table__number">${WoocartBridgeHelpers.escapeHtml( item.price )}</td>
 				<td class="wcb-import-preview-table__number"><strong>${WoocartBridgeHelpers.escapeHtml( item.subtotal )}</strong></td>
-				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--ok">Listo</span></td>
+				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--ok">${__( 'Ready' )}</span></td>
 			</tr>
 		`;
 	}
@@ -404,7 +408,7 @@ class CartImport {
 					<div class="wcb-import-preview-product">
 						<span class="wcb-import-preview-product__fallback">!</span>
 						<div class="wcb-import-preview-product__meta">
-							<strong>Fila ${error.row > 0 ? error.row : '-'}</strong>
+							<strong>${error.row > 0 ? sprintf( __( 'Row %d' ), error.row ) : '-'}</strong>
 							<span class="wcb-import-preview-product__error">${WoocartBridgeHelpers.escapeHtml( error.message )}</span>
 						</div>
 					</div>
@@ -413,7 +417,7 @@ class CartImport {
 				<td class="wcb-import-preview-table__number">-</td>
 				<td class="wcb-import-preview-table__number">-</td>
 				<td class="wcb-import-preview-table__number">-</td>
-				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--error">Con error</span></td>
+				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--error">${__( 'With issue' )}</span></td>
 			</tr>
 		`;
 	}
@@ -453,25 +457,32 @@ class CartImport {
 
 	private renderPreviewFooterNote( errorCount: number ): string {
 		if ( errorCount === 0 ) {
-			return 'Todos los productos válidos se incluirán en la importación.';
+			return __( 'All valid products will be included in the import.' );
 		}
 
-		return `Los ${errorCount} productos con error se omitirán en la importación.`;
+		return sprintf(
+			_n(
+				'%d product with an issue will be skipped during import.',
+				'%d products with issues will be skipped during import.',
+				errorCount
+			),
+			errorCount
+		);
 	}
 
 	private updateProgress( current: number, total: number, added: number, errorCount: number ): void {
 		const percent = total > 0 ? Math.round( ( current / total ) * 100 ) : 0;
 
 		Swal.update( {
-			title: `Importando productos... ${current} / ${total}`,
+			title: sprintf( __( 'Importing products... %1$d / %2$d' ), current, total ),
 			html: `
 				<div class="wcb-import-progress">
 					<div class="wcb-import-progress__track">
 						<div class="wcb-import-progress__bar" style="width: ${percent}%"></div>
 					</div>
 					<div class="wcb-import-progress__meta">
-						<span>Agregados: ${added}</span>
-						<span>Con error: ${errorCount}</span>
+						<span>${sprintf( __( 'Added: %d' ), added )}</span>
+						<span>${sprintf( __( 'With issues: %d' ), errorCount )}</span>
 					</div>
 				</div>
 			`,
@@ -487,13 +498,13 @@ class CartImport {
 
 		const errorsHtml = summary.errors.length > 0
 			? `<ul>${summary.errors.map( ( error ) => `<li>${WoocartBridgeHelpers.escapeHtml( this.formatRowError( error ) )}</li>` ).join( '' )}</ul>`
-			: '<p class="wcb-import-summary__success">Todos los productos se agregaron correctamente.</p>';
+			: `<p class="wcb-import-summary__success">${__( 'All products were added successfully.' )}</p>`;
 
 		summaryElement.hidden = false;
 		summaryElement.innerHTML = `
-			<h3>Resumen de importación</h3>
-			<p>Productos agregados: <strong>${summary.added}</strong></p>
-			<p>Con error: <strong>${summary.errors.length}</strong></p>
+			<h3>${__( 'Import summary' )}</h3>
+			<p>${sprintf( __( 'Products added: %d' ), summary.added )}</p>
+			<p>${sprintf( __( 'With issues: %d' ), summary.errors.length )}</p>
 			${errorsHtml}
 		`;
 	}
@@ -632,7 +643,7 @@ class CartImport {
 	}
 
 	private formatCurrency( value: number ): string {
-		return value.toLocaleString( 'es-ES', {
+		return value.toLocaleString( document.documentElement.lang || navigator.language || 'en-US', {
 			minimumFractionDigits: 2,
 			maximumFractionDigits: 2,
 		} );
@@ -643,7 +654,7 @@ class CartImport {
 	}
 
 	private formatRowError( error: RowError ): string {
-		return error.row > 0 ? `Fila ${error.row}: ${error.message}` : error.message;
+		return error.row > 0 ? sprintf( __( 'Row %1$d: %2$s' ), error.row, error.message ) : error.message;
 	}
 
 	private getUploadIconPath(): string {

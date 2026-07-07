@@ -251,6 +251,7 @@ class AssetManager {
 			}
 
 			$dispatched[ $asset_key ] = true;
+			$text_domain = (string) ( $asset['options']['text-domain'] ?? '' );
 
 			$options = array_merge(
 				[
@@ -259,7 +260,7 @@ class AssetManager {
 				],
 				$asset['options']
 			);
-			unset( $options['screens'], $options['condition'] );
+			unset( $options['screens'], $options['condition'], $options['text-domain'] );
 
 			Vite\enqueue_asset(
 				$this->trailingslash( $this->base_path ) . trim( $this->dist_path, '/\\' ),
@@ -272,6 +273,14 @@ class AssetManager {
 					$asset['handle'],
 					$asset['localize']['object_name'],
 					$asset['localize']['data']
+				);
+			}
+
+			if ( $text_domain !== '' && function_exists( 'wp_set_script_translations' ) ) {
+				wp_set_script_translations(
+					$asset['handle'],
+					$text_domain,
+					$this->trailingslash( $this->base_path ) . 'languages'
 				);
 			}
 		}

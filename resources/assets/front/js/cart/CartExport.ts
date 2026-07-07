@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import { WoocartBridgeHelpers } from '@helpers/utils/WoocartBridgeHelpers';
+import { __ } from '@helpers/utils/i18n';
 
 interface CartExportOptions {
 	selector?: string;
@@ -17,8 +18,8 @@ class CartExport {
 
 	constructor( {
 		selector = '[data-woocart-bridge-export-button]',
-		loadingText = 'Generando CSV...',
-		successTitle = 'Carrito exportado',
+		loadingText = __( 'Generating CSV...' ),
+		successTitle = __( 'Cart exported' ),
 		successDelay = 800,
 	}: CartExportOptions = {} ) {
 		this.selector = selector;

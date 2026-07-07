@@ -2,7 +2,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$button_text = isset( $button_text ) ? (string) $button_text : __( 'Exportar carrito', 'woocart-bridge' );
+$button_text = isset( $button_text ) ? (string) $button_text : __( 'Export cart', 'woocart-bridge' );
 $export_url  = isset( $export_url ) ? (string) $export_url : '#';
 ?>
 <a
