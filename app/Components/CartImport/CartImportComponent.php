@@ -217,9 +217,9 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 		$csv = Csv::build(
 			[
-				[ 'product_id', 'variation_id', 'sku', 'product_name', 'quantity', 'price', 'subtotal' ],
-				[ '123', '', 'ABC-123', 'Example simple product', '2', '19.99', '39.98' ],
-				[ '456', '789', 'XYZ-456-RED-M', 'Example variable product - Red / M', '1', '24.99', '24.99' ],
+				[ 'product_id', 'variation_id', 'sku', 'product_name', 'quantity' ],
+				[ '123', '', 'ABC-123', 'Example simple product', '2' ],
+				[ '456', '789', 'XYZ-456-RED-M', 'Example variable product - Red / M', '1' ],
 			]
 		);
 
@@ -281,8 +281,6 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 	private static function make_preview_item( int $row_number, array $resolved, WC_Product $product ): array {
 		$quantity = (int) $resolved['quantity'];
-		$price    = (float) wc_get_price_to_display( $product );
-		$subtotal = $price * $quantity;
 		$sku      = $product->get_sku() ?: (string) $resolved['sku'];
 
 		return [
@@ -292,8 +290,6 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			'sku'          => $sku,
 			'name'         => wp_strip_all_tags( $product->get_name() ),
 			'quantity'     => $quantity,
-			'price'        => wc_format_decimal( $price, wc_get_price_decimals() ),
-			'subtotal'     => wc_format_decimal( $subtotal, wc_get_price_decimals() ),
 			'image'        => self::get_product_image_url( $product ),
 			'permalink'    => $product->get_permalink(),
 		];

@@ -436,28 +436,6 @@
 	color: #50575e;
 }
 
-.wcb-import-preview__amount {
-	display: grid;
-	gap: 4px;
-	text-align: right;
-}
-
-.wcb-import-preview__amount span {
-	color: #646970;
-	font-size: 12px;
-	font-weight: 600;
-	line-height: 1;
-	text-transform: uppercase;
-	letter-spacing: 0.06em;
-}
-
-.wcb-import-preview__amount strong {
-	color: #1e1e1e;
-	font-size: 21px;
-	font-weight: 700;
-	line-height: 1;
-}
-
 .wcb-import-preview-table-wrapper {
 	max-height: 344px;
 	overflow-y: auto;
@@ -861,12 +839,8 @@
 		padding: 16px 18px;
 	}
 
-	.wcb-import-preview__amount {
-		text-align: left;
-	}
-
 	.wcb-import-preview-table {
-		min-width: 860px;
+		min-width: 660px;
 	}
 
 	.wcb-import-preview-table th:first-child,

@@ -27,8 +27,6 @@ interface ImportItem {
 	sku: string;
 	name: string;
 	quantity: number;
-	price: string;
-	subtotal: string;
 	image: string;
 	permalink: string;
 }
@@ -326,9 +324,6 @@ class CartImport {
 
 	private renderPreviewModal( response: PreviewResponse ): string {
 		const totalItems = response.items.length + response.errors.length;
-		const totalAmount = this.formatCurrency(
-			response.items.reduce( ( total, item ) => total + this.parseDecimal( item.subtotal ), 0 )
-		);
 
 		return `
 			<div class="wcb-import-preview">
@@ -350,10 +345,6 @@ class CartImport {
 							<strong>${totalItems}</strong> ${__( 'total' )}
 						</span>
 					</div>
-					<div class="wcb-import-preview__amount">
-						<span>${__( 'Amount to import' )}</span>
-						<strong>${WoocartBridgeHelpers.escapeHtml( totalAmount )}</strong>
-					</div>
 				</div>
 				<div class="wcb-import-preview-table-wrapper">
 					<table class="wcb-import-preview-table">
@@ -362,8 +353,6 @@ class CartImport {
 								<th>${__( 'Product' )}</th>
 								<th>${__( 'Product / variation' )}</th>
 								<th>${__( 'Qty.' )}</th>
-								<th>${__( 'Price' )}</th>
-								<th>${__( 'Subtotal' )}</th>
 								<th>${__( 'Status' )}</th>
 							</tr>
 						</thead>
@@ -388,8 +377,6 @@ class CartImport {
 				</td>
 				<td>${this.renderProductVariationLink( item )}</td>
 				<td class="wcb-import-preview-table__number">${item.quantity}</td>
-				<td class="wcb-import-preview-table__number">${WoocartBridgeHelpers.escapeHtml( item.price )}</td>
-				<td class="wcb-import-preview-table__number"><strong>${WoocartBridgeHelpers.escapeHtml( item.subtotal )}</strong></td>
 				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--ok">${__( 'Ready' )}</span></td>
 			</tr>
 		`;
@@ -408,8 +395,6 @@ class CartImport {
 					</div>
 				</td>
 				<td>-</td>
-				<td class="wcb-import-preview-table__number">-</td>
-				<td class="wcb-import-preview-table__number">-</td>
 				<td class="wcb-import-preview-table__number">-</td>
 				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--error">${__( 'With issue' )}</span></td>
 			</tr>
@@ -680,20 +665,6 @@ class CartImport {
 				${label}
 			</a>
 		`;
-	}
-
-	private parseDecimal( value: string ): number {
-		const normalized = value.replace( /[^\d,.-]/g, '' ).replace( ',', '.' );
-		const parsed = Number.parseFloat( normalized );
-
-		return Number.isFinite( parsed ) ? parsed : 0;
-	}
-
-	private formatCurrency( value: number ): string {
-		return value.toLocaleString( document.documentElement.lang || navigator.language || 'en-US', {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		} );
 	}
 
 	private getInitial( value: string ): string {
