@@ -20,4 +20,22 @@ export default defineConfig( {
       '@styles': fileURLToPath( new URL( './resources/assets', import.meta.url ) ),
     },
   },
+  server: {
+    host: 'localhost',
+    port: 5173,
+    strictPort: true,
+    cors: {
+      origin: [
+        'https://wptest.test',
+        'http://wptest.test',
+        'http://localhost',
+        'http://127.0.0.1',
+      ],
+      credentials: true,
+    },
+    hmr: {
+      host: 'localhost',
+      protocol: 'ws',
+    },
+  },
 } );
