@@ -28,14 +28,27 @@ interface ImportItem {
 	sku: string;
 	name: string;
 	quantity: number;
+	price: number;
+	subtotal: number;
 	image: string;
 	permalink: string;
+}
+
+type ImportChunkItem = Pick<ImportItem, 'row' | 'product_id' | 'variation_id' | 'sku' | 'quantity'>;
+
+interface PreviewCurrency {
+	code: string;
+	symbol: string;
+	decimal_separator: string;
+	thousand_separator: string;
+	decimals: number;
 }
 
 interface PreviewResponse {
 	items: ImportItem[];
 	errors: RowError[];
 	import_mode: string;
+	currency?: PreviewCurrency;
 }
 
 interface UpdatedCartItem {
@@ -333,7 +346,8 @@ class CartImport {
 	}
 
 	private async importChunks( form: HTMLElement, items: ImportItem[] ): Promise<void> {
-		const chunks = this.chunkItems( items );
+		const payloadItems = this.getImportPayloadItems( items );
+		const chunks = this.chunkItems( payloadItems );
 		const errors: RowError[] = [];
 		const updatedItems: UpdatedCartItem[] = [];
 		let added = 0;
@@ -366,7 +380,7 @@ class CartImport {
 
 	private async importChunk(
 		form: HTMLElement,
-		chunk: ImportItem[],
+		chunk: ImportChunkItem[],
 		index: number,
 		totalChunks: number
 	): Promise<ChunkResponse | null> {
@@ -401,8 +415,8 @@ class CartImport {
 	private parseAjaxResponse<T>( responseText: string ): AjaxResponse<T> | null {
 		try {
 			return JSON.parse( responseText ) as AjaxResponse<T>;
-		} catch ( error ) {
-			console.error( 'Invalid AJAX response', error, responseText );
+		} catch {
+			console.error( 'Invalid AJAX response', responseText );
 			return null;
 		}
 	}
@@ -445,6 +459,7 @@ class CartImport {
 
 	private renderPreviewModal( response: PreviewResponse ): string {
 		const totalItems = response.items.length + response.errors.length;
+		const totalAmount = response.items.reduce( ( total, item ) => total + this.getNumber( item.subtotal ), 0 );
 
 		return `
 			<div class="wcb-import-preview">
@@ -466,6 +481,10 @@ class CartImport {
 							<strong>${totalItems}</strong> ${__( 'total' )}
 						</span>
 					</div>
+					<div class="wcb-import-preview__amount">
+						<span>${__( 'Amount to import' )}</span>
+						<strong>${this.formatCurrency( totalAmount, response.currency )}</strong>
+					</div>
 				</div>
 				<div class="wcb-import-preview-table-wrapper">
 					<table class="wcb-import-preview-table">
@@ -474,11 +493,13 @@ class CartImport {
 								<th>${__( 'Product' )}</th>
 								<th>${__( 'Product / variation' )}</th>
 								<th>${__( 'Qty.' )}</th>
+								<th>${__( 'Price' )}</th>
+								<th>${__( 'Subtotal' )}</th>
 								<th>${__( 'Status' )}</th>
 							</tr>
 						</thead>
 						<tbody>
-							${response.items.map( ( item ) => this.renderPreviewRow( item ) ).join( '' )}
+							${response.items.map( ( item ) => this.renderPreviewRow( item, response.currency ) ).join( '' )}
 							${response.errors.map( ( error ) => this.renderPreviewErrorRow( error ) ).join( '' )}
 						</tbody>
 					</table>
@@ -490,7 +511,7 @@ class CartImport {
 		`;
 	}
 
-	private renderPreviewRow( item: ImportItem ): string {
+	private renderPreviewRow( item: ImportItem, currency?: PreviewCurrency ): string {
 		return `
 			<tr>
 				<td>
@@ -498,6 +519,8 @@ class CartImport {
 				</td>
 				<td>${this.renderProductVariationLink( item )}</td>
 				<td class="wcb-import-preview-table__number">${item.quantity}</td>
+				<td class="wcb-import-preview-table__number">${this.formatCurrency( item.price, currency )}</td>
+				<td class="wcb-import-preview-table__number"><strong>${this.formatCurrency( item.subtotal, currency )}</strong></td>
 				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--ok">${__( 'Ready' )}</span></td>
 			</tr>
 		`;
@@ -516,6 +539,8 @@ class CartImport {
 					</div>
 				</td>
 				<td>-</td>
+				<td class="wcb-import-preview-table__number">-</td>
+				<td class="wcb-import-preview-table__number">-</td>
 				<td class="wcb-import-preview-table__number">-</td>
 				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--error">${__( 'With issue' )}</span></td>
 			</tr>
@@ -727,8 +752,8 @@ class CartImport {
 		}
 	}
 
-	private chunkItems( items: ImportItem[] ): ImportItem[][] {
-		const chunks: ImportItem[][] = [];
+	private chunkItems<T>( items: T[] ): T[][] {
+		const chunks: T[][] = [];
 
 		for ( let index = 0; index < items.length; index += this.chunkSize ) {
 			chunks.push( items.slice( index, index + this.chunkSize ) );
@@ -759,6 +784,39 @@ class CartImport {
 		}
 
 		return `${( size / 1024 / 1024 ).toFixed( 1 )} MB`;
+	}
+
+	private getImportPayloadItems( items: ImportItem[] ): ImportChunkItem[] {
+		return items.map( ( item ) => ( {
+			row: item.row,
+			product_id: item.product_id,
+			variation_id: item.variation_id,
+			sku: item.sku,
+			quantity: item.quantity,
+		} ) );
+	}
+
+	private formatCurrency( value: number, currency?: PreviewCurrency ): string {
+		const amount = this.getNumber( value );
+		const decimals = currency?.decimals ?? 2;
+		const currencyCode = currency?.code || 'USD';
+		const currencySymbol = currency?.symbol || '$';
+		const decimalSeparator = currency?.decimal_separator || '.';
+		const thousandSeparator = currency?.thousand_separator || ',';
+		const fixedAmount = amount.toFixed( decimals );
+		const [ integerPart, decimalPart = '' ] = fixedAmount.split( '.' );
+		const formattedInteger = integerPart.replace( /\B(?=(\d{3})+(?!\d))/g, thousandSeparator );
+		const formattedAmount = decimals > 0
+			? `${formattedInteger}${decimalSeparator}${decimalPart}`
+			: formattedInteger;
+
+		return `${currencySymbol} ${formattedAmount} ${currencyCode}`;
+	}
+
+	private getNumber( value: unknown ): number {
+		const numberValue = typeof value === 'number' ? value : Number( value );
+
+		return Number.isFinite( numberValue ) ? numberValue : 0;
 	}
 
 	private formatProductVariationId( item: ImportItem ): string {

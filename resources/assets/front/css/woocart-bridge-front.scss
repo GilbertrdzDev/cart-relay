@@ -391,6 +391,29 @@
 	gap: 10px;
 }
 
+.wcb-import-preview__amount {
+	display: grid;
+	gap: 4px;
+	text-align: right;
+}
+
+.wcb-import-preview__amount span {
+	color: #646970;
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 1;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.wcb-import-preview__amount strong {
+	color: #111827;
+	font-size: 20px;
+	font-weight: 800;
+	line-height: 1.1;
+	letter-spacing: 0;
+}
+
 .wcb-import-preview__badge {
 	display: inline-flex;
 	align-items: center;
@@ -838,8 +861,12 @@
 		padding: 16px 18px;
 	}
 
+	.wcb-import-preview__amount {
+		text-align: left;
+	}
+
 	.wcb-import-preview-table {
-		min-width: 660px;
+		min-width: 840px;
 	}
 
 	.wcb-import-preview-table th:first-child,

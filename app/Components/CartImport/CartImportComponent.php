@@ -139,6 +139,13 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 				'items'       => $items,
 				'errors'      => $errors,
 				'import_mode' => self::get_import_mode(),
+				'currency'    => [
+					'code'              => get_woocommerce_currency(),
+					'symbol'            => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' ),
+					'decimal_separator' => wc_get_price_decimal_separator(),
+					'thousand_separator' => wc_get_price_thousand_separator(),
+					'decimals'          => wc_get_price_decimals(),
+				],
 			]
 		);
 	}
@@ -285,6 +292,8 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 	private static function make_preview_item( int $row_number, array $resolved, WC_Product $product ): array {
 		$quantity = (int) $resolved['quantity'];
 		$sku      = $product->get_sku() ?: (string) $resolved['sku'];
+		$price    = (float) wc_get_price_to_display( $product );
+		$subtotal = (float) wc_get_price_to_display( $product, [ 'qty' => $quantity ] );
 
 		return [
 			'row'          => $row_number,
@@ -293,6 +302,8 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			'sku'          => $sku,
 			'name'         => wp_strip_all_tags( $product->get_name() ),
 			'quantity'     => $quantity,
+			'price'        => $price,
+			'subtotal'     => $subtotal,
 			'image'        => self::get_product_image_url( $product ),
 			'permalink'    => $product->get_permalink(),
 		];
