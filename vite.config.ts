@@ -1,9 +1,11 @@
 import { v4wp } from '@kucrut/vite-for-wp';
 import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'node:url';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig( {
   plugins: [
+    tailwindcss(),
     v4wp({
       input: {
         admin: 'resources/assets/admin/js/app-admin.ts',

@@ -18,13 +18,7 @@ class Admin {
 	}
 
 	public function registerAssets(): void {
-		$this->plugin->getAssetManager()->admin_vite(
-			"{$this->plugin->getName()}-admin-js",
-			'resources/assets/admin/js/app-admin.ts',
-			[
-				'in-footer' => true,
-			]
-		);
+		// Admin assets are registered by components so they can be scoped to their screens.
 	}
 
 	public function registerHooks(): void {
