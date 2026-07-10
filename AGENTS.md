@@ -16,6 +16,17 @@ PHP source lives in `app/` under the `WoocartBridge\App\` PSR-4 namespace. Core 
 
 Node must satisfy `^20.19.0 || >=22.12.0`. PHP must be `>=8.2`.
 
+## Local WordPress Runtime
+
+This plugin repository is symlinked into the plugins directory of a local WordPress install at `C:\laragon\www\wptest`. The local site URL is `https://wptest.test`.
+
+When validation needs WordPress, WooCommerce, database, or plugin state, use WP-CLI from the WordPress root. The `wp` command is already available through the system `PATH`; call `wp` directly rather than referencing `wp.bat`, for example:
+
+```powershell
+cd C:\laragon\www\wptest
+wp plugin status woocart-bridge
+```
+
 ## Coding Style & Naming Conventions
 
 Follow the existing WordPress-oriented PHP style: tabs for indentation in PHP files, spaced WordPress function calls such as `defined( 'ABSPATH' ) || exit;`, and English comments for primary classes, methods, and functions. Keep classes namespaced under `WoocartBridge\App\` and name files after their classes, for example `app/Core/AssetManager.php`.

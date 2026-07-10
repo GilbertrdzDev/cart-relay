@@ -6,6 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 WooCart Bridge is a WordPress plugin (PHP >= 8.2) whose purpose is importing/exporting WooCommerce carts via simple CSV files (SKU + quantity). The plugin scaffolding (Core, Loader, AssetManager, Component system) is in place, but the CSV import/export feature itself has not yet been implemented — `app/Components/` is currently an empty scaffold directory.
 
+## Local WordPress environment
+
+This working directory (`C:\devs\wordpress\plugins\woocart-bridge`) is symlinked into a local Laragon WordPress install's plugins folder at `C:\laragon\www\wptest\wp-content\plugins\woocart-bridge`. The site is served locally at `https://wptest.test`.
+
+WP-CLI is on the system PATH (as `wp`) for validating/testing the plugin against the live local site (e.g. checking hooks, options, running the plugin's activation/deactivation, inspecting DB state). Run it from the WordPress root (`C:\laragon\www\wptest`), e.g.:
+```
+wp plugin list --path=C:\laragon\www\wptest
+wp eval 'echo "test";' --path=C:\laragon\www\wptest
+```
+
 ## Commands
 
 Backend (PHP, via Composer):
@@ -74,3 +84,38 @@ Singleton PHP template renderer (accessed as `Plugin::$component`). `render('som
 
 ## Comment style (from user's global CLAUDE.md)
 Comments must be in English. Only document methods/functions/classes and other primary code elements — no line-by-line inline comments.
+
+## Uso automático de Codex
+
+- Claude decide de forma autónoma cuándo usar Codex, sin pedir permiso, siempre que su uso mejore la calidad del resultado.
+- Usa Codex como revisor externo por defecto: el review-gate de Codex está habilitado por defecto en este proyecto.
+- Flujo de trabajo: Claude Code implementa primero, y luego usa Codex para revisar, cuestionar o rescatar la implementación cuando corresponda.
+- Después de implementar cambios medianos o grandes, ejecuta:
+  ```
+  /codex:review --background
+  ```
+- Ejecuta esa revisión especialmente cuando se modifica: lógica de negocio, imports/exports de carritos (CSV), hooks, AJAX, REST API, validaciones, permisos, nonces, sanitización, base de datos, configuración de build o tests.
+- Para cambios riesgosos ejecuta:
+  ```
+  /codex:adversarial-review --base main --background
+  ```
+- Considera "cambios riesgosos" todo lo relacionado con: carrito (cart), orders, shipping, product meta, import/export CSV, admin pages, AJAX actions, REST endpoints, database schema, permissions, nonces, sanitización, validación, y compatibilidad con comportamiento existente.
+- Usa Codex Rescue cuando te atasques, cuando haya bugs difíciles, o cuando necesites una segunda propuesta de implementación:
+  ```
+  /codex:rescue --background --fresh "<descripción clara del problema>"
+  ```
+- Usa Rescue especialmente cuando: no encuentres la causa raíz después de 2 intentos, un test siga fallando, el bug toque varios archivos, o haya incertidumbre técnica.
+- Cuando lances un job en background, revisa siempre el resultado antes de cerrar la tarea:
+  ```
+  /codex:status
+  /codex:result
+  ```
+- Si Codex encuentra problemas reales, corrígelos.
+- No uses Codex para cambios mínimos como typos, formateo simple, renombres locales, comentarios o cambios visuales sin lógica.
+- Valida siempre con los comandos disponibles del proyecto (`composer install`, `npm run build`, typecheck) o ejecución local cuando aplique.
+- Antes de finalizar cualquier tarea, entrega un resumen corto indicando:
+  - qué cambiaste
+  - qué validaste
+  - si se usó Codex
+  - qué encontró Codex
+  - qué quedó pendiente, si aplica
