@@ -21,6 +21,8 @@
  * Plugin URI:        https://gilbertrdz.dev
  * Description:       WooCart Bridge Free lets customers import and export WooCommerce carts with simple CSV files using SKU and quantity.
  * Version:           1.0.0
+ * Requires PHP:      8.2
+ * WC tested up to:   10.9
  * Author:            Gilbert Rodríguez
  * Author URI:        https://gilbertrdz.dev
  * License:           GPL-2.0+
@@ -49,6 +51,19 @@ if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
 
 define( 'WOOCART_BRIDGE_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WOOCART_BRIDGE_DIR_URL', plugin_dir_url( __FILE__ ) );
+
+/**
+ * Declares compatibility with WooCommerce High-Performance Order Storage.
+ */
+add_action( 'before_woocommerce_init', static function(): void {
+	if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+			'custom_order_tables',
+			__FILE__,
+			true
+		);
+	}
+} );
 
 /**
  * Code that runs during plugin activation.
