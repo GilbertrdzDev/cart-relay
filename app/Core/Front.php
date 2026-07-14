@@ -2,6 +2,10 @@
 
 namespace WoocartBridge\App\Core;
 
+use WoocartBridge\App\Components\CartButtons\CartButtonsComponent;
+use WoocartBridge\App\Components\CartExport\CartExportComponent;
+use WoocartBridge\App\Components\CartImport\CartImportComponent;
+
 defined( 'ABSPATH' ) || exit;
 
 class Front {
@@ -16,7 +20,13 @@ class Front {
 		// Frontend assets are registered by feature components so they can load conditionally.
 	}
 
-	public function registerHooks(): void {}
+	public function registerHooks(): void {
+		$this->plugin->addComponents(
+			CartExportComponent::class,
+			CartImportComponent::class,
+			CartButtonsComponent::class
+		);
+	}
 
 	public function enqueueStyles(): void {}
 

@@ -2,6 +2,8 @@
 
 namespace WoocartBridge\App\Core;
 
+use WoocartBridge\App\Components\Admin\SettingsPageComponent;
+use WoocartBridge\App\Components\RequirementsCheck;
 use WoocartBridge\App\Helpers\PageTemplater;
 
 
@@ -22,6 +24,11 @@ class Admin {
 	}
 
 	public function registerHooks(): void {
+		$this->plugin->addComponents(
+			RequirementsCheck::class,
+			SettingsPageComponent::class
+		);
+
 		$this->plugin->getLoader()->add_action( 'after_setup_theme', [ $this, 'templates' ] );
 	}
 

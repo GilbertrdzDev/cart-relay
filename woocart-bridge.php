@@ -34,11 +34,6 @@
 use WoocartBridge\App\Core\Plugin;
 use WoocartBridge\App\Core\Activator;
 use WoocartBridge\App\Core\Deactivator;
-use WoocartBridge\App\Components\CartButtons\CartButtonsComponent;
-use WoocartBridge\App\Components\CartExport\CartExportComponent;
-use WoocartBridge\App\Components\CartImport\CartImportComponent;
-use WoocartBridge\App\Components\RequirementsCheck;
-use WoocartBridge\App\Components\Admin\SettingsPageComponent;
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -76,13 +71,5 @@ register_activation_hook( __FILE__, [ Activator::class, 'activate' ] );
 register_deactivation_hook( __FILE__, [ Deactivator::class, 'deactivate' ] );
 
 add_action( 'plugins_loaded', function() {
-	( new Plugin() )
-		->addComponents(
-			RequirementsCheck::class,
-			SettingsPageComponent::class,
-			CartExportComponent::class,
-			CartImportComponent::class,
-			CartButtonsComponent::class
-		)
-		->run();
+	( new Plugin() )->run();
 } );
