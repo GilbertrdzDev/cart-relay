@@ -6,6 +6,10 @@ WooCart Bridge is a WordPress/WooCommerce plugin for CSV cart import/export. The
 
 PHP source lives in `app/` under the `WoocartBridge\App\` PSR-4 namespace. Core bootstrapping and hook orchestration are in `app/Core/`, reusable helpers are in `app/Helpers/`, marker contracts are in `app/Interfaces/`, and feature components should be added under `app/Components/`. Views and assets live under `resources/`: PHP partials in `resources/views/`, admin and frontend Vite entries in `resources/assets/admin/js/app-admin.js` and `resources/assets/front/js/app-front.js`, and SCSS beside each bundle. WordPress page templates live in `templates/`.
 
+## Code Search
+
+Use the CocoIndex Code `ccc` skill first when exploring or searching project code. Use semantic search for unknown functionality, flows, classes, methods, implementations, or references; write concrete natural-language queries that describe the code's behavior, and add language or path filters when useful. Use structural `ccc grep` for specific syntax patterns such as method calls, class or function definitions, and similar structures. Refresh the index when it may be stale before trusting results, and inspect returned snippets and line ranges before opening complete files. Avoid broad manual `grep`, `find`, recursive directory reads, or mass file opening unless CocoIndex is unavailable or insufficient. If CocoIndex fails, run its diagnostics or check its status before falling back to manual search.
+
 ## Build, Test, and Development Commands
 
 - `composer install` installs PHP dependencies and generates autoload files.

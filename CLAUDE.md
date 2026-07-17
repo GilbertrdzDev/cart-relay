@@ -85,6 +85,19 @@ Singleton PHP template renderer (accessed as `Plugin::$component`). `render('som
 ## Comment style (from user's global CLAUDE.md)
 Comments must be in English. Only document methods/functions/classes and other primary code elements — no line-by-line inline comments.
 
+## Búsqueda de código con CocoIndex (skill `ccc`)
+
+Al explorar o buscar código dentro de este proyecto, usa primero el skill `ccc` de CocoIndex Code.
+
+- Usa la búsqueda semántica de CocoIndex para encontrar funcionalidades, flujos, clases, métodos, implementaciones o referencias cuando no se conozca su nombre o ubicación exacta.
+- Formula consultas concretas en lenguaje natural, describiendo qué hace el código buscado y no solamente palabras aisladas.
+- Utiliza filtros por lenguaje o ruta cuando ayuden a reducir los resultados.
+- Usa la búsqueda estructural `ccc grep` cuando busques patrones sintácticos concretos, como llamadas a métodos, definiciones de clases, funciones o estructuras similares.
+- Actualiza o refresca el índice cuando pueda estar desactualizado antes de confiar en los resultados.
+- Revisa primero los fragmentos y líneas retornados por CocoIndex, abriendo archivos completos únicamente cuando sea necesario.
+- Evita búsquedas manuales amplias con `grep`, `find`, lectura recursiva de carpetas o apertura masiva de archivos, salvo que CocoIndex no esté disponible o no encuentre resultados suficientes.
+- Si CocoIndex falla, ejecuta sus diagnósticos o verifica su estado antes de recurrir a búsquedas manuales.
+
 ## Uso automático de Codex
 
 - Claude decide de forma autónoma cuándo usar Codex, sin pedir permiso, siempre que su uso mejore la calidad del resultado.
