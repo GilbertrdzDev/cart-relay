@@ -48,37 +48,33 @@ class Arr {
 
 		foreach ( $arraySearch as $indice => $valor ) {
 
-			$c++;
+			++$c;
 
 			if ( $keyInValue ) {
 				if ( $search === $valor[ $keyInValue ] ) {
 					$found = true;
 					break;
 				}
-			} else {
-				if ( $search === $indice ) {
+			} elseif ( $search === $indice ) {
 					$found = true;
 					break;
-				}
 			}
-
 		}
 
 		if ( $before ) {
-			$c--;
+			--$c;
 		}
-		
+
 		if ( $found ) {
 
 			$arrLeft  = array_slice( $arraySearch, 0, $c );
 			$arrRight = array_slice( $arraySearch, $c );
 
 			$found = array_merge( $arrLeft, $arrayInsert, $arrRight );
-			
+
 		}
 
 		return $found;
-
 	}
 
 }

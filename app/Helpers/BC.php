@@ -15,26 +15,24 @@
 namespace CartRelay\App\Helpers;
 
 defined( 'ABSPATH' ) || exit;
-
 /**
  * Class BC
  * @package CartRelay\App\Helpers
  */
 class BC {
 
-	public static function parseExtraData( $extra, $delimiter = "|", $secondary_delimiter = "=", $in_object = true ) {
+
+	public static function parseExtraData( $extra, $delimiter = '|', $secondary_delimiter = '=', $in_object = true ) {
 
 		$parsed_data = [];
 		$extra       = explode( $delimiter, $extra );
-
 		foreach ( $extra as $item ) {
 			$item_part = explode( $secondary_delimiter, $item, 2 );
-
 			if ( count( $item_part ) !== 2 ) {
 				continue;
 			}
 
-			$parsed_data[ $item_part[ 0 ] ] = $item_part[ 1 ];
+			$parsed_data[ $item_part[0] ] = $item_part[1];
 		}
 
 		if ( $in_object ) {
@@ -42,7 +40,6 @@ class BC {
 		}
 
 		return $parsed_data;
-
 	}
 
 }

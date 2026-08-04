@@ -18,7 +18,6 @@ class Plugin {
 	protected AssetManager $asset_manager;
 	public ComponentCompiler $component;
 	protected string $name = 'cart-relay';
-	protected string $version = '1.0.0';
 	private array $components = [];
 
 	public function __construct() {
@@ -31,13 +30,6 @@ class Plugin {
 		$this->component     = ComponentCompiler::get_instance(
 			CART_RELAY_DIR_PATH . 'resources/views/components/'
 		);
-	}
-
-	private function setLocale(): void {
-		$plugin_i18n = new I18n();
-		$plugin_i18n->setDomain( $this->getName() );
-
-		$this->loader->add_action( 'plugins_loaded', [ $plugin_i18n, 'loadPluginTextdomain' ] );
 	}
 
 	private function setAdminHooks(): void {
@@ -76,7 +68,6 @@ class Plugin {
 	}
 
 	public function run(): void {
-		$this->setLocale();
 		$this->setAdminHooks();
 		$this->setFrontendHooks();
 		$this->registerComponents();
@@ -97,7 +88,7 @@ class Plugin {
 	}
 
 	public function getVersion(): string {
-		return $this->version;
+		return CART_RELAY_VERSION;
 	}
 
 }

@@ -26,7 +26,7 @@ class Sanitizer {
 			'absint'                  => absint( $value ),
 			'rest_sanitize_boolean',
 			'boolean'                 => rest_sanitize_boolean( $value ),
-			default                   => throw new InvalidArgumentException( "Unknown sanitizer {$strategy}." ),
+			default                   => throw new InvalidArgumentException( "Unknown sanitizer {$strategy}." ), // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 		};
 	}
 
@@ -35,7 +35,6 @@ class Sanitizer {
 			FieldType::TOGGLE => 'boolean',
 			default           => 'sanitize_text_field',
 		};
-
 	}
 
 }

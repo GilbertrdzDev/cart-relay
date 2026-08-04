@@ -35,7 +35,7 @@ class Field {
 		private readonly FieldType $type
 	) {
 		if ( ! preg_match( '/^[A-Za-z][A-Za-z0-9_-]*$/', $name ) ) {
-			throw new InvalidArgumentException( "Invalid field name {$name}." );
+			throw new InvalidArgumentException( "Invalid field name {$name}." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 		}
 
 		$this->id = 'cr-' . str_replace( '_', '-', $name );
@@ -56,8 +56,8 @@ class Field {
 		return $this;
 	}
 
-	public function default( mixed $default ): static {
-		$this->default = $default;
+	public function default( mixed $default_value ): static {
+		$this->default = $default_value;
 		return $this;
 	}
 
@@ -86,8 +86,8 @@ class Field {
 		return $this;
 	}
 
-	public function readonly( bool $readonly = true ): static {
-		$this->readonly = $readonly;
+	public function readonly( bool $is_readonly = true ): static {
+		$this->readonly = $is_readonly;
 		return $this;
 	}
 

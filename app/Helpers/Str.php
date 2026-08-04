@@ -64,7 +64,6 @@ class Str {
 		}
 
 		return static::$camelCache[ $value ] = lcfirst( static::studly( $value ) );
-
 	}
 
 	/**
@@ -93,7 +92,6 @@ class Str {
 		}
 
 		return $value;
-
 	}
 
 	/**
@@ -119,7 +117,6 @@ class Str {
 		}
 
 		return static::$snakeCache[ $key ][ $delimiter ] = $value;
-
 	}
 
 	/**
@@ -139,7 +136,6 @@ class Str {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -159,7 +155,6 @@ class Str {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -180,7 +175,6 @@ class Str {
 		$value = ucwords( str_replace( [ '-', '_' ], ' ', $value ) );
 
 		return static::$studlyCache[ $key ] = str_replace( ' ', '', $value );
-
 	}
 
 	/**
@@ -199,7 +193,6 @@ class Str {
 		$value = static::lower( $value );
 
 		return static::$ucwordsforceCache[ $key ] = ucwords( $value );
-
 	}
 
 }

@@ -45,15 +45,15 @@ class Settings {
 	 * Gets a plugin setting by key.
 	 *
 	 * @param string $key
-	 * @param mixed  $default
+	 * @param mixed  $default_value
 	 *
 	 * @return mixed
 	 */
-	public static function get( string $key, mixed $default = null ): mixed {
+	public static function get( string $key, mixed $default_value = null ): mixed {
 		$settings = static::all();
 
 		if ( ! array_key_exists( $key, $settings ) ) {
-			return $default;
+			return $default_value;
 		}
 
 		if ( ! array_key_exists( $key, static::stored() ) ) {

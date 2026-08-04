@@ -60,12 +60,14 @@ class SettingsPageComponent implements EnqueueScript, HasActions {
 		$compiler = ComponentCompiler::get_instance();
 		$form     = ( new FormRenderer( $compiler ) )->render( $this->form(), Settings::all( true ) );
 
-		echo $compiler->render(
+		$page = $compiler->render(
 			'admin.settings-page',
 			[
 				'form' => $form,
 			]
-		); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		);
+
+		echo $page; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered component escapes its leaf values.
 	}
 
 	public function handle_save(): void {
@@ -86,7 +88,7 @@ class SettingsPageComponent implements EnqueueScript, HasActions {
 		}
 
 		$submitted = isset( $_POST['settings'] ) && is_array( $_POST['settings'] )
-			? wp_unslash( $_POST['settings'] )
+			? wp_unslash( $_POST['settings'] ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- FormProcessor sanitizes every allowed field.
 			: [];
 		$form      = $this->form();
 		$result    = ( new FormProcessor() )->process( $form, $submitted );

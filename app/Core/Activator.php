@@ -29,7 +29,6 @@ class Activator {
 	 * @access front static
 	 */
 	public static function activate(): void {
-		
 	}
-	
+
 }

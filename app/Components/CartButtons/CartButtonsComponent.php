@@ -16,6 +16,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class CartButtonsComponent implements HasActions, Shortcode {
 
+	public const SHORTCODE = 'cart_relay_buttons';
+
 	private const DEFAULT_HOOK = 'woocommerce_after_cart_table';
 	private const ALLOWED_HOOKS = [
 		'woocommerce_before_cart_table',
@@ -28,7 +30,7 @@ class CartButtonsComponent implements HasActions, Shortcode {
 	}
 
 	public static function register_shortcode( Loader $loader ): void {
-		$loader->add_shortcode( 'cartbridge_buttons', [ self::class, 'render' ] );
+		$loader->add_shortcode( self::SHORTCODE, [ self::class, 'render' ] );
 	}
 
 	public static function render_on_cart_hook(): void {
@@ -36,7 +38,7 @@ class CartButtonsComponent implements HasActions, Shortcode {
 	}
 
 	public static function render( array $atts = [], string $content = '' ): string {
-		$export = CartExportComponent::render([]);
+		$export = CartExportComponent::render( [] );
 		$import = self::render_import_form();
 
 		if ( $export === '' && $import === '' ) {

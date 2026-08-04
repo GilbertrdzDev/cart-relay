@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
 class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 
 	public const ACTION = 'cart_relay_export_cart';
+	public const SHORTCODE = 'cart_relay_export_button';
 	private const NONCE_ACTION = 'cart_relay_export_cart';
 
 	public function enqueue_scripts( AssetManager $asset_manager ): void {
@@ -47,7 +48,7 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 	}
 
 	public static function register_shortcode( Loader $loader ): void {
-		$loader->add_shortcode( 'cartbridge_export_button', [ self::class, 'render' ] );
+		$loader->add_shortcode( self::SHORTCODE, [ self::class, 'render' ] );
 	}
 
 	public static function render( array $atts, string $content = '' ): string {
@@ -128,8 +129,8 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 			return false;
 		}
 
-		return has_shortcode( $post->post_content, 'cartbridge_export_button' )
-			|| has_shortcode( $post->post_content, 'cartbridge_buttons' );
+		return has_shortcode( $post->post_content, self::SHORTCODE )
+			|| has_shortcode( $post->post_content, 'cart_relay_buttons' );
 	}
 
 	private static function get_export_url(): string {

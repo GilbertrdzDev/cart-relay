@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Variables are isolated to the component include scope.
+
 $form = isset( $form ) ? (string) $form : '';
 ?>
 <div class="cr-admin cr:mx-auto cr:max-w-5xl cr:py-8 cr:pr-5">

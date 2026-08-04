@@ -82,17 +82,29 @@ class Validator {
 		$limit = (string) ( $parameters[0] ?? '' );
 
 		return match ( $rule ) {
+			/* translators: %s: form field label. */
 			'required'   => sprintf( __( '%s is required.', 'cart-relay' ), $label ),
+			/* translators: %s: form field label. */
 			'email'      => sprintf( __( '%s must be a valid email address.', 'cart-relay' ), $label ),
+			/* translators: %s: form field label. */
 			'url'        => sprintf( __( '%s must be a valid URL.', 'cart-relay' ), $label ),
+			/* translators: %s: form field label. */
 			'numeric'    => sprintf( __( '%s must be numeric.', 'cart-relay' ), $label ),
+			/* translators: %s: form field label. */
 			'integer'    => sprintf( __( '%s must be an integer.', 'cart-relay' ), $label ),
+			/* translators: 1: form field label, 2: minimum value. */
 			'min'        => sprintf( __( '%1$s must be at least %2$s.', 'cart-relay' ), $label, $limit ),
+			/* translators: 1: form field label, 2: maximum value. */
 			'max'        => sprintf( __( '%1$s must not exceed %2$s.', 'cart-relay' ), $label, $limit ),
+			/* translators: 1: form field label, 2: minimum character count. */
 			'min_length' => sprintf( __( '%1$s must contain at least %2$s characters.', 'cart-relay' ), $label, $limit ),
+			/* translators: 1: form field label, 2: maximum character count. */
 			'max_length' => sprintf( __( '%1$s must not exceed %2$s characters.', 'cart-relay' ), $label, $limit ),
+			/* translators: %s: form field label. */
 			'in'         => sprintf( __( '%s contains an invalid selection.', 'cart-relay' ), $label ),
+			/* translators: %s: form field label. */
 			'boolean'    => sprintf( __( '%s must be enabled or disabled.', 'cart-relay' ), $label ),
+			/* translators: %s: form field label. */
 			default      => sprintf( __( '%s is invalid.', 'cart-relay' ), $label ),
 		};
 	}

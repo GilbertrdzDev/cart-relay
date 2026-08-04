@@ -2,15 +2,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$id             = isset( $id ) ? (string) $id : '';
-$action         = isset( $action ) ? (string) $action : '';
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Variables are isolated to the component include scope.
+
+$form_id        = isset( $id ) ? (string) $id : '';
+$form_action    = isset( $action ) ? (string) $action : '';
 $nonce          = isset( $nonce ) ? (string) $nonce : '';
 $ajax_url       = isset( $ajax_url ) ? (string) $ajax_url : '';
 $initial_values = isset( $initial_values ) && is_array( $initial_values ) ? $initial_values : [];
 $sections       = isset( $sections ) ? (string) $sections : '';
 ?>
 <form
-	id="<?php echo esc_attr( $id ); ?>"
+	id="<?php echo esc_attr( $form_id ); ?>"
 	class="cr:space-y-6"
 	method="post"
 	data-cr-admin-form
@@ -18,7 +20,7 @@ $sections       = isset( $sections ) ? (string) $sections : '';
 	data-initial-values="<?php echo esc_attr( wp_json_encode( $initial_values ) ); ?>"
 	x-data="crAdminSettings"
 >
-	<input type="hidden" name="action" value="<?php echo esc_attr( $action ); ?>">
+	<input type="hidden" name="action" value="<?php echo esc_attr( $form_action ); ?>">
 	<input type="hidden" name="nonce" value="<?php echo esc_attr( $nonce ); ?>">
 
 	<?php echo $sections; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

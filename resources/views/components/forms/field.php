@@ -5,9 +5,11 @@ use CartRelay\App\Components\Forms\FieldType;
 
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Variables are isolated to the component include scope.
+
 $field      = isset( $field ) && $field instanceof Field ? $field : null;
 $input      = isset( $input ) ? (string) $input : '';
-$error      = isset( $error ) ? (string) $error : '';
+$field_error = isset( $error ) ? (string) $error : '';
 $visibility = isset( $visibility ) && is_array( $visibility ) ? $visibility : null;
 
 if ( ! $field ) {
@@ -52,9 +54,9 @@ if ( $field->getType() === FieldType::HIDDEN ) {
 		<?php endif; ?>
 		<p
 			id="<?php echo esc_attr( $field->getId() ); ?>-error"
-			class="<?php echo $error === '' ? 'cr:hidden ' : ''; ?>cr:mt-1.5 cr:mb-0 cr:text-sm cr:text-red-600"
+			class="<?php echo $field_error === '' ? 'cr:hidden ' : ''; ?>cr:mt-1.5 cr:mb-0 cr:text-sm cr:text-red-600"
 			data-cr-field-error="<?php echo esc_attr( $field->getName() ); ?>"
 			aria-live="polite"
-		><?php echo esc_html( $error ); ?></p>
+		><?php echo esc_html( $field_error ); ?></p>
 	</div>
 </div>

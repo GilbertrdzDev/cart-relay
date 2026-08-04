@@ -3,6 +3,8 @@
 namespace CartRelay\App\Components\CartImport;
 
 use WC_Product;
+use LengthException;
+use RuntimeException;
 use CartRelay\App\Core\AssetManager;
 use CartRelay\App\Core\ComponentCompiler;
 use CartRelay\App\Core\Loader;
@@ -23,9 +25,13 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 	public const PREVIEW_ACTION = 'cart_relay_preview_import_cart';
 	public const IMPORT_CHUNK_ACTION = 'cart_relay_import_cart_chunk';
 	public const TEMPLATE_ACTION = 'cart_relay_download_template';
+	public const SHORTCODE = 'cart_relay_import_form';
 
 	private const TEMPLATE_FILENAME = 'cart-relay-cart-template.csv';
-	private const MAX_UPLOAD_SIZE = 10485760;
+	private const MAX_UPLOAD_SIZE = 2097152;
+	private const MAX_CHUNK_SIZE = 25;
+	private const MAX_TOTAL_CHUNKS = 20;
+	private const MAX_ITEMS_JSON_SIZE = 65536;
 
 	public function enqueue_scripts( AssetManager $asset_manager ): void {
 		$asset_manager->frontend_vite(
@@ -61,7 +67,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 	}
 
 	public static function register_shortcode( Loader $loader ): void {
-		$loader->add_shortcode( 'cartbridge_import_form', [ self::class, 'render' ] );
+		$loader->add_shortcode( self::SHORTCODE, [ self::class, 'render' ] );
 	}
 
 	public static function render( array $atts = [], string $content = '' ): string {
@@ -85,15 +91,27 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 	}
 
 	public static function handle_preview(): void {
-		self::verify_post_nonce( self::PREVIEW_ACTION );
+		if ( false === check_ajax_referer( self::PREVIEW_ACTION, 'nonce', false ) ) {
+			wp_send_json_error( [ 'errors' => [ __( 'Invalid request.', 'cart-relay' ) ] ], 403 );
+		}
 
-		$validation_errors = self::validate_upload();
+		$upload = isset( $_FILES['csv_file'] ) && is_array( $_FILES['csv_file'] )
+			? $_FILES['csv_file'] // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- PHP upload metadata is validated before any path is used.
+			: [];
+
+		$validation_errors = self::validate_upload( $upload );
 
 		if ( $validation_errors !== [] ) {
 			self::send_validation_errors( $validation_errors );
 		}
 
-		$rows = Csv::parse_upload( $_FILES['csv_file'] );
+		$rows = [];
+
+		try {
+			$rows = Csv::parse_upload( $upload );
+		} catch ( RuntimeException $exception ) {
+			self::send_validation_errors( [ $exception->getMessage() ] );
+		}
 
 		if ( $rows === [] ) {
 			self::send_validation_errors( [ __( 'The CSV is empty or has no importable rows.', 'cart-relay' ) ] );
@@ -151,16 +169,33 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 	}
 
 	public static function handle_import_chunk(): void {
-		self::verify_post_nonce( self::IMPORT_CHUNK_ACTION );
+		if ( false === check_ajax_referer( self::IMPORT_CHUNK_ACTION, 'nonce', false ) ) {
+			wp_send_json_error( [ 'errors' => [ __( 'Invalid request.', 'cart-relay' ) ] ], 403 );
+		}
 
 		if ( ! self::ensure_cart() ) {
 			wp_send_json_error( [ 'errors' => [ __( 'WooCommerce cart is not available.', 'cart-relay' ) ] ], 400 );
 		}
 
-		$items        = self::get_posted_items();
 		$chunk_index  = isset( $_POST['chunk_index'] ) ? absint( $_POST['chunk_index'] ) : 0;
 		$total_chunks = isset( $_POST['total_chunks'] ) ? max( 1, absint( $_POST['total_chunks'] ) ) : 1;
-		$import_mode  = self::sanitize_import_mode( $_POST['import_mode'] ?? self::get_import_mode() );
+		$posted_import_mode = isset( $_POST['import_mode'] ) && is_string( $_POST['import_mode'] )
+			? sanitize_text_field( wp_unslash( $_POST['import_mode'] ) )
+			: self::get_import_mode();
+		$import_mode        = self::sanitize_import_mode( $posted_import_mode );
+
+		if ( $total_chunks > self::MAX_TOTAL_CHUNKS || $chunk_index >= $total_chunks ) {
+			self::send_validation_errors( [ __( 'The import chunk information is invalid.', 'cart-relay' ) ] );
+		}
+
+		$items = [];
+		$raw_items = isset( $_POST['items'] ) ? wp_unslash( $_POST['items'] ) : '[]'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON is size-limited, decoded, and each field is sanitized below.
+
+		try {
+			$items = self::parse_posted_items( $raw_items );
+		} catch ( RuntimeException $exception ) {
+			self::send_validation_errors( [ $exception->getMessage() ] );
+		}
 
 		if ( $items === [] ) {
 			self::send_validation_errors( [ __( 'There are no products to import in this chunk.', 'cart-relay' ) ] );
@@ -195,7 +230,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			);
 
 			if ( $result ) {
-				$added++;
+				++$added;
 				$updated_items[] = self::make_updated_cart_item( (string) $result, $resolved );
 				wc_clear_notices();
 				continue;
@@ -257,16 +292,14 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			return false;
 		}
 
-		return has_shortcode( $post->post_content, 'cartbridge_import_form' )
-			|| has_shortcode( $post->post_content, 'cartbridge_buttons' );
+		return has_shortcode( $post->post_content, self::SHORTCODE )
+			|| has_shortcode( $post->post_content, 'cart_relay_buttons' );
 	}
 
-	private static function validate_upload(): array {
-		if ( empty( $_FILES['csv_file'] ) || ! is_array( $_FILES['csv_file'] ) ) {
+	private static function validate_upload( array $file ): array {
+		if ( $file === [] ) {
 			return [ __( 'You must select a CSV file.', 'cart-relay' ) ];
 		}
-
-		$file = $_FILES['csv_file'];
 
 		if ( (int) ( $file['error'] ?? UPLOAD_ERR_NO_FILE ) !== UPLOAD_ERR_OK ) {
 			return [ __( 'The CSV file could not be uploaded.', 'cart-relay' ) ];
@@ -276,14 +309,52 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			return [ __( 'The CSV file is not valid.', 'cart-relay' ) ];
 		}
 
-		if ( (int) ( $file['size'] ?? 0 ) > self::MAX_UPLOAD_SIZE ) {
-			return [ __( 'The CSV file cannot exceed 10 MB.', 'cart-relay' ) ];
+		$tmp_name = (string) $file['tmp_name'];
+		$file_size = filesize( $tmp_name );
+
+		if ( $file_size === false || $file_size <= 0 ) {
+			return [ __( 'The CSV file is empty.', 'cart-relay' ) ];
+		}
+
+		if ( $file_size > self::MAX_UPLOAD_SIZE ) {
+			return [ __( 'The CSV file cannot exceed 2 MB.', 'cart-relay' ) ];
 		}
 
 		$filename = sanitize_file_name( (string) ( $file['name'] ?? '' ) );
+		$filetype = wp_check_filetype( $filename, [ 'csv' => 'text/csv' ] );
 
-		if ( strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) ) !== 'csv' ) {
+		if ( ( $filetype['ext'] ?? '' ) !== 'csv' ) {
 			return [ __( 'The file must use the .csv extension.', 'cart-relay' ) ];
+		}
+
+		if ( class_exists( 'finfo' ) ) {
+			$finfo = new \finfo( FILEINFO_MIME_TYPE );
+			$mime  = $finfo->file( $tmp_name );
+			$allowed_mimes = [
+				'text/csv',
+				'text/plain',
+				'text/x-csv',
+				'application/csv',
+				'application/x-csv',
+				'application/vnd.ms-excel',
+			];
+
+			if ( is_string( $mime ) && ! in_array( strtolower( $mime ), $allowed_mimes, true ) ) {
+				return [ __( 'The uploaded file does not contain valid CSV data.', 'cart-relay' ) ];
+			}
+		}
+
+		$handle = fopen( $tmp_name, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Reading a verified temporary upload does not use WP_Filesystem credentials.
+
+		if ( $handle === false ) {
+			return [ __( 'The CSV file could not be read.', 'cart-relay' ) ];
+		}
+
+		$sample = fread( $handle, 8192 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- Reading a verified temporary upload.
+		fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing the temporary upload stream.
+
+		if ( $sample === false || str_contains( $sample, "\0" ) ) {
+			return [ __( 'The uploaded file does not contain valid CSV data.', 'cart-relay' ) ];
 		}
 
 		return [];
@@ -291,7 +362,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 	private static function make_preview_item( int $row_number, array $resolved, WC_Product $product ): array {
 		$quantity = (int) $resolved['quantity'];
-		$sku      = $product->get_sku() ?: (string) $resolved['sku'];
+		$sku      = $product->get_sku() !== '' ? $product->get_sku() : (string) $resolved['sku'];
 		$price    = (float) wc_get_price_to_display( $product );
 		$subtotal = (float) wc_get_price_to_display( $product, [ 'qty' => $quantity ] );
 
@@ -326,12 +397,27 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		return (string) $image_url;
 	}
 
-	private static function get_posted_items(): array {
-		$raw_items = isset( $_POST['items'] ) ? wp_unslash( $_POST['items'] ) : '[]';
+	private static function parse_posted_items( mixed $raw_items ): array {
+		if ( ! is_string( $raw_items ) || strlen( $raw_items ) > self::MAX_ITEMS_JSON_SIZE ) {
+			throw new LengthException( __( 'The import chunk is too large.', 'cart-relay' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are escaped at output boundaries.
+		}
+
 		$items     = json_decode( (string) $raw_items, true );
 
 		if ( ! is_array( $items ) ) {
 			return [];
+		}
+
+		if ( count( $items ) > self::MAX_CHUNK_SIZE ) {
+			// phpcs:disable WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception messages are escaped at output boundaries.
+			throw new LengthException(
+				sprintf(
+					/* translators: %d: maximum number of products in one import request. */
+					__( 'An import request cannot contain more than %d products.', 'cart-relay' ),
+					self::MAX_CHUNK_SIZE
+				)
+			);
+			// phpcs:enable WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 
 		return array_values(
@@ -353,14 +439,6 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			'sku'          => sanitize_text_field( (string) ( $item['sku'] ?? '' ) ),
 			'quantity'     => absint( $item['quantity'] ?? 0 ),
 		];
-	}
-
-	private static function verify_post_nonce( string $action ): void {
-		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
-
-		if ( ! wp_verify_nonce( $nonce, $action ) ) {
-			wp_send_json_error( [ 'errors' => [ __( 'Invalid request.', 'cart-relay' ) ] ], 403 );
-		}
 	}
 
 	private static function get_cart_error_message( array $resolved ): string {
@@ -395,7 +473,8 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 	}
 
 	private static function make_updated_cart_item( string $cart_item_key, array $resolved ): array {
-		$cart_item = WC()->cart->get_cart_item( $cart_item_key ) ?: [];
+		$cart_item = WC()->cart->get_cart_item( $cart_item_key );
+		$cart_item = is_array( $cart_item ) ? $cart_item : [];
 
 		return [
 			'cart_item_key' => $cart_item_key,
@@ -412,7 +491,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		}
 
 		return array_map(
-			static function( array $error ): string {
+			static function ( array $error ): string {
 				$row = absint( $error['row'] ?? 0 );
 				$message = (string) ( $error['message'] ?? __( 'Unknown error.', 'cart-relay' ) );
 

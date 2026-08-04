@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Variables are isolated to the component include scope.
+
 $export_button = isset( $export_button ) ? (string) $export_button : '';
 $import_form   = isset( $import_form ) ? (string) $import_form : '';
 

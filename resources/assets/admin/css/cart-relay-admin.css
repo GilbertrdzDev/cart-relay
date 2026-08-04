@@ -2,9 +2,7 @@
 @import "tailwindcss/theme.css" layer(theme) prefix(cr);
 @import "tailwindcss/utilities.css" layer(utilities) prefix(cr);
 
-/* Preline UI */
-@source "../../../../node_modules/preline/dist/*.js";
-@import "../../../../node_modules/preline/variants.css";
+/* Tailwind source discovery */
 @source "../../../../app/**/*.php";
 @source "../../../views/**/*.php";
 @source "../js/**/*.ts";

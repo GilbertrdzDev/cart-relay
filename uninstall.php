@@ -12,3 +12,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
+delete_option( 'cart_relay_settings' );

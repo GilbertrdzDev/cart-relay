@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Variables are isolated to the component include scope.
+
 $ajax_url       = isset( $ajax_url ) ? (string) $ajax_url : admin_url( 'admin-ajax.php' );
 $button_text    = isset( $button_text ) ? (string) $button_text : __( 'Import cart', 'cart-relay' );
 $import_mode    = isset( $import_mode ) ? (string) $import_mode : 'merge';
@@ -56,7 +58,7 @@ $template_url   = isset( $template_url ) ? (string) $template_url : '#';
 				<span class="cr-import-dropzone__link"><?php esc_html_e( 'click to select', 'cart-relay' ); ?></span>
 			</span>
 			<span class="cr-import-dropzone__hint">
-				<?php esc_html_e( 'CSV format, up to 10 MB', 'cart-relay' ); ?>
+				<?php esc_html_e( 'CSV format, up to 2 MB and 500 product rows', 'cart-relay' ); ?>
 			</span>
 		</span>
 

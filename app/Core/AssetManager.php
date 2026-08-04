@@ -331,7 +331,7 @@ class AssetManager {
 			$url = esc_url_raw( $path );
 
 			if ( $url === '' ) {
-				throw new InvalidArgumentException( "Invalid asset URL {$path}." );
+				throw new InvalidArgumentException( "Invalid asset URL {$path}." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 			}
 
 			return $url;
@@ -350,7 +350,7 @@ class AssetManager {
 			|| preg_match( '#^[A-Za-z]:/#', $normalized )
 			|| preg_match( '#(^|/)\.\.(/|$)#', $normalized )
 		) {
-			throw new InvalidArgumentException( "Invalid relative asset path {$path}." );
+			throw new InvalidArgumentException( "Invalid relative asset path {$path}." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 		}
 
 		return $normalized;
