@@ -1,0 +1,103 @@
+name: Release Cart Relay
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wordpress-org-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish release
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: wordpress-org
+
+    steps:
+      - name: Check out release tag
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: composer:2.8.12
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.18.0'
+          cache: npm
+
+      - name: Validate release tag
+        id: version
+        shell: bash
+        run: |
+          tag='${{ github.event.release.tag_name }}'
+          version="${tag#v}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Release tags must use v1.2.3 or 1.2.3 format." >&2
+            exit 1
+          fi
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          php tools/verify-version.php "$version"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist
+          npm ci
+
+      - name: Run release quality gates
+        run: |
+          composer validate --strict
+          composer audit
+          composer lint
+          composer test
+          composer phpcs
+          npm audit --audit-level=high
+          npm run typecheck
+          npm run build
+          composer package
+
+      - name: Run WordPress Plugin Check
+        uses: WordPress/plugin-check-action@98a1788320d0add90df2d8183934ecccbc4e05d2 # v1.1.7
+        with:
+          build-dir: build/cart-relay
+          categories: |
+            plugin_repo
+            security
+            performance
+            accessibility
+            general
+          strict: true
+
+      - name: Attach ZIP to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+        run: gh release upload "$RELEASE_TAG" build/cart-relay.zip build/package-manifest.txt --clobber
+
+      - name: Deploy to WordPress.org SVN
+        if: ${{ vars.WORDPRESS_ORG_DEPLOY_ENABLED == 'true' }}
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # 2.3.0
+        env:
+          SVN_USERNAME: gilbertrdzdev
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: cart-relay
+          VERSION: ${{ steps.version.outputs.version }}
+          BUILD_DIR: build/cart-relay
+          ASSETS_DIR: .wordpress-org

@@ -2,5 +2,7 @@
 /.idea
 /node_modules/
 /dist/
+/build/
+/.phpunit.cache/
 # CocoIndex Code (ccc)
 /.cocoindex_code/

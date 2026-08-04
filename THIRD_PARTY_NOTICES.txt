@@ -1,0 +1,20 @@
+Third-party notices
+===================
+
+Cart Relay uses the following GPL-compatible packages in its runtime or compiled assets. Versions are resolved by composer.lock and package-lock.json in the public source repository.
+
+Runtime dependency
+------------------
+
+* kucrut/vite-for-wp - GPL-2.0-only - https://github.com/kucrut/vite-for-wp
+
+Compiled asset dependencies
+---------------------------
+
+* alpinejs - MIT - https://github.com/alpinejs/alpine
+* sweetalert2 - MIT - https://github.com/sweetalert2/sweetalert2
+* tailwindcss - MIT - https://github.com/tailwindlabs/tailwindcss
+* @tailwindcss/vite - MIT - https://github.com/tailwindlabs/tailwindcss
+* @tailwindcss/forms - MIT - https://github.com/tailwindlabs/tailwindcss-forms
+
+Development-only tools and their transitive dependencies are documented in the public lock files and are not included in the production package.

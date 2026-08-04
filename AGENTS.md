@@ -4,7 +4,7 @@
 
 Cart Relay is a WordPress/WooCommerce plugin for CSV cart import/export. The plugin entry point is `cart-relay.php`; it loads Composer autoloading, defines plugin constants, registers activation/deactivation hooks, and starts `CartRelay\App\Core\Plugin`.
 
-PHP source lives in `app/` under the `CartRelay\App\` PSR-4 namespace. Core bootstrapping and hook orchestration are in `app/Core/`, reusable helpers are in `app/Helpers/`, marker contracts are in `app/Interfaces/`, and feature components should be added under `app/Components/`. Views and assets live under `resources/`: PHP partials in `resources/views/`, admin and frontend Vite entries in `resources/assets/admin/js/app-admin.js` and `resources/assets/front/js/app-front.js`, and SCSS beside each bundle. WordPress page templates live in `templates/`.
+PHP source lives in `app/` under the `CartRelay\App\` PSR-4 namespace. Core bootstrapping and hook orchestration are in `app/Core/`, reusable helpers are in `app/Helpers/`, marker contracts are in `app/Interfaces/`, and feature components should be added under `app/Components/`. Views and assets live under `resources/`: PHP partials in `resources/views/`, admin and frontend Vite entries in `resources/assets/admin/js/app-admin.ts` and `resources/assets/front/js/app-front.ts`, and styles under `resources/assets/`. PHPUnit tests live under `tests/`.
 
 ## Code Search
 
@@ -17,8 +17,9 @@ Use the CocoIndex Code `ccc` skill first when exploring or searching project cod
 - `npm run dev` starts Vite development mode for WordPress asset integration.
 - `npm run build` builds production assets into `dist/`.
 - `npm run serve` previews the production Vite build.
+- `composer test` runs the PHPUnit regression suite.
 
-Node must satisfy `^20.19.0 || >=22.12.0`. PHP must be `>=8.2`.
+Node must satisfy `^24.0.0`. PHP must be `>=8.2`.
 
 ## Local WordPress Runtime
 
@@ -39,7 +40,7 @@ Register behavior through `Loader`, `AssetManager`, and component interfaces rat
 
 ## Testing Guidelines
 
-No PHPUnit, PHPCS, lint, or coverage configuration is currently present. Until those are added, validate changes manually in a local WordPress + WooCommerce install, and run `npm run build` for asset changes. If tests are introduced, place PHP tests in a dedicated `tests/` tree and document the new command here.
+Add focused PHPUnit coverage under `tests/Unit/` for isolated helpers and regression-sensitive behavior. Run `composer test`, `npm run typecheck`, and `npm run build` before handoff. Changes that depend on WordPress, WooCommerce, sessions, or browser behavior must also be exercised in the local runtime.
 
 ## Commit & Pull Request Guidelines
 

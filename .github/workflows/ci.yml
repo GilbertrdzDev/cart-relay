@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Validate, build, and package
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # 2.35.5
+        with:
+          php-version: '8.2'
+          coverage: none
+          tools: composer:2.8.12
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.18.0'
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Validate PHP project
+        run: |
+          composer validate --strict
+          composer audit
+          composer lint
+          composer test
+          composer check-version
+          composer phpcs
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Validate and build assets
+        run: |
+          npm audit --audit-level=high
+          npm run typecheck
+          npm run build
+
+      - name: Build production package
+        run: composer package
+
+      - name: Run WordPress Plugin Check
+        uses: WordPress/plugin-check-action@98a1788320d0add90df2d8183934ecccbc4e05d2 # v1.1.7
+        with:
+          build-dir: build/cart-relay
+          categories: |
+            plugin_repo
+            security
+            performance
+            accessibility
+            general
+          strict: true
+
+      - name: Upload production package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: cart-relay-production
+          path: |
+            build/cart-relay.zip
+            build/package-manifest.txt
+          if-no-files-found: error
+          retention-days: 14

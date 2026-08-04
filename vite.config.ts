@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig( {
+  build: {
+    sourcemap: false,
+  },
   plugins: [
     tailwindcss(),
     v4wp({
