@@ -6,22 +6,22 @@
  * @link         https://gilbertrdz.dev
  * @since        1.0.0
  *
- * @package      WoocartBridge
- * @subpackage   WoocartBridge/app/Helpers
+ * @package      CartRelay
+ * @subpackage   CartRelay/app/Helpers
  *
  * @author       Gilbert Rodríguez <gilbertrdz.dev@gmail.com>
  */
 
-namespace WoocartBridge\App\Helpers;
+namespace CartRelay\App\Helpers;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Settings
- * @package WoocartBridge\App\Helpers
+ * @package CartRelay\App\Helpers
  */
 class Settings {
-	public const OPTION_NAME = 'woocart_bridge_settings';
+	public const OPTION_NAME = 'cart_relay_settings';
 
 	private static ?array $cache = null;
 	private static ?array $stored_cache = null;
@@ -120,8 +120,8 @@ class Settings {
 	 */
 	private static function translate_default( string $key, mixed $value ): mixed {
 		return match ( $key ) {
-			'export_button_text' => __( 'Export cart', 'woocart-bridge' ),
-			'import_button_text' => __( 'Import cart', 'woocart-bridge' ),
+			'export_button_text' => __( 'Export cart', 'cart-relay' ),
+			'import_button_text' => __( 'Import cart', 'cart-relay' ),
 			default              => $value,
 		};
 	}

@@ -1,15 +1,15 @@
 <?php
 
-namespace WoocartBridge\App\Components\CartExport;
+namespace CartRelay\App\Components\CartExport;
 
-use WoocartBridge\App\Core\ComponentCompiler;
-use WoocartBridge\App\Core\AssetManager;
-use WoocartBridge\App\Core\Loader;
-use WoocartBridge\App\Helpers\Csv;
-use WoocartBridge\App\Helpers\Settings;
-use WoocartBridge\App\Interfaces\EnqueueScript;
-use WoocartBridge\App\Interfaces\HasActions;
-use WoocartBridge\App\Interfaces\Shortcode;
+use CartRelay\App\Core\ComponentCompiler;
+use CartRelay\App\Core\AssetManager;
+use CartRelay\App\Core\Loader;
+use CartRelay\App\Helpers\Csv;
+use CartRelay\App\Helpers\Settings;
+use CartRelay\App\Interfaces\EnqueueScript;
+use CartRelay\App\Interfaces\HasActions;
+use CartRelay\App\Interfaces\Shortcode;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -18,18 +18,18 @@ defined( 'ABSPATH' ) || exit;
  */
 class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 
-	public const ACTION = 'woocart_bridge_export_cart';
-	private const NONCE_ACTION = 'woocart_bridge_export_cart';
+	public const ACTION = 'cart_relay_export_cart';
+	private const NONCE_ACTION = 'cart_relay_export_cart';
 
 	public function enqueue_scripts( AssetManager $asset_manager ): void {
 		$asset_manager->frontend_vite(
-			'woocart-bridge-front-js',
+			'cart-relay-front-js',
 			'resources/assets/front/js/app-front.ts',
 			[
 				'in-footer'   => true,
 				'condition'   => [ self::class, 'should_enqueue_assets' ],
 				'dependencies' => [ 'wp-i18n' ],
-				'text-domain' => 'woocart-bridge',
+				'text-domain' => 'cart-relay',
 			]
 		);
 	}
@@ -58,7 +58,7 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 		return ComponentCompiler::get_instance()->render(
 			'cart.export-button',
 			[
-				'button_text' => Settings::get( 'export_button_text', __( 'Export cart', 'woocart-bridge' ) ),
+				'button_text' => Settings::get( 'export_button_text', __( 'Export cart', 'cart-relay' ) ),
 				'export_url'  => self::get_export_url(),
 			]
 		);
@@ -68,11 +68,11 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 		$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
-			wp_die( esc_html__( 'Invalid export request.', 'woocart-bridge' ), '', [ 'response' => 403 ] );
+			wp_die( esc_html__( 'Invalid export request.', 'cart-relay' ), '', [ 'response' => 403 ] );
 		}
 
 		if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
-			wp_die( esc_html__( 'WooCommerce cart is not available.', 'woocart-bridge' ), '', [ 'response' => 400 ] );
+			wp_die( esc_html__( 'WooCommerce cart is not available.', 'cart-relay' ), '', [ 'response' => 400 ] );
 		}
 
 		$rows = [
@@ -102,7 +102,7 @@ class CartExportComponent implements EnqueueScript, HasActions, Shortcode {
 		}
 
 		$csv      = Csv::build( $rows );
-		$filename = 'woocart-bridge-cart-' . gmdate( 'Y-m-d-His' ) . '.csv';
+		$filename = 'cart-relay-cart-' . gmdate( 'Y-m-d-His' ) . '.csv';
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );

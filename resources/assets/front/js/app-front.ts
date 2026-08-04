@@ -1,3 +1,3 @@
 import '@front/bootstrap-front';
-import '@front/woocart-bridge-front';
-import '@styles/front/css/woocart-bridge-front.scss';
+import '@front/cart-relay-front';
+import '@styles/front/css/cart-relay-front.scss';

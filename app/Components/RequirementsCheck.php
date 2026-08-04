@@ -1,9 +1,9 @@
 <?php
 
-namespace WoocartBridge\App\Components;
+namespace CartRelay\App\Components;
 
-use WoocartBridge\App\Core\Loader;
-use WoocartBridge\App\Interfaces\HasActions;
+use CartRelay\App\Core\Loader;
+use CartRelay\App\Interfaces\HasActions;
 
 
 defined( 'ABSPATH' ) || exit;
@@ -27,7 +27,7 @@ class RequirementsCheck implements HasActions {
 
 		printf(
 			'<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
-			esc_html__( 'WooCart Bridge requires WooCommerce to be installed and active in order to import/export carts.', 'woocart-bridge' )
+			esc_html__( 'Cart Relay requires WooCommerce to be installed and active in order to import/export carts.', 'cart-relay' )
 		);
 	}
 

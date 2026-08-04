@@ -1,4 +1,4 @@
-const TEXT_DOMAIN = 'woocart-bridge';
+const TEXT_DOMAIN = 'cart-relay';
 
 interface WpI18n {
 	__: ( text: string, domain?: string ) => string;

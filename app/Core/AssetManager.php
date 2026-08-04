@@ -1,6 +1,6 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
 use InvalidArgumentException;
 use Kucrut\Vite;

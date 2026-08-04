@@ -5,7 +5,7 @@
  *
  * @link      https://gilbertrdz.dev
  * @since     1.0.0
- * @package   WoocartBridge
+ * @package   CartRelay
  */
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {

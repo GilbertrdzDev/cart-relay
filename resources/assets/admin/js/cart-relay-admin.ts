@@ -1,7 +1,7 @@
 import { AdminForm } from '@admin/forms/AdminForm';
 
 const initializeAdminForms = (): void => {
-  document.querySelectorAll<HTMLFormElement>( '[data-wcb-admin-form]' ).forEach( ( form ) => {
+  document.querySelectorAll<HTMLFormElement>( '[data-cr-admin-form]' ).forEach( ( form ) => {
     new AdminForm( form ).init();
   } );
 };

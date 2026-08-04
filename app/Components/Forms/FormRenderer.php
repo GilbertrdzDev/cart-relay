@@ -1,8 +1,8 @@
 <?php
 
-namespace WoocartBridge\App\Components\Forms;
+namespace CartRelay\App\Components\Forms;
 
-use WoocartBridge\App\Core\ComponentCompiler;
+use CartRelay\App\Core\ComponentCompiler;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -71,7 +71,7 @@ class FormRenderer {
 				'placeholder'      => $field->getPlaceholder(),
 				'aria-describedby' => implode( ' ', $describedBy ),
 				'aria-invalid'     => $error !== '' ? 'true' : 'false',
-				'data-wcb-field'   => $field->getName(),
+				'data-cr-field'   => $field->getName(),
 				'class'            => implode( ' ', [ ...$this->defaultClasses( $field ), ...$field->getClasses() ] ),
 			]
 		);
@@ -116,20 +116,20 @@ class FormRenderer {
 	private function defaultClasses( Field $field ): array {
 		return match ( $field->getType() ) {
 			FieldType::TEXT => [
-				'wcb:block', 'wcb:w-full', 'wcb:rounded-lg', 'wcb:border', 'wcb:border-slate-300',
-				'wcb:bg-white', 'wcb:px-3', 'wcb:py-2.5', 'wcb:text-sm', 'wcb:text-slate-900',
-				'wcb:shadow-sm', 'wcb:outline-none', 'wcb:transition', 'wcb:focus:border-blue-500',
-				'wcb:focus:ring-2', 'wcb:focus:ring-blue-500/20', 'wcb:disabled:cursor-not-allowed',
-				'wcb:disabled:bg-slate-100',
+				'cr:block', 'cr:w-full', 'cr:rounded-lg', 'cr:border', 'cr:border-slate-300',
+				'cr:bg-white', 'cr:px-3', 'cr:py-2.5', 'cr:text-sm', 'cr:text-slate-900',
+				'cr:shadow-sm', 'cr:outline-none', 'cr:transition', 'cr:focus:border-blue-500',
+				'cr:focus:ring-2', 'cr:focus:ring-blue-500/20', 'cr:disabled:cursor-not-allowed',
+				'cr:disabled:bg-slate-100',
 			],
 			FieldType::SELECT => [
-				'wcb:block', 'wcb:w-full', 'wcb:rounded-lg', 'wcb:border', 'wcb:border-slate-300',
-				'wcb:bg-white', 'wcb:px-3', 'wcb:py-2.5', 'wcb:text-sm', 'wcb:text-slate-900',
-				'wcb:shadow-sm', 'wcb:outline-none', 'wcb:focus:border-blue-500', 'wcb:focus:ring-2',
-				'wcb:focus:ring-blue-500/20',
+				'cr:block', 'cr:w-full', 'cr:rounded-lg', 'cr:border', 'cr:border-slate-300',
+				'cr:bg-white', 'cr:px-3', 'cr:py-2.5', 'cr:text-sm', 'cr:text-slate-900',
+				'cr:shadow-sm', 'cr:outline-none', 'cr:focus:border-blue-500', 'cr:focus:ring-2',
+				'cr:focus:ring-blue-500/20',
 			],
 			FieldType::TOGGLE => [
-				'wcb:peer', 'wcb:sr-only',
+				'cr:peer', 'cr:sr-only',
 			],
 			FieldType::HIDDEN => [],
 		};

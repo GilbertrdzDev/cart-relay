@@ -6,19 +6,19 @@
  * @link         https://gilbertrdz.dev
  * @since        1.0.0
  *
- * @package      WoocartBridge
- * @subpackage   WoocartBridge/app/Helpers
+ * @package      CartRelay
+ * @subpackage   CartRelay/app/Helpers
  *
  * @author       Gilbert Rodríguez <gilbertrdz.dev@gmail.com>
  */
 
-namespace WoocartBridge\App\Helpers;
+namespace CartRelay\App\Helpers;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class PageTemplater
- * @package WoocartBridge\App\Helpers
+ * @package CartRelay\App\Helpers
  */
 class PageTemplater {
 
@@ -153,7 +153,7 @@ class PageTemplater {
 	public function register_project_templates( array $atts ): array {
 
 		// Create the key used for the themes cache
-		$cache_key = 'woocart-bridge_page_templates-' . md5( get_theme_root() . '/' . get_stylesheet() );
+		$cache_key = 'cart-relay_page_templates-' . md5( get_theme_root() . '/' . get_stylesheet() );
 
 		// Retrieve the cache list.
 		// If it doesn't exist, or it's empty prepare an array
@@ -231,8 +231,8 @@ class PageTemplater {
 			return null;
 		}
 
-		$base_path = realpath( WOOCART_BRIDGE_DIR_PATH . 'templates' );
-		$file      = realpath( WOOCART_BRIDGE_DIR_PATH . str_replace( '\\', '/', $template ) );
+		$base_path = realpath( CART_RELAY_DIR_PATH . 'templates' );
+		$file      = realpath( CART_RELAY_DIR_PATH . str_replace( '\\', '/', $template ) );
 
 		if (
 			$base_path === false

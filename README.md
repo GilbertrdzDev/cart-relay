@@ -1,1 +1,1 @@
-# woocart-bridge
+# Cart Relay for WooCommerce

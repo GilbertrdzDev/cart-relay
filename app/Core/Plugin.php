@@ -1,13 +1,13 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
-use WoocartBridge\App\Interfaces\EnqueueScript;
-use WoocartBridge\App\Interfaces\EnqueueStyle;
-use WoocartBridge\App\Interfaces\HasActions;
-use WoocartBridge\App\Interfaces\HasFilters;
-use WoocartBridge\App\Interfaces\HasShortcodes;
-use WoocartBridge\App\Interfaces\Shortcode;
+use CartRelay\App\Interfaces\EnqueueScript;
+use CartRelay\App\Interfaces\EnqueueStyle;
+use CartRelay\App\Interfaces\HasActions;
+use CartRelay\App\Interfaces\HasFilters;
+use CartRelay\App\Interfaces\HasShortcodes;
+use CartRelay\App\Interfaces\Shortcode;
 
 
 defined( 'ABSPATH' ) || exit;
@@ -17,7 +17,7 @@ class Plugin {
 	protected Loader $loader;
 	protected AssetManager $asset_manager;
 	public ComponentCompiler $component;
-	protected string $name = 'woocart-bridge';
+	protected string $name = 'cart-relay';
 	protected string $version = '1.0.0';
 	private array $components = [];
 
@@ -25,11 +25,11 @@ class Plugin {
 		$this->loader        = new Loader();
 		$this->asset_manager = new AssetManager(
 			$this->loader,
-			WOOCART_BRIDGE_DIR_PATH,
-			WOOCART_BRIDGE_DIR_URL
+			CART_RELAY_DIR_PATH,
+			CART_RELAY_DIR_URL
 		);
 		$this->component     = ComponentCompiler::get_instance(
-			WOOCART_BRIDGE_DIR_PATH . 'resources/views/components/'
+			CART_RELAY_DIR_PATH . 'resources/views/components/'
 		);
 	}
 

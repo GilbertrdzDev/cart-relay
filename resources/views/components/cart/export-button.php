@@ -2,17 +2,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$button_text = isset( $button_text ) ? (string) $button_text : __( 'Export cart', 'woocart-bridge' );
+$button_text = isset( $button_text ) ? (string) $button_text : __( 'Export cart', 'cart-relay' );
 $export_url  = isset( $export_url ) ? (string) $export_url : '#';
 ?>
 <a
 	href="<?php echo esc_url( $export_url ); ?>"
-	class="button wcb-export-button"
-	data-woocart-bridge-export-button
+	class="button cr-export-button"
+	data-cart-relay-export-button
 	data-export-url="<?php echo esc_url( $export_url ); ?>"
 >
 	<svg
-		class="wcb-export-button__icon"
+		class="cr-export-button__icon"
 		width="18"
 		height="18"
 		viewBox="0 0 24 24"
@@ -24,5 +24,5 @@ $export_url  = isset( $export_url ) ? (string) $export_url : '#';
 			fill="currentColor"
 		/>
 	</svg>
-	<span class="wcb-export-button__text"><?php echo esc_html( $button_text ); ?></span>
+	<span class="cr-export-button__text"><?php echo esc_html( $button_text ); ?></span>
 </a>

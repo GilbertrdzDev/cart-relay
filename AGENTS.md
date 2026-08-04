@@ -2,9 +2,9 @@
 
 ## Project Structure & Module Organization
 
-WooCart Bridge is a WordPress/WooCommerce plugin for CSV cart import/export. The plugin entry point is `woocart-bridge.php`; it loads Composer autoloading, defines plugin constants, registers activation/deactivation hooks, and starts `WoocartBridge\App\Core\Plugin`.
+Cart Relay is a WordPress/WooCommerce plugin for CSV cart import/export. The plugin entry point is `cart-relay.php`; it loads Composer autoloading, defines plugin constants, registers activation/deactivation hooks, and starts `CartRelay\App\Core\Plugin`.
 
-PHP source lives in `app/` under the `WoocartBridge\App\` PSR-4 namespace. Core bootstrapping and hook orchestration are in `app/Core/`, reusable helpers are in `app/Helpers/`, marker contracts are in `app/Interfaces/`, and feature components should be added under `app/Components/`. Views and assets live under `resources/`: PHP partials in `resources/views/`, admin and frontend Vite entries in `resources/assets/admin/js/app-admin.js` and `resources/assets/front/js/app-front.js`, and SCSS beside each bundle. WordPress page templates live in `templates/`.
+PHP source lives in `app/` under the `CartRelay\App\` PSR-4 namespace. Core bootstrapping and hook orchestration are in `app/Core/`, reusable helpers are in `app/Helpers/`, marker contracts are in `app/Interfaces/`, and feature components should be added under `app/Components/`. Views and assets live under `resources/`: PHP partials in `resources/views/`, admin and frontend Vite entries in `resources/assets/admin/js/app-admin.js` and `resources/assets/front/js/app-front.js`, and SCSS beside each bundle. WordPress page templates live in `templates/`.
 
 ## Code Search
 
@@ -28,12 +28,12 @@ When validation needs WordPress, WooCommerce, database, or plugin state, use WP-
 
 ```powershell
 cd C:\laragon\www\wptest
-wp plugin status woocart-bridge
+wp plugin status cart-relay
 ```
 
 ## Coding Style & Naming Conventions
 
-Follow the existing WordPress-oriented PHP style: tabs for indentation in PHP files, spaced WordPress function calls such as `defined( 'ABSPATH' ) || exit;`, and English comments for primary classes, methods, and functions. Keep classes namespaced under `WoocartBridge\App\` and name files after their classes, for example `app/Core/AssetManager.php`.
+Follow the existing WordPress-oriented PHP style: tabs for indentation in PHP files, spaced WordPress function calls such as `defined( 'ABSPATH' ) || exit;`, and English comments for primary classes, methods, and functions. Keep classes namespaced under `CartRelay\App\` and name files after their classes, for example `app/Core/AssetManager.php`.
 
 Register behavior through `Loader`, `AssetManager`, and component interfaces rather than calling WordPress hook APIs directly in feature code.
 

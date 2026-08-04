@@ -1,13 +1,13 @@
 <?php
 
-namespace WoocartBridge\App\Components\CartButtons;
+namespace CartRelay\App\Components\CartButtons;
 
-use WoocartBridge\App\Components\CartExport\CartExportComponent;
-use WoocartBridge\App\Core\ComponentCompiler;
-use WoocartBridge\App\Core\Loader;
-use WoocartBridge\App\Helpers\Settings;
-use WoocartBridge\App\Interfaces\HasActions;
-use WoocartBridge\App\Interfaces\Shortcode;
+use CartRelay\App\Components\CartExport\CartExportComponent;
+use CartRelay\App\Core\ComponentCompiler;
+use CartRelay\App\Core\Loader;
+use CartRelay\App\Helpers\Settings;
+use CartRelay\App\Interfaces\HasActions;
+use CartRelay\App\Interfaces\Shortcode;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -59,7 +59,7 @@ class CartButtonsComponent implements HasActions, Shortcode {
 	}
 
 	private static function render_import_form(): string {
-		$component = 'WoocartBridge\\App\\Components\\CartImport\\CartImportComponent';
+		$component = 'CartRelay\\App\\Components\\CartImport\\CartImportComponent';
 
 		if ( ! class_exists( $component ) || ! is_callable( [ $component, 'render' ] ) ) {
 			return '';

@@ -6,19 +6,19 @@
  * @link         https://gilbertrdz.dev
  * @since        1.0.0
  *
- * @package      WoocartBridge
- * @subpackage   WoocartBridge/app/Core
+ * @package      CartRelay
+ * @subpackage   CartRelay/app/Core
  *
  * @author       Gilbert Rodríguez <gilbertrdz.dev@gmail.com>
  */
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class I18n
- * @package WoocartBridge\App\Core
+ * @package CartRelay\App\Core
  */
 class I18n {
 
@@ -40,12 +40,12 @@ class I18n {
 
 		$locale = apply_filters( 'plugin_locale', get_locale(), $this->domain );
 
-		load_textdomain( $this->domain, WOOCART_BRIDGE_DIR_PATH . 'languages/woocart-bridge-' . $locale . '.mo' );
+		load_textdomain( $this->domain, CART_RELAY_DIR_PATH . 'languages/cart-relay-' . $locale . '.mo' );
 
 		load_plugin_textdomain(
 			$this->domain,
 			false,
-			WOOCART_BRIDGE_DIR_PATH . '/languages/'
+			CART_RELAY_DIR_PATH . '/languages/'
 		);
 
 	}

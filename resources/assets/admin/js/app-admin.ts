@@ -1,3 +1,3 @@
 import '@admin/bootstrap-admin';
-import '@admin/woocart-bridge-admin';
-import '@styles/admin/css/woocart-bridge-admin.css';
+import '@admin/cart-relay-admin';
+import '@styles/admin/css/cart-relay-admin.css';

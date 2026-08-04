@@ -1,6 +1,6 @@
 <?php
 
-namespace WoocartBridge\App\Components\Forms;
+namespace CartRelay\App\Components\Forms;
 
 use InvalidArgumentException;
 
@@ -38,7 +38,7 @@ class Field {
 			throw new InvalidArgumentException( "Invalid field name {$name}." );
 		}
 
-		$this->id = 'wcb-' . str_replace( '_', '-', $name );
+		$this->id = 'cr-' . str_replace( '_', '-', $name );
 	}
 
 	public function id( string $id ): static {

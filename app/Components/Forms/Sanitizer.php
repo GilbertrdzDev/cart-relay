@@ -1,6 +1,6 @@
 <?php
 
-namespace WoocartBridge\App\Components\Forms;
+namespace CartRelay\App\Components\Forms;
 
 use InvalidArgumentException;
 

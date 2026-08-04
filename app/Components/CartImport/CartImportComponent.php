@@ -1,17 +1,17 @@
 <?php
 
-namespace WoocartBridge\App\Components\CartImport;
+namespace CartRelay\App\Components\CartImport;
 
 use WC_Product;
-use WoocartBridge\App\Core\AssetManager;
-use WoocartBridge\App\Core\ComponentCompiler;
-use WoocartBridge\App\Core\Loader;
-use WoocartBridge\App\Helpers\Csv;
-use WoocartBridge\App\Helpers\ProductResolver;
-use WoocartBridge\App\Helpers\Settings;
-use WoocartBridge\App\Interfaces\EnqueueScript;
-use WoocartBridge\App\Interfaces\HasActions;
-use WoocartBridge\App\Interfaces\Shortcode;
+use CartRelay\App\Core\AssetManager;
+use CartRelay\App\Core\ComponentCompiler;
+use CartRelay\App\Core\Loader;
+use CartRelay\App\Helpers\Csv;
+use CartRelay\App\Helpers\ProductResolver;
+use CartRelay\App\Helpers\Settings;
+use CartRelay\App\Interfaces\EnqueueScript;
+use CartRelay\App\Interfaces\HasActions;
+use CartRelay\App\Interfaces\Shortcode;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,22 +20,22 @@ defined( 'ABSPATH' ) || exit;
  */
 class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
-	public const PREVIEW_ACTION = 'woocart_bridge_preview_import_cart';
-	public const IMPORT_CHUNK_ACTION = 'woocart_bridge_import_cart_chunk';
-	public const TEMPLATE_ACTION = 'woocart_bridge_download_template';
+	public const PREVIEW_ACTION = 'cart_relay_preview_import_cart';
+	public const IMPORT_CHUNK_ACTION = 'cart_relay_import_cart_chunk';
+	public const TEMPLATE_ACTION = 'cart_relay_download_template';
 
-	private const TEMPLATE_FILENAME = 'woocart-bridge-cart-template.csv';
+	private const TEMPLATE_FILENAME = 'cart-relay-cart-template.csv';
 	private const MAX_UPLOAD_SIZE = 10485760;
 
 	public function enqueue_scripts( AssetManager $asset_manager ): void {
 		$asset_manager->frontend_vite(
-			'woocart-bridge-front-js',
+			'cart-relay-front-js',
 			'resources/assets/front/js/app-front.ts',
 			[
 				'in-footer'   => true,
 				'condition'   => [ self::class, 'should_enqueue_assets' ],
 				'dependencies' => [ 'wp-i18n' ],
-				'text-domain' => 'woocart-bridge',
+				'text-domain' => 'cart-relay',
 			]
 		);
 	}
@@ -73,7 +73,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			'cart.import-form',
 			[
 				'ajax_url'         => admin_url( 'admin-ajax.php' ),
-				'button_text'      => Settings::get( 'import_button_text', __( 'Import cart', 'woocart-bridge' ) ),
+				'button_text'      => Settings::get( 'import_button_text', __( 'Import cart', 'cart-relay' ) ),
 				'import_mode'      => self::get_import_mode(),
 				'preview_action'   => self::PREVIEW_ACTION,
 				'preview_nonce'    => wp_create_nonce( self::PREVIEW_ACTION ),
@@ -96,7 +96,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$rows = Csv::parse_upload( $_FILES['csv_file'] );
 
 		if ( $rows === [] ) {
-			self::send_validation_errors( [ __( 'The CSV is empty or has no importable rows.', 'woocart-bridge' ) ] );
+			self::send_validation_errors( [ __( 'The CSV is empty or has no importable rows.', 'cart-relay' ) ] );
 		}
 
 		$items  = [];
@@ -122,7 +122,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 			if ( ! $product instanceof WC_Product ) {
 				$errors[] = [
 					'row'     => $row_number,
-					'message' => __( 'Product not found.', 'woocart-bridge' ),
+					'message' => __( 'Product not found.', 'cart-relay' ),
 				];
 				continue;
 			}
@@ -154,7 +154,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		self::verify_post_nonce( self::IMPORT_CHUNK_ACTION );
 
 		if ( ! self::ensure_cart() ) {
-			wp_send_json_error( [ 'errors' => [ __( 'WooCommerce cart is not available.', 'woocart-bridge' ) ] ], 400 );
+			wp_send_json_error( [ 'errors' => [ __( 'WooCommerce cart is not available.', 'cart-relay' ) ] ], 400 );
 		}
 
 		$items        = self::get_posted_items();
@@ -163,7 +163,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$import_mode  = self::sanitize_import_mode( $_POST['import_mode'] ?? self::get_import_mode() );
 
 		if ( $items === [] ) {
-			self::send_validation_errors( [ __( 'There are no products to import in this chunk.', 'woocart-bridge' ) ] );
+			self::send_validation_errors( [ __( 'There are no products to import in this chunk.', 'cart-relay' ) ] );
 		}
 
 		if ( $import_mode === 'replace' && $chunk_index === 0 ) {
@@ -222,7 +222,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$nonce = isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, self::TEMPLATE_ACTION ) ) {
-			wp_die( esc_html__( 'Invalid template request.', 'woocart-bridge' ), '', [ 'response' => 403 ] );
+			wp_die( esc_html__( 'Invalid template request.', 'cart-relay' ), '', [ 'response' => 403 ] );
 		}
 
 		$csv = Csv::build(
@@ -263,27 +263,27 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 	private static function validate_upload(): array {
 		if ( empty( $_FILES['csv_file'] ) || ! is_array( $_FILES['csv_file'] ) ) {
-			return [ __( 'You must select a CSV file.', 'woocart-bridge' ) ];
+			return [ __( 'You must select a CSV file.', 'cart-relay' ) ];
 		}
 
 		$file = $_FILES['csv_file'];
 
 		if ( (int) ( $file['error'] ?? UPLOAD_ERR_NO_FILE ) !== UPLOAD_ERR_OK ) {
-			return [ __( 'The CSV file could not be uploaded.', 'woocart-bridge' ) ];
+			return [ __( 'The CSV file could not be uploaded.', 'cart-relay' ) ];
 		}
 
 		if ( empty( $file['tmp_name'] ) || ! is_uploaded_file( $file['tmp_name'] ) ) {
-			return [ __( 'The CSV file is not valid.', 'woocart-bridge' ) ];
+			return [ __( 'The CSV file is not valid.', 'cart-relay' ) ];
 		}
 
 		if ( (int) ( $file['size'] ?? 0 ) > self::MAX_UPLOAD_SIZE ) {
-			return [ __( 'The CSV file cannot exceed 10 MB.', 'woocart-bridge' ) ];
+			return [ __( 'The CSV file cannot exceed 10 MB.', 'cart-relay' ) ];
 		}
 
 		$filename = sanitize_file_name( (string) ( $file['name'] ?? '' ) );
 
 		if ( strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) ) !== 'csv' ) {
-			return [ __( 'The file must use the .csv extension.', 'woocart-bridge' ) ];
+			return [ __( 'The file must use the .csv extension.', 'cart-relay' ) ];
 		}
 
 		return [];
@@ -359,7 +359,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, $action ) ) {
-			wp_send_json_error( [ 'errors' => [ __( 'Invalid request.', 'woocart-bridge' ) ] ], 403 );
+			wp_send_json_error( [ 'errors' => [ __( 'Invalid request.', 'cart-relay' ) ] ], 403 );
 		}
 	}
 
@@ -382,7 +382,7 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 		return sprintf(
 			/* translators: %d: WooCommerce product ID. */
-			__( 'Product %d could not be added to the cart.', 'woocart-bridge' ),
+			__( 'Product %d could not be added to the cart.', 'cart-relay' ),
 			(int) $resolved['product_id']
 		);
 	}
@@ -408,18 +408,18 @@ class CartImportComponent implements EnqueueScript, HasActions, Shortcode {
 
 	private static function format_row_errors( array $errors ): array {
 		if ( $errors === [] ) {
-			return [ __( 'No valid products were found in the CSV.', 'woocart-bridge' ) ];
+			return [ __( 'No valid products were found in the CSV.', 'cart-relay' ) ];
 		}
 
 		return array_map(
 			static function( array $error ): string {
 				$row = absint( $error['row'] ?? 0 );
-				$message = (string) ( $error['message'] ?? __( 'Unknown error.', 'woocart-bridge' ) );
+				$message = (string) ( $error['message'] ?? __( 'Unknown error.', 'cart-relay' ) );
 
 				return $row > 0
 					? sprintf(
 						/* translators: 1: CSV row number, 2: validation error message. */
-						__( 'Row %1$d: %2$s', 'woocart-bridge' ),
+						__( 'Row %1$d: %2$s', 'cart-relay' ),
 						$row,
 						$message
 					)

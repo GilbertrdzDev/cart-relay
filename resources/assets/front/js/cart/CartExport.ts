@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { WoocartBridgeHelpers } from '@helpers/utils/WoocartBridgeHelpers';
+import { CartRelayHelpers } from '@helpers/utils/CartRelayHelpers';
 import { __ } from '@helpers/utils/i18n';
 
 interface CartExportOptions {
@@ -17,7 +17,7 @@ class CartExport {
 	private readonly successDelay: number;
 
 	constructor( {
-		selector = '[data-woocart-bridge-export-button]',
+		selector = '[data-cart-relay-export-button]',
 		loadingText = __( 'Generating CSV...' ),
 		successTitle = __( 'Cart exported' ),
 		successDelay = 800,
@@ -65,7 +65,7 @@ class CartExport {
 	}
 
 	private startDownload( exportUrl: string ): void {
-		WoocartBridgeHelpers.swalShowLoading( this.loadingText );
+		CartRelayHelpers.swalShowLoading( this.loadingText );
 
 		window.location.href = exportUrl;
 		window.setTimeout( () => this.showSuccess(), this.successDelay );

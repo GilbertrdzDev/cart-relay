@@ -1,6 +1,6 @@
 @layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme) prefix(wcb);
-@import "tailwindcss/utilities.css" layer(utilities) prefix(wcb);
+@import "tailwindcss/theme.css" layer(theme) prefix(cr);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(cr);
 
 /* Preline UI */
 @source "../../../../node_modules/preline/dist/*.js";
@@ -12,6 +12,6 @@
 /* Plugins */
 @plugin "@tailwindcss/forms";
 
-.wcb-admin [x-cloak] {
+.cr-admin [x-cloak] {
   display: none !important;
 }

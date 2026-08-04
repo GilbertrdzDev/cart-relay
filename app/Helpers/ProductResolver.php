@@ -6,13 +6,13 @@
  * @link         https://gilbertrdz.dev
  * @since        1.0.0
  *
- * @package      WoocartBridge
- * @subpackage   WoocartBridge/app/Helpers
+ * @package      CartRelay
+ * @subpackage   CartRelay/app/Helpers
  *
  * @author       Gilbert Rodríguez <gilbertrdz.dev@gmail.com>
  */
 
-namespace WoocartBridge\App\Helpers;
+namespace CartRelay\App\Helpers;
 
 use WC_Product;
 
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class ProductResolver
- * @package WoocartBridge\App\Helpers
+ * @package CartRelay\App\Helpers
  */
 class ProductResolver {
 
@@ -87,13 +87,13 @@ class ProductResolver {
 			if ( ! $product ) {
 				$errors[] = sprintf(
 					/* translators: %d: WooCommerce variation ID. */
-					__( 'Variation not found for ID %d.', 'woocart-bridge' ),
+					__( 'Variation not found for ID %d.', 'cart-relay' ),
 					$variation_id
 				);
 			} elseif ( ! $product->is_type( 'variation' ) ) {
 				$errors[] = sprintf(
 					/* translators: %d: WooCommerce product ID. */
-					__( 'ID %d does not match a variation.', 'woocart-bridge' ),
+					__( 'ID %d does not match a variation.', 'cart-relay' ),
 					$variation_id
 				);
 			} else {
@@ -102,7 +102,7 @@ class ProductResolver {
 				if ( $product_id > 0 && $parent_id !== $product_id ) {
 					$errors[] = sprintf(
 						/* translators: 1: WooCommerce variation ID, 2: WooCommerce product ID. */
-						__( 'Variation %1$d does not belong to product %2$d.', 'woocart-bridge' ),
+						__( 'Variation %1$d does not belong to product %2$d.', 'cart-relay' ),
 						$variation_id,
 						$product_id
 					);
@@ -116,7 +116,7 @@ class ProductResolver {
 			if ( ! $product ) {
 				$errors[] = sprintf(
 					/* translators: %d: WooCommerce product ID. */
-					__( 'Product not found for ID %d.', 'woocart-bridge' ),
+					__( 'Product not found for ID %d.', 'cart-relay' ),
 					$product_id
 				);
 			} elseif ( $product->is_type( 'variation' ) ) {
@@ -129,7 +129,7 @@ class ProductResolver {
 			if ( ! $product ) {
 				$errors[] = sprintf(
 					/* translators: %s: WooCommerce product SKU. */
-					__( 'Product not found for SKU %s.', 'woocart-bridge' ),
+					__( 'Product not found for SKU %s.', 'cart-relay' ),
 					$sku
 				);
 			} elseif ( $product->is_type( 'variation' ) ) {
@@ -139,17 +139,17 @@ class ProductResolver {
 				$product_id = $product->get_id();
 			}
 		} else {
-			$errors[] = __( 'The row must include product_id, variation_id, or sku.', 'woocart-bridge' );
+			$errors[] = __( 'The row must include product_id, variation_id, or sku.', 'cart-relay' );
 		}
 
 		if ( $product && $variation_id === 0 && $product->is_type( 'variable' ) ) {
-			$errors[] = __( 'Variable products require variation_id.', 'woocart-bridge' );
+			$errors[] = __( 'Variable products require variation_id.', 'cart-relay' );
 		}
 
 		if ( $product ) {
 			$errors = array_merge( $errors, self::validate( $product, $quantity ) );
 		} elseif ( $quantity <= 0 ) {
-			$errors[] = __( 'Quantity must be greater than zero.', 'woocart-bridge' );
+			$errors[] = __( 'Quantity must be greater than zero.', 'cart-relay' );
 		}
 
 		return [
@@ -174,29 +174,29 @@ class ProductResolver {
 		$errors = [];
 
 		if ( $product->get_id() <= 0 ) {
-			$errors[] = __( 'The product does not exist.', 'woocart-bridge' );
+			$errors[] = __( 'The product does not exist.', 'cart-relay' );
 		}
 
 		if ( $product->get_status() !== 'publish' ) {
-			$errors[] = __( 'The product is not published.', 'woocart-bridge' );
+			$errors[] = __( 'The product is not published.', 'cart-relay' );
 		}
 
 		if ( ! $product->is_purchasable() ) {
-			$errors[] = __( 'The product cannot be purchased.', 'woocart-bridge' );
+			$errors[] = __( 'The product cannot be purchased.', 'cart-relay' );
 		}
 
 		if ( $quantity <= 0 ) {
-			$errors[] = __( 'Quantity must be greater than zero.', 'woocart-bridge' );
+			$errors[] = __( 'Quantity must be greater than zero.', 'cart-relay' );
 		}
 
 		if ( ! $product->is_in_stock() ) {
-			$errors[] = __( 'The product is out of stock.', 'woocart-bridge' );
+			$errors[] = __( 'The product is out of stock.', 'cart-relay' );
 		} elseif ( $quantity > 0 && ! $product->has_enough_stock( $quantity ) ) {
-			$errors[] = __( 'The product does not have enough stock.', 'woocart-bridge' );
+			$errors[] = __( 'The product does not have enough stock.', 'cart-relay' );
 		}
 
 		if ( ! $product->is_type( [ 'simple', 'variation' ] ) ) {
-			$errors[] = __( 'Only simple products or specific variations are supported.', 'woocart-bridge' );
+			$errors[] = __( 'Only simple products or specific variations are supported.', 'cart-relay' );
 		}
 
 		return $errors;

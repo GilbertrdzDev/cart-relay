@@ -1,10 +1,10 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
-use WoocartBridge\App\Components\Admin\SettingsPageComponent;
-use WoocartBridge\App\Components\RequirementsCheck;
-use WoocartBridge\App\Helpers\PageTemplater;
+use CartRelay\App\Components\Admin\SettingsPageComponent;
+use CartRelay\App\Components\RequirementsCheck;
+use CartRelay\App\Helpers\PageTemplater;
 
 
 defined( 'ABSPATH' ) || exit;

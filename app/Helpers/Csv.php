@@ -6,13 +6,13 @@
  * @link         https://gilbertrdz.dev
  * @since        1.0.0
  *
- * @package      WoocartBridge
- * @subpackage   WoocartBridge/app/Helpers
+ * @package      CartRelay
+ * @subpackage   CartRelay/app/Helpers
  *
  * @author       Gilbert Rodríguez <gilbertrdz.dev@gmail.com>
  */
 
-namespace WoocartBridge\App\Helpers;
+namespace CartRelay\App\Helpers;
 
 use SplFileObject;
 use SplTempFileObject;
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Csv
- * @package WoocartBridge\App\Helpers
+ * @package CartRelay\App\Helpers
  */
 class Csv {
 

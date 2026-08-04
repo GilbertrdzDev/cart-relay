@@ -22,7 +22,7 @@ const matchesCondition = (
   return values[field] === expected;
 };
 
-Alpine.data( 'wcbAdminSettings', () => ( {
+Alpine.data( 'crAdminSettings', () => ( {
   values: {} as SettingsValues,
 
   init(): void {

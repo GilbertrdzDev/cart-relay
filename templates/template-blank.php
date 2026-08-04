@@ -8,5 +8,5 @@ defined( 'ABSPATH' ) || exit;
  * @link      https://gilbertrdz.dev
  * @since     1.0.0
  *
- * @package   WoocartBridge
+ * @package   CartRelay
  */

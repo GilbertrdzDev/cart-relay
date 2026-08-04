@@ -1,10 +1,10 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
-use WoocartBridge\App\Components\CartButtons\CartButtonsComponent;
-use WoocartBridge\App\Components\CartExport\CartExportComponent;
-use WoocartBridge\App\Components\CartImport\CartImportComponent;
+use CartRelay\App\Components\CartButtons\CartButtonsComponent;
+use CartRelay\App\Components\CartExport\CartExportComponent;
+use CartRelay\App\Components\CartImport\CartImportComponent;
 
 defined( 'ABSPATH' ) || exit;
 

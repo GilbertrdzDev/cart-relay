@@ -1,6 +1,6 @@
 <?php
 
-namespace WoocartBridge\App\Components\Forms;
+namespace CartRelay\App\Components\Forms;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -82,18 +82,18 @@ class Validator {
 		$limit = (string) ( $parameters[0] ?? '' );
 
 		return match ( $rule ) {
-			'required'   => sprintf( __( '%s is required.', 'woocart-bridge' ), $label ),
-			'email'      => sprintf( __( '%s must be a valid email address.', 'woocart-bridge' ), $label ),
-			'url'        => sprintf( __( '%s must be a valid URL.', 'woocart-bridge' ), $label ),
-			'numeric'    => sprintf( __( '%s must be numeric.', 'woocart-bridge' ), $label ),
-			'integer'    => sprintf( __( '%s must be an integer.', 'woocart-bridge' ), $label ),
-			'min'        => sprintf( __( '%1$s must be at least %2$s.', 'woocart-bridge' ), $label, $limit ),
-			'max'        => sprintf( __( '%1$s must not exceed %2$s.', 'woocart-bridge' ), $label, $limit ),
-			'min_length' => sprintf( __( '%1$s must contain at least %2$s characters.', 'woocart-bridge' ), $label, $limit ),
-			'max_length' => sprintf( __( '%1$s must not exceed %2$s characters.', 'woocart-bridge' ), $label, $limit ),
-			'in'         => sprintf( __( '%s contains an invalid selection.', 'woocart-bridge' ), $label ),
-			'boolean'    => sprintf( __( '%s must be enabled or disabled.', 'woocart-bridge' ), $label ),
-			default      => sprintf( __( '%s is invalid.', 'woocart-bridge' ), $label ),
+			'required'   => sprintf( __( '%s is required.', 'cart-relay' ), $label ),
+			'email'      => sprintf( __( '%s must be a valid email address.', 'cart-relay' ), $label ),
+			'url'        => sprintf( __( '%s must be a valid URL.', 'cart-relay' ), $label ),
+			'numeric'    => sprintf( __( '%s must be numeric.', 'cart-relay' ), $label ),
+			'integer'    => sprintf( __( '%s must be an integer.', 'cart-relay' ), $label ),
+			'min'        => sprintf( __( '%1$s must be at least %2$s.', 'cart-relay' ), $label, $limit ),
+			'max'        => sprintf( __( '%1$s must not exceed %2$s.', 'cart-relay' ), $label, $limit ),
+			'min_length' => sprintf( __( '%1$s must contain at least %2$s characters.', 'cart-relay' ), $label, $limit ),
+			'max_length' => sprintf( __( '%1$s must not exceed %2$s characters.', 'cart-relay' ), $label, $limit ),
+			'in'         => sprintf( __( '%s contains an invalid selection.', 'cart-relay' ), $label ),
+			'boolean'    => sprintf( __( '%s must be enabled or disabled.', 'cart-relay' ), $label ),
+			default      => sprintf( __( '%s is invalid.', 'cart-relay' ), $label ),
 		};
 	}
 

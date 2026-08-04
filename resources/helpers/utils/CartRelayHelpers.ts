@@ -14,7 +14,7 @@ interface AjaxErrorResponse {
 type UrlParameterValue = string | boolean | Array<string | boolean>;
 type UrlParameters = Record<string, UrlParameterValue>;
 
-class WoocartBridgeHelpers {
+class CartRelayHelpers {
 
 	static swalShowLoading( title = __( 'Loading...' ) ): void {
 		Swal.fire( {
@@ -59,7 +59,7 @@ class WoocartBridgeHelpers {
 			const sanitizedErrorsHtml = errorValues.reduce( ( html, value, index ) => {
 				return `${html}
 					<li class="list-group-item alert alert-danger">
-						<span class="round round-primary q-round">${index + 1}</span>${WoocartBridgeHelpers.escapeHtml( String( value ) )}
+						<span class="round round-primary q-round">${index + 1}</span>${CartRelayHelpers.escapeHtml( String( value ) )}
 					</li>
 				`;
 			}, '<ul class="list-group" style="text-align: left">' ) + '</ul>';
@@ -153,4 +153,4 @@ class WoocartBridgeHelpers {
 
 }
 
-export { WoocartBridgeHelpers };
+export { CartRelayHelpers };

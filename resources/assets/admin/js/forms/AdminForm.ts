@@ -10,8 +10,8 @@ interface AjaxResponse {
 }
 
 const STATUS_CLASSES = {
-  success: [ 'wcb:border-green-200', 'wcb:bg-green-50', 'wcb:text-green-800' ],
-  error: [ 'wcb:border-red-200', 'wcb:bg-red-50', 'wcb:text-red-800' ],
+  success: [ 'cr:border-green-200', 'cr:bg-green-50', 'cr:text-green-800' ],
+  error: [ 'cr:border-red-200', 'cr:bg-red-50', 'cr:text-red-800' ],
 } as const;
 
 export class AdminForm {
@@ -65,29 +65,29 @@ export class AdminForm {
   }
 
   private clearFeedback(): void {
-    this.form.querySelectorAll<HTMLElement>( '[data-wcb-field-error]' ).forEach( ( error ) => {
+    this.form.querySelectorAll<HTMLElement>( '[data-cr-field-error]' ).forEach( ( error ) => {
       error.textContent = '';
-      error.classList.add( 'wcb:hidden' );
+      error.classList.add( 'cr:hidden' );
     } );
 
-    this.form.querySelectorAll<HTMLElement>( '[data-wcb-field]' ).forEach( ( field ) => {
+    this.form.querySelectorAll<HTMLElement>( '[data-cr-field]' ).forEach( ( field ) => {
       field.setAttribute( 'aria-invalid', 'false' );
     } );
 
     const status = this.getStatus();
-    status?.classList.add( 'wcb:hidden' );
+    status?.classList.add( 'cr:hidden' );
   }
 
   private showErrors( errors: Record<string, string> ): void {
     const invalidFields: HTMLElement[] = [];
 
     Object.entries( errors ).forEach( ( [name, message] ) => {
-      const error = this.form.querySelector<HTMLElement>( `[data-wcb-field-error="${CSS.escape( name )}"]` );
-      const field = this.form.querySelector<HTMLElement>( `[data-wcb-field="${CSS.escape( name )}"]` );
+      const error = this.form.querySelector<HTMLElement>( `[data-cr-field-error="${CSS.escape( name )}"]` );
+      const field = this.form.querySelector<HTMLElement>( `[data-cr-field="${CSS.escape( name )}"]` );
 
       if ( error ) {
         error.textContent = message;
-        error.classList.remove( 'wcb:hidden' );
+        error.classList.remove( 'cr:hidden' );
       }
 
       if ( field ) {
@@ -107,7 +107,7 @@ export class AdminForm {
     }
 
     status.classList.remove(
-      'wcb:hidden',
+      'cr:hidden',
       ...STATUS_CLASSES.success,
       ...STATUS_CLASSES.error,
     );
@@ -117,9 +117,9 @@ export class AdminForm {
   }
 
   private setLoading( loading: boolean ): void {
-    const submit = this.form.querySelector<HTMLButtonElement>( '[data-wcb-submit]' );
-    const label = this.form.querySelector<HTMLElement>( '[data-wcb-submit-label]' );
-    const loadingLabel = this.form.querySelector<HTMLElement>( '[data-wcb-submit-loading]' );
+    const submit = this.form.querySelector<HTMLButtonElement>( '[data-cr-submit]' );
+    const label = this.form.querySelector<HTMLElement>( '[data-cr-submit-label]' );
+    const loadingLabel = this.form.querySelector<HTMLElement>( '[data-cr-submit-loading]' );
 
     this.form.setAttribute( 'aria-busy', loading ? 'true' : 'false' );
 
@@ -127,11 +127,11 @@ export class AdminForm {
       submit.disabled = loading;
     }
 
-    label?.classList.toggle( 'wcb:hidden', loading );
-    loadingLabel?.classList.toggle( 'wcb:hidden', ! loading );
+    label?.classList.toggle( 'cr:hidden', loading );
+    loadingLabel?.classList.toggle( 'cr:hidden', ! loading );
   }
 
   private getStatus(): HTMLElement | null {
-    return this.form.querySelector<HTMLElement>( '[data-wcb-form-status]' );
+    return this.form.querySelector<HTMLElement>( '[data-cr-form-status]' );
   }
 }

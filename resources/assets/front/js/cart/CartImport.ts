@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { WoocartBridgeHelpers } from '@helpers/utils/WoocartBridgeHelpers';
+import { CartRelayHelpers } from '@helpers/utils/CartRelayHelpers';
 import { __, _n, sprintf } from '@helpers/utils/i18n';
 
 declare global {
@@ -84,7 +84,7 @@ class CartImport {
 	private isListening = false;
 
 	constructor( {
-		formSelector = '[data-woocart-bridge-import-form]',
+		formSelector = '[data-cart-relay-import-form]',
 		chunkSize = 25,
 	}: CartImportOptions = {} ) {
 		this.formSelector = formSelector;
@@ -116,7 +116,7 @@ class CartImport {
 			return;
 		}
 
-		const removeButton = target.closest<HTMLElement>( '[data-wcb-import-remove]' );
+		const removeButton = target.closest<HTMLElement>( '[data-cr-import-remove]' );
 
 		if ( removeButton ) {
 			const form = this.getImportForm( removeButton );
@@ -131,7 +131,7 @@ class CartImport {
 			return;
 		}
 
-		const previewButton = target.closest<HTMLElement>( '[data-wcb-import-preview]' );
+		const previewButton = target.closest<HTMLElement>( '[data-cr-import-preview]' );
 
 		if ( previewButton ) {
 			const form = this.getImportForm( previewButton );
@@ -145,7 +145,7 @@ class CartImport {
 			return;
 		}
 
-		const dropzone = target.closest<HTMLElement>( '[data-wcb-import-dropzone]' );
+		const dropzone = target.closest<HTMLElement>( '[data-cr-import-dropzone]' );
 
 		if ( ! dropzone ) {
 			return;
@@ -164,7 +164,7 @@ class CartImport {
 	private handleDocumentChange( event: Event ): void {
 		const target = event.target;
 
-		if ( ! ( target instanceof HTMLInputElement ) || ! target.matches( '[data-wcb-import-file]' ) ) {
+		if ( ! ( target instanceof HTMLInputElement ) || ! target.matches( '[data-cr-import-file]' ) ) {
 			return;
 		}
 
@@ -243,7 +243,7 @@ class CartImport {
 	}
 
 	private getDropzoneFromEvent( event: Event ): HTMLElement | null {
-		return this.getEventTargetElement( event )?.closest<HTMLElement>( '[data-wcb-import-dropzone]' ) || null;
+		return this.getEventTargetElement( event )?.closest<HTMLElement>( '[data-cr-import-dropzone]' ) || null;
 	}
 
 	private getEventTargetElement( event: Event ): Element | null {
@@ -251,7 +251,7 @@ class CartImport {
 	}
 
 	private getFileInput( form: HTMLElement ): HTMLInputElement | null {
-		return form.querySelector<HTMLInputElement>( '[data-wcb-import-file]' );
+		return form.querySelector<HTMLInputElement>( '[data-cr-import-file]' );
 	}
 
 	private getImportForm( element: Element ): HTMLElement | null {
@@ -303,7 +303,7 @@ class CartImport {
 		formData.append( 'nonce', this.getDatasetValue( form, 'previewNonce' ) );
 		formData.append( 'csv_file', file );
 
-		WoocartBridgeHelpers.swalShowLoading( __( 'Reading CSV...' ) );
+		CartRelayHelpers.swalShowLoading( __( 'Reading CSV...' ) );
 
 		const payload = await this.postFormData<PreviewResponse>( form, formData );
 
@@ -331,12 +331,12 @@ class CartImport {
 			cancelButtonText: __( 'Cancel' ),
 			buttonsStyling: false,
 			customClass: {
-				popup: 'wcb-import-preview-modal',
-				htmlContainer: 'wcb-import-preview-modal__html',
-				actions: 'wcb-import-preview-modal__actions',
-				cancelButton: 'wcb-import-preview-modal__cancel',
-				confirmButton: 'wcb-import-preview-modal__confirm',
-				closeButton: 'wcb-import-preview-modal__close',
+				popup: 'cr-import-preview-modal',
+				htmlContainer: 'cr-import-preview-modal__html',
+				actions: 'cr-import-preview-modal__actions',
+				cancelButton: 'cr-import-preview-modal__cancel',
+				confirmButton: 'cr-import-preview-modal__confirm',
+				closeButton: 'cr-import-preview-modal__close',
 			},
 		} );
 
@@ -352,7 +352,7 @@ class CartImport {
 		const updatedItems: UpdatedCartItem[] = [];
 		let added = 0;
 
-		WoocartBridgeHelpers.swalShowLoading( __( 'Importing products...' ) );
+		CartRelayHelpers.swalShowLoading( __( 'Importing products...' ) );
 		this.updateProgress( 0, items.length, added, errors.length );
 
 		for ( let index = 0; index < chunks.length; index++ ) {
@@ -425,7 +425,7 @@ class CartImport {
 		const data = payload?.data;
 		const errors = this.getResponseErrors( data );
 
-		WoocartBridgeHelpers.ajaxErrorHandler(
+		CartRelayHelpers.ajaxErrorHandler(
 			{
 				status,
 				responseText,
@@ -462,32 +462,32 @@ class CartImport {
 		const totalAmount = response.items.reduce( ( total, item ) => total + this.getNumber( item.subtotal ), 0 );
 
 		return `
-			<div class="wcb-import-preview">
-				<div class="wcb-import-preview__header">
+			<div class="cr-import-preview">
+				<div class="cr-import-preview__header">
 					<h2>${__( 'Import preview' )}</h2>
 					<p>${__( 'Review products before adding them to WooCommerce.' )}</p>
 				</div>
-				<div class="wcb-import-preview__summary">
-					<div class="wcb-import-preview__badges">
-						<span class="wcb-import-preview__badge wcb-import-preview__badge--ok">
+				<div class="cr-import-preview__summary">
+					<div class="cr-import-preview__badges">
+						<span class="cr-import-preview__badge cr-import-preview__badge--ok">
 							<span aria-hidden="true"></span>
 							<strong>${response.items.length}</strong> ${__( 'valid' )}
 						</span>
-						<span class="wcb-import-preview__badge wcb-import-preview__badge--error">
+						<span class="cr-import-preview__badge cr-import-preview__badge--error">
 							<span aria-hidden="true"></span>
 							<strong>${response.errors.length}</strong> ${_n( 'with issue', 'with issues', response.errors.length )}
 						</span>
-						<span class="wcb-import-preview__badge wcb-import-preview__badge--total">
+						<span class="cr-import-preview__badge cr-import-preview__badge--total">
 							<strong>${totalItems}</strong> ${__( 'total' )}
 						</span>
 					</div>
-					<div class="wcb-import-preview__amount">
+					<div class="cr-import-preview__amount">
 						<span>${__( 'Amount to import' )}</span>
 						<strong>${this.formatCurrency( totalAmount, response.currency )}</strong>
 					</div>
 				</div>
-				<div class="wcb-import-preview-table-wrapper">
-					<table class="wcb-import-preview-table">
+				<div class="cr-import-preview-table-wrapper">
+					<table class="cr-import-preview-table">
 						<thead>
 							<tr>
 								<th>${__( 'Product' )}</th>
@@ -504,7 +504,7 @@ class CartImport {
 						</tbody>
 					</table>
 				</div>
-				<div class="wcb-import-preview__footer-note">
+				<div class="cr-import-preview__footer-note">
 					${this.renderPreviewFooterNote( response.errors.length )}
 				</div>
 			</div>
@@ -518,60 +518,60 @@ class CartImport {
 					${this.renderPreviewProduct( item )}
 				</td>
 				<td>${this.renderProductVariationLink( item )}</td>
-				<td class="wcb-import-preview-table__number">${item.quantity}</td>
-				<td class="wcb-import-preview-table__number">${this.formatCurrency( item.price, currency )}</td>
-				<td class="wcb-import-preview-table__number"><strong>${this.formatCurrency( item.subtotal, currency )}</strong></td>
-				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--ok">${__( 'Ready' )}</span></td>
+				<td class="cr-import-preview-table__number">${item.quantity}</td>
+				<td class="cr-import-preview-table__number">${this.formatCurrency( item.price, currency )}</td>
+				<td class="cr-import-preview-table__number"><strong>${this.formatCurrency( item.subtotal, currency )}</strong></td>
+				<td class="cr-import-preview-table__status"><span class="cr-import-status cr-import-status--ok">${__( 'Ready' )}</span></td>
 			</tr>
 		`;
 	}
 
 	private renderPreviewErrorRow( error: RowError ): string {
 		return `
-			<tr class="wcb-import-preview-table__row--error">
+			<tr class="cr-import-preview-table__row--error">
 				<td>
-					<div class="wcb-import-preview-product">
-						<span class="wcb-import-preview-product__fallback">!</span>
-						<div class="wcb-import-preview-product__meta">
+					<div class="cr-import-preview-product">
+						<span class="cr-import-preview-product__fallback">!</span>
+						<div class="cr-import-preview-product__meta">
 							<strong>${error.row > 0 ? sprintf( __( 'Row %d' ), error.row ) : '-'}</strong>
-							<span class="wcb-import-preview-product__error">${WoocartBridgeHelpers.escapeHtml( error.message )}</span>
+							<span class="cr-import-preview-product__error">${CartRelayHelpers.escapeHtml( error.message )}</span>
 						</div>
 					</div>
 				</td>
 				<td>-</td>
-				<td class="wcb-import-preview-table__number">-</td>
-				<td class="wcb-import-preview-table__number">-</td>
-				<td class="wcb-import-preview-table__number">-</td>
-				<td class="wcb-import-preview-table__status"><span class="wcb-import-status wcb-import-status--error">${__( 'With issue' )}</span></td>
+				<td class="cr-import-preview-table__number">-</td>
+				<td class="cr-import-preview-table__number">-</td>
+				<td class="cr-import-preview-table__number">-</td>
+				<td class="cr-import-preview-table__status"><span class="cr-import-status cr-import-status--error">${__( 'With issue' )}</span></td>
 			</tr>
 		`;
 	}
 
 	private renderPreviewThumb( item: ImportItem ): string {
 		if ( item.image ) {
-			return `<img class="wcb-import-preview-product__image" src="${WoocartBridgeHelpers.escapeHtml( item.image )}" alt="">`;
+			return `<img class="cr-import-preview-product__image" src="${CartRelayHelpers.escapeHtml( item.image )}" alt="">`;
 		}
 
-		return `<span class="wcb-import-preview-product__fallback">${WoocartBridgeHelpers.escapeHtml( this.getInitial( item.name ) )}</span>`;
+		return `<span class="cr-import-preview-product__fallback">${CartRelayHelpers.escapeHtml( this.getInitial( item.name ) )}</span>`;
 	}
 
 	private renderPreviewProduct( item: ImportItem ): string {
 		const content = `
 			${this.renderPreviewThumb( item )}
-			<div class="wcb-import-preview-product__meta">
-				<strong>${WoocartBridgeHelpers.escapeHtml( item.name )}</strong>
-				<span>SKU ${WoocartBridgeHelpers.escapeHtml( item.sku || '-' )}</span>
+			<div class="cr-import-preview-product__meta">
+				<strong>${CartRelayHelpers.escapeHtml( item.name )}</strong>
+				<span>SKU ${CartRelayHelpers.escapeHtml( item.sku || '-' )}</span>
 			</div>
 		`;
 
 		if ( ! item.permalink ) {
-			return `<div class="wcb-import-preview-product">${content}</div>`;
+			return `<div class="cr-import-preview-product">${content}</div>`;
 		}
 
 		return `
 			<a
-				class="wcb-import-preview-product wcb-import-preview-product--link"
-				href="${WoocartBridgeHelpers.escapeHtml( item.permalink )}"
+				class="cr-import-preview-product cr-import-preview-product--link"
+				href="${CartRelayHelpers.escapeHtml( item.permalink )}"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
@@ -601,11 +601,11 @@ class CartImport {
 		Swal.update( {
 			title: sprintf( __( 'Importing products... %1$d / %2$d' ), current, total ),
 			html: `
-				<div class="wcb-import-progress">
-					<div class="wcb-import-progress__track">
-						<div class="wcb-import-progress__bar" style="width: ${percent}%"></div>
+				<div class="cr-import-progress">
+					<div class="cr-import-progress__track">
+						<div class="cr-import-progress__bar" style="width: ${percent}%"></div>
 					</div>
-					<div class="wcb-import-progress__meta">
+					<div class="cr-import-progress__meta">
 						<span>${sprintf( __( 'Added: %d' ), added )}</span>
 						<span>${sprintf( __( 'With issues: %d' ), errorCount )}</span>
 					</div>
@@ -626,7 +626,7 @@ class CartImport {
 				timerProgressBar: true,
 				showConfirmButton: false,
 				customClass: {
-					popup: 'wcb-import-result-toast',
+					popup: 'cr-import-result-toast',
 				},
 			} );
 
@@ -640,43 +640,43 @@ class CartImport {
 			confirmButtonText: __( 'Close' ),
 			buttonsStyling: false,
 			customClass: {
-				popup: 'wcb-import-result-modal',
-				htmlContainer: 'wcb-import-result-modal__html',
-				confirmButton: 'wcb-import-result-modal__confirm',
+				popup: 'cr-import-result-modal',
+				htmlContainer: 'cr-import-result-modal__html',
+				confirmButton: 'cr-import-result-modal__confirm',
 			},
 		} );
 	}
 
 	private renderImportResultIssues( added: number, errors: RowError[] ): string {
 		return `
-			<div class="wcb-import-result">
-				<div class="wcb-import-result__stats">
-					<span class="wcb-import-result__stat wcb-import-result__stat--ok">
+			<div class="cr-import-result">
+				<div class="cr-import-result__stats">
+					<span class="cr-import-result__stat cr-import-result__stat--ok">
 						<strong>${added}</strong>
 						${_n( 'product added', 'products added', added )}
 					</span>
-					<span class="wcb-import-result__stat wcb-import-result__stat--error">
+					<span class="cr-import-result__stat cr-import-result__stat--error">
 						<strong>${errors.length}</strong>
 						${_n( 'issue', 'issues', errors.length )}
 					</span>
 				</div>
-				<div class="wcb-import-result__errors">
-					${errors.map( ( error ) => `<p>${WoocartBridgeHelpers.escapeHtml( this.formatRowError( error ) )}</p>` ).join( '' )}
+				<div class="cr-import-result__errors">
+					${errors.map( ( error ) => `<p>${CartRelayHelpers.escapeHtml( this.formatRowError( error ) )}</p>` ).join( '' )}
 				</div>
 			</div>
 		`;
 	}
 
 	private renderSummary( form: HTMLElement, summary: { added: number; errors: RowError[] } ): void {
-		const summaryElement = form.querySelector<HTMLElement>( '[data-wcb-import-summary]' );
+		const summaryElement = form.querySelector<HTMLElement>( '[data-cr-import-summary]' );
 
 		if ( ! summaryElement ) {
 			return;
 		}
 
 		const errorsHtml = summary.errors.length > 0
-			? `<ul>${summary.errors.map( ( error ) => `<li>${WoocartBridgeHelpers.escapeHtml( this.formatRowError( error ) )}</li>` ).join( '' )}</ul>`
-			: `<p class="wcb-import-summary__success">${__( 'All products were added successfully.' )}</p>`;
+			? `<ul>${summary.errors.map( ( error ) => `<li>${CartRelayHelpers.escapeHtml( this.formatRowError( error ) )}</li>` ).join( '' )}</ul>`
+			: `<p class="cr-import-summary__success">${__( 'All products were added successfully.' )}</p>`;
 
 		summaryElement.hidden = false;
 		summaryElement.innerHTML = `
@@ -688,7 +688,7 @@ class CartImport {
 	}
 
 	private clearSummary( form: HTMLElement ): void {
-		const summaryElement = form.querySelector<HTMLElement>( '[data-wcb-import-summary]' );
+		const summaryElement = form.querySelector<HTMLElement>( '[data-cr-import-summary]' );
 
 		if ( summaryElement ) {
 			summaryElement.hidden = true;
@@ -697,12 +697,12 @@ class CartImport {
 	}
 
 	private setFileMeta( form: HTMLElement, file: File ): void {
-		const meta = form.querySelector<HTMLElement>( '[data-wcb-import-file-meta]' );
-		const emptyState = form.querySelector<HTMLElement>( '[data-wcb-import-empty-state]' );
-		const dropzone = form.querySelector<HTMLElement>( '[data-wcb-import-dropzone]' );
-		const icon = form.querySelector<SVGElement>( '.wcb-import-dropzone__icon' );
-		const name = form.querySelector<HTMLElement>( '[data-wcb-import-file-name]' );
-		const size = form.querySelector<HTMLElement>( '[data-wcb-import-file-size]' );
+		const meta = form.querySelector<HTMLElement>( '[data-cr-import-file-meta]' );
+		const emptyState = form.querySelector<HTMLElement>( '[data-cr-import-empty-state]' );
+		const dropzone = form.querySelector<HTMLElement>( '[data-cr-import-dropzone]' );
+		const icon = form.querySelector<SVGElement>( '.cr-import-dropzone__icon' );
+		const name = form.querySelector<HTMLElement>( '[data-cr-import-file-name]' );
+		const size = form.querySelector<HTMLElement>( '[data-cr-import-file-size]' );
 
 		if ( meta ) {
 			meta.hidden = false;
@@ -730,10 +730,10 @@ class CartImport {
 	}
 
 	private setDropzoneEmpty( form: HTMLElement ): void {
-		const meta = form.querySelector<HTMLElement>( '[data-wcb-import-file-meta]' );
-		const emptyState = form.querySelector<HTMLElement>( '[data-wcb-import-empty-state]' );
-		const dropzone = form.querySelector<HTMLElement>( '[data-wcb-import-dropzone]' );
-		const icon = form.querySelector<SVGElement>( '.wcb-import-dropzone__icon' );
+		const meta = form.querySelector<HTMLElement>( '[data-cr-import-file-meta]' );
+		const emptyState = form.querySelector<HTMLElement>( '[data-cr-import-empty-state]' );
+		const dropzone = form.querySelector<HTMLElement>( '[data-cr-import-dropzone]' );
+		const icon = form.querySelector<SVGElement>( '.cr-import-dropzone__icon' );
 
 		if ( meta ) {
 			meta.hidden = true;
@@ -828,7 +828,7 @@ class CartImport {
 	}
 
 	private renderProductVariationLink( item: ImportItem ): string {
-		const label = WoocartBridgeHelpers.escapeHtml( this.formatProductVariationId( item ) );
+		const label = CartRelayHelpers.escapeHtml( this.formatProductVariationId( item ) );
 
 		if ( ! item.permalink ) {
 			return label;
@@ -836,8 +836,8 @@ class CartImport {
 
 		return `
 			<a
-				class="wcb-import-preview-table__product-link"
-				href="${WoocartBridgeHelpers.escapeHtml( item.permalink )}"
+				class="cr-import-preview-table__product-link"
+				href="${CartRelayHelpers.escapeHtml( item.permalink )}"
 				target="_blank"
 				rel="noopener noreferrer"
 			>
@@ -865,7 +865,7 @@ class CartImport {
 	private async refreshCartDisplay( updatedItems: UpdatedCartItem[] ): Promise<void> {
 		this.syncVisibleCartQuantities( updatedItems );
 
-		if ( await this.triggerWooCartUpdate() ) {
+		if ( await this.triggerWooCommerceCartUpdate() ) {
 			return;
 		}
 
@@ -900,7 +900,7 @@ class CartImport {
 		return match ? match[1] : '';
 	}
 
-	private triggerWooCartUpdate(): Promise<boolean> {
+	private triggerWooCommerceCartUpdate(): Promise<boolean> {
 		if ( typeof window.jQuery !== 'function' || ! document.querySelector( '.woocommerce-cart-form' ) ) {
 			return Promise.resolve( false );
 		}

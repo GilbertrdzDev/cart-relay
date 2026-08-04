@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-WooCart Bridge is a WordPress plugin (PHP >= 8.2) whose purpose is importing/exporting WooCommerce carts via simple CSV files (SKU + quantity). The plugin scaffolding (Core, Loader, AssetManager, Component system) is in place, but the CSV import/export feature itself has not yet been implemented — `app/Components/` is currently an empty scaffold directory.
+Cart Relay is a WordPress plugin (PHP >= 8.2) whose purpose is importing/exporting WooCommerce carts via simple CSV files (SKU + quantity). The plugin scaffolding (Core, Loader, AssetManager, Component system) is in place, but the CSV import/export feature itself has not yet been implemented — `app/Components/` is currently an empty scaffold directory.
 
 ## Local WordPress environment
 
-This working directory (`C:\devs\wordpress\plugins\woocart-bridge`) is symlinked into a local Laragon WordPress install's plugins folder at `C:\laragon\www\wptest\wp-content\plugins\woocart-bridge`. The site is served locally at `https://wptest.test`.
+This working directory (`C:\devs\wordpress\plugins\cart-relay`) is symlinked into a local Laragon WordPress install's plugins folder at `C:\laragon\www\wptest\wp-content\plugins\cart-relay`. The site is served locally at `https://wptest.test`.
 
 WP-CLI is on the system PATH (as `wp`) for validating/testing the plugin against the live local site (e.g. checking hooks, options, running the plugin's activation/deactivation, inspecting DB state). Run it from the WordPress root (`C:\laragon\www\wptest`), e.g.:
 ```
@@ -38,7 +38,7 @@ There are no automated tests configured in this repository currently.
 ## Architecture
 
 ### Boot sequence
-`woocart-bridge.php` is the plugin entry file WordPress reads. It defines `WOOCART_BRIDGE_DIR_PATH`/`WOOCART_BRIDGE_DIR_URL`, wires `register_activation_hook`/`register_deactivation_hook` to `App\Core\Activator`/`Deactivator`, and on `plugins_loaded` instantiates `App\Core\Plugin` and calls `->run()`.
+`cart-relay.php` is the plugin entry file WordPress reads. It defines `CART_RELAY_DIR_PATH`/`CART_RELAY_DIR_URL`, wires `register_activation_hook`/`register_deactivation_hook` to `App\Core\Activator`/`Deactivator`, and on `plugins_loaded` instantiates `App\Core\Plugin` and calls `->run()`.
 
 `Plugin::run()` is the orchestrator:
 1. `setLocale()` — registers `I18n::loadPluginTextdomain` on `plugins_loaded`.
@@ -71,10 +71,10 @@ Singleton PHP template renderer (accessed as `Plugin::$component`). `render('som
 
 ### Frontend build (Vite)
 `vite.config.ts` uses `@kucrut/vite-for-wp`'s `v4wp()` plugin with two entrypoints, output to `dist/`:
-- `resources/assets/admin/js/app-admin.js` → imports `bootstrap-admin.js`, `woocart-bridge-admin.js`, `../css/woocart-bridge-admin.scss`
-- `resources/assets/front/js/app-front.js` → imports `bootstrap-front.js`, `woocart-bridge-front.js`, `../css/woocart-bridge-front.scss`
+- `resources/assets/admin/js/app-admin.js` → imports `bootstrap-admin.js`, `cart-relay-admin.js`, `../css/cart-relay-admin.scss`
+- `resources/assets/front/js/app-front.js` → imports `bootstrap-front.js`, `cart-relay-front.js`, `../css/cart-relay-front.scss`
 
-`resources/helpers/utils/WoocartBridgeHelpers.js` is a shared static-method utility class (SweetAlert2-based loading/error UI helpers, ajax error formatting, URL query param parsing) meant to be imported by the admin/front bundles.
+`resources/helpers/utils/CartRelayHelpers.js` is a shared static-method utility class (SweetAlert2-based loading/error UI helpers, ajax error formatting, URL query param parsing) meant to be imported by the admin/front bundles.
 
 ### PHP helpers (`app/Helpers/`)
 - `Str` — camel/snake/kebab/studly case conversion helpers (with internal memoization caches).
