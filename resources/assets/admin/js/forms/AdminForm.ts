@@ -96,7 +96,16 @@ export class AdminForm {
       }
     } );
 
-    invalidFields[0]?.focus();
+    const firstInvalidField = invalidFields[0];
+    const panel = firstInvalidField?.closest<HTMLElement>( '[data-cr-tab-panel]' );
+
+    if ( panel?.dataset.crTabPanel ) {
+      this.form.dispatchEvent( new CustomEvent( 'cr:activate-tab', {
+        detail: { tabId: panel.dataset.crTabPanel },
+      } ) );
+    }
+
+    firstInvalidField?.focus();
   }
 
   private showStatus( message: string, state: keyof typeof STATUS_CLASSES ): void {

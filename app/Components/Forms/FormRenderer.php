@@ -13,11 +13,16 @@ class FormRenderer {
 
 	public function __construct( private readonly ComponentCompiler $compiler ) {}
 
-	public function render( Form $form, array $values, array $errors = [] ): string {
-		$sections = '';
-		$initial  = [];
+	public function render( Form $form, array $values, array $errors = [], string $active_tab = '' ): string {
+		$sections          = '';
+		$initial           = [];
+		$rendered_sections = [];
 
 		foreach ( $form->getSections() as $section ) {
+			if ( $section->getFields() === [] ) {
+				continue;
+			}
+
 			$fields = '';
 
 			foreach ( $section->getFields() as $field ) {
@@ -26,7 +31,7 @@ class FormRenderer {
 				$fields .= $this->renderField( $field, $value, $errors[ $field->getName() ] ?? '' );
 			}
 
-			$sections .= $this->compiler->render(
+			$section_html = $this->compiler->render(
 				'forms.section',
 				[
 					'id'          => $section->getId(),
@@ -35,6 +40,44 @@ class FormRenderer {
 					'fields'      => $fields,
 				]
 			);
+			$rendered_sections[ spl_object_id( $section ) ] = $section_html;
+
+			if ( ! $section->hasTab() ) {
+				$sections .= $section_html;
+			}
+		}
+
+		$tabs          = $form->getTabs();
+		$active_tab    = $form->resolveTabId( $active_tab );
+		$rendered_tabs = [];
+
+		foreach ( $tabs as $tab ) {
+			$content = '';
+
+			foreach ( $tab['sections'] as $section ) {
+				$content .= $rendered_sections[ spl_object_id( $section ) ] ?? '';
+			}
+
+			if ( $content === '' ) {
+				continue;
+			}
+
+			$rendered_tabs[] = [
+				'id'      => $tab['id'],
+				'title'   => $tab['title'],
+				'content' => $content,
+			];
+		}
+
+		if ( $rendered_tabs !== [] ) {
+			$sections = $this->compiler->render(
+				'forms.tabs',
+				[
+					'form_id'    => $form->getId(),
+					'tabs'       => $rendered_tabs,
+					'active_tab' => $active_tab,
+				]
+			) . $sections;
 		}
 
 		return $this->compiler->render(
@@ -46,6 +89,7 @@ class FormRenderer {
 				'ajax_url'       => admin_url( 'admin-ajax.php' ),
 				'initial_values' => $initial,
 				'sections'       => $sections,
+				'active_tab'     => $active_tab,
 			]
 		);
 	}

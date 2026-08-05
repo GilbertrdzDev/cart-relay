@@ -10,6 +10,9 @@ defined( 'ABSPATH' ) || exit;
 class Section {
 
 	private array $fields = [];
+	private string $tabId = '';
+	private string $tabTitle = '';
+	private int $tabOrder = 0;
 
 	public function __construct(
 		private readonly string $id,
@@ -33,6 +36,14 @@ class Section {
 		return $this->add( new Field( $name, FieldType::HIDDEN ) );
 	}
 
+	public function tab( string $id, string $title, int $order ): self {
+		$this->tabId    = $id;
+		$this->tabTitle = $title;
+		$this->tabOrder = $order;
+
+		return $this;
+	}
+
 	public function getId(): string {
 		return $this->id;
 	}
@@ -43,6 +54,22 @@ class Section {
 
 	public function getDescription(): string {
 		return $this->description;
+	}
+
+	public function hasTab(): bool {
+		return $this->tabId !== '';
+	}
+
+	public function getTabId(): string {
+		return $this->tabId;
+	}
+
+	public function getTabTitle(): string {
+		return $this->tabTitle;
+	}
+
+	public function getTabOrder(): int {
+		return $this->tabOrder;
 	}
 
 	public function getFields(): array {
