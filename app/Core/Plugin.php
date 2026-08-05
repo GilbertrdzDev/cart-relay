@@ -1,13 +1,13 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
-use WoocartBridge\App\Interfaces\EnqueueScript;
-use WoocartBridge\App\Interfaces\EnqueueStyle;
-use WoocartBridge\App\Interfaces\HasActions;
-use WoocartBridge\App\Interfaces\HasFilters;
-use WoocartBridge\App\Interfaces\HasShortcodes;
-use WoocartBridge\App\Interfaces\Shortcode;
+use CartRelay\App\Interfaces\EnqueueScript;
+use CartRelay\App\Interfaces\EnqueueStyle;
+use CartRelay\App\Interfaces\HasActions;
+use CartRelay\App\Interfaces\HasFilters;
+use CartRelay\App\Interfaces\HasShortcodes;
+use CartRelay\App\Interfaces\Shortcode;
 
 
 defined( 'ABSPATH' ) || exit;
@@ -17,27 +17,19 @@ class Plugin {
 	protected Loader $loader;
 	protected AssetManager $asset_manager;
 	public ComponentCompiler $component;
-	protected string $name = 'woocart-bridge';
-	protected string $version = '1.0.0';
+	protected string $name = 'cart-relay';
 	private array $components = [];
 
 	public function __construct() {
 		$this->loader        = new Loader();
 		$this->asset_manager = new AssetManager(
 			$this->loader,
-			WOOCART_BRIDGE_DIR_PATH,
-			WOOCART_BRIDGE_DIR_URL
+			CART_RELAY_DIR_PATH,
+			CART_RELAY_DIR_URL
 		);
 		$this->component     = ComponentCompiler::get_instance(
-			WOOCART_BRIDGE_DIR_PATH . 'resources/views/components/'
+			CART_RELAY_DIR_PATH . 'resources/views/components/'
 		);
-	}
-
-	private function setLocale(): void {
-		$plugin_i18n = new I18n();
-		$plugin_i18n->setDomain( $this->getName() );
-
-		$this->loader->add_action( 'plugins_loaded', [ $plugin_i18n, 'loadPluginTextdomain' ] );
 	}
 
 	private function setAdminHooks(): void {
@@ -76,7 +68,6 @@ class Plugin {
 	}
 
 	public function run(): void {
-		$this->setLocale();
 		$this->setAdminHooks();
 		$this->setFrontendHooks();
 		$this->registerComponents();
@@ -97,7 +88,7 @@ class Plugin {
 	}
 
 	public function getVersion(): string {
-		return $this->version;
+		return CART_RELAY_VERSION;
 	}
 
 }

@@ -1,6 +1,10 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
+
+use CartRelay\App\Components\CartButtons\CartButtonsComponent;
+use CartRelay\App\Components\CartExport\CartExportComponent;
+use CartRelay\App\Components\CartImport\CartImportComponent;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,16 +17,16 @@ class Front {
 	}
 
 	public function registerAssets(): void {
-		$this->plugin->getAssetManager()->frontend_vite(
-			"{$this->plugin->getName()}-front-js",
-			'resources/assets/front/js/app-front.js',
-			[
-				'in-footer' => true,
-			]
-		);
+		// Frontend assets are registered by feature components so they can load conditionally.
 	}
 
-	public function registerHooks(): void {}
+	public function registerHooks(): void {
+		$this->plugin->addComponents(
+			CartExportComponent::class,
+			CartImportComponent::class,
+			CartButtonsComponent::class
+		);
+	}
 
 	public function enqueueStyles(): void {}
 

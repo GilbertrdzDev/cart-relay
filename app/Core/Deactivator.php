@@ -6,19 +6,19 @@
  * @link         https://gilbertrdz.dev
  * @since        1.0.0
  *
- * @package      WoocartBridge
- * @subpackage   WoocartBridge/app/Core
+ * @package      CartRelay
+ * @subpackage   CartRelay/app/Core
  *
  * @author       Gilbert Rodríguez <gilbertrdz.dev@gmail.com>
  */
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Deactivator
- * @package WoocartBridge\App\Core
+ * @package CartRelay\App\Core
  */
 class Deactivator {
 
@@ -33,7 +33,6 @@ class Deactivator {
 	public static function deactivate(): void {
 
 		flush_rewrite_rules();
-
 	}
 
 }

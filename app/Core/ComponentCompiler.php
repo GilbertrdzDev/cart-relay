@@ -1,6 +1,6 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
 use Exception;
 
@@ -42,7 +42,7 @@ class ComponentCompiler {
 
 	private function get_component( string $component ): string {
 		if ( ! preg_match( '/^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/', $component ) ) {
-			throw new Exception( "Invalid component name {$component}." );
+			throw new Exception( "Invalid component name {$component}." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 		}
 
 		$base_path = realpath( $this->component_path );
@@ -59,7 +59,7 @@ class ComponentCompiler {
 			|| ! is_file( $real_template )
 			|| ! str_starts_with( $real_template, $base_path . DIRECTORY_SEPARATOR )
 		) {
-			throw new Exception( "Component {$component} not found." );
+			throw new Exception( "Component {$component} not found." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 		}
 
 		return $real_template;
@@ -68,7 +68,7 @@ class ComponentCompiler {
 	private function compile( string $template, array $data = [] ): string {
 		ob_start();
 
-		extract( $data, EXTR_SKIP );
+		extract( $data, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Internal templates receive a fixed, validated data map.
 		include $template;
 
 		return (string) ob_get_clean();

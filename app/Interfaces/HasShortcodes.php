@@ -1,8 +1,8 @@
 <?php
 
-namespace WoocartBridge\App\Interfaces;
+namespace CartRelay\App\Interfaces;
 
-use WoocartBridge\App\Core\Loader;
+use CartRelay\App\Core\Loader;
 
 
 defined( 'ABSPATH' ) || exit;

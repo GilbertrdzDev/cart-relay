@@ -1,6 +1,6 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
 use InvalidArgumentException;
 use Kucrut\Vite;
@@ -233,10 +233,25 @@ class AssetManager {
 	}
 
 	private function dispatch_vite_assets( array $assets, bool $admin = false ): void {
+		$dispatched = [];
+
 		foreach ( $assets as $asset ) {
 			if ( $admin && ! $this->should_enqueue_for_screen( $asset['options']['screens'] ?? null ) ) {
 				continue;
 			}
+
+			if ( ! $this->should_enqueue_for_condition( $asset['options']['condition'] ?? null ) ) {
+				continue;
+			}
+
+			$asset_key = $asset['handle'] . '|' . $asset['entry'];
+
+			if ( isset( $dispatched[ $asset_key ] ) ) {
+				continue;
+			}
+
+			$dispatched[ $asset_key ] = true;
+			$text_domain = (string) ( $asset['options']['text-domain'] ?? '' );
 
 			$options = array_merge(
 				[
@@ -245,7 +260,7 @@ class AssetManager {
 				],
 				$asset['options']
 			);
-			unset( $options['screens'] );
+			unset( $options['screens'], $options['condition'], $options['text-domain'] );
 
 			Vite\enqueue_asset(
 				$this->trailingslash( $this->base_path ) . trim( $this->dist_path, '/\\' ),
@@ -258,6 +273,14 @@ class AssetManager {
 					$asset['handle'],
 					$asset['localize']['object_name'],
 					$asset['localize']['data']
+				);
+			}
+
+			if ( $text_domain !== '' && function_exists( 'wp_set_script_translations' ) ) {
+				wp_set_script_translations(
+					$asset['handle'],
+					$text_domain,
+					$this->trailingslash( $this->base_path ) . 'languages'
 				);
 			}
 		}
@@ -308,7 +331,7 @@ class AssetManager {
 			$url = esc_url_raw( $path );
 
 			if ( $url === '' ) {
-				throw new InvalidArgumentException( "Invalid asset URL {$path}." );
+				throw new InvalidArgumentException( "Invalid asset URL {$path}." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 			}
 
 			return $url;
@@ -327,7 +350,7 @@ class AssetManager {
 			|| preg_match( '#^[A-Za-z]:/#', $normalized )
 			|| preg_match( '#(^|/)\.\.(/|$)#', $normalized )
 		) {
-			throw new InvalidArgumentException( "Invalid relative asset path {$path}." );
+			throw new InvalidArgumentException( "Invalid relative asset path {$path}." ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal exception, not HTML output.
 		}
 
 		return $normalized;
@@ -343,6 +366,18 @@ class AssetManager {
 		$screens_list = is_array( $screens ) ? $screens : [ $screens ];
 
 		return in_array( $screen_id, $screens_list, true );
+	}
+
+	private function should_enqueue_for_condition( callable|bool|null $condition ): bool {
+		if ( $condition === null ) {
+			return true;
+		}
+
+		if ( is_bool( $condition ) ) {
+			return $condition;
+		}
+
+		return (bool) call_user_func( $condition );
 	}
 
 	private function trailingslash( string $path ): string {

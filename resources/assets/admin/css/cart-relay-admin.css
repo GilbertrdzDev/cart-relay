@@ -1,0 +1,15 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(cr);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(cr);
+
+/* Tailwind source discovery */
+@source "../../../../app/**/*.php";
+@source "../../../views/**/*.php";
+@source "../js/**/*.ts";
+
+/* Plugins */
+@plugin "@tailwindcss/forms";
+
+.cr-admin [x-cloak] {
+  display: none !important;
+}

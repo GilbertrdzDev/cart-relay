@@ -1,44 +1,31 @@
 <?php
 
-namespace WoocartBridge\App\Core;
+namespace CartRelay\App\Core;
 
-use WoocartBridge\App\Helpers\PageTemplater;
-
+use CartRelay\App\Components\Admin\SettingsPageComponent;
+use CartRelay\App\Components\RequirementsCheck;
 
 defined( 'ABSPATH' ) || exit;
 
 class Admin {
 
 	private Plugin $plugin;
-	private PageTemplater $pageTemplater;
 
 	public function __construct( Plugin $plugin ) {
-		$this->plugin        = $plugin;
-		$this->pageTemplater = new PageTemplater();
+
+		$this->plugin = $plugin;
 	}
 
 	public function registerAssets(): void {
-		$this->plugin->getAssetManager()->admin_vite(
-			"{$this->plugin->getName()}-admin-js",
-			'resources/assets/admin/js/app-admin.js',
-			[
-				'in-footer' => true,
-			]
-		);
-	}
 
+		// Admin assets are registered by components so they can be scoped to their screens.
+	}
 	public function registerHooks(): void {
-		$this->plugin->getLoader()->add_action( 'after_setup_theme', [ $this, 'templates' ] );
-	}
 
+		$this->plugin->addComponents( RequirementsCheck::class, SettingsPageComponent::class );
+	}
 	public function enqueueStyles(): void {}
 
 	public function enqueueScripts(): void {}
-
-	public function templates(): void {
-		$this->pageTemplater->addTemplates( [
-			// 'templates/template-blank.php' => 'Blank template',
-		] )->run();
-	}
 
 }

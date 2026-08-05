@@ -1,13 +1,16 @@
 {
-    "name": "woocart-bridge/app",
-    "description": "WooCart Bridge Free permite importar y exportar carritos de WooCommerce usando archivos CSV simples con SKU y cantidad.",
+    "name": "cart-relay/app",
+    "description": "Import and export WooCommerce carts with simple CSV files using SKU and quantity.",
     "type": "wordpress-plugin",
     "require": {
         "php": ">=8.2.0",
-        "composer/installers": "^2.2.0",
         "kucrut/vite-for-wp": "^0.12.0"
     },
-    "license": "GPL-2.0+",
+    "require-dev": {
+        "phpunit/phpunit": "^11.5",
+        "wp-coding-standards/wpcs": "^3.4.1"
+    },
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Gilbert Rodríguez",
@@ -16,12 +19,25 @@
     ],
     "autoload": {
         "psr-4": {
-            "WoocartBridge\\App\\": "app/"
+            "CartRelay\\App\\": "app/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CartRelay\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-version": "php tools/verify-version.php",
+        "lint": "php tools/lint-php.php",
+        "package": "php tools/build-package.php",
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf"
     },
     "config": {
         "allow-plugins": {
-            "composer/installers": true
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ruleset name="Cart Relay">
+	<description>WordPress coding standards for Cart Relay runtime PHP.</description>
+
+	<file>cart-relay.php</file>
+	<file>uninstall.php</file>
+	<file>app</file>
+	<file>resources/views</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/dist/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+	<exclude-pattern>*/tools/*</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
+
+	<arg name="basepath" value="."/>
+	<arg name="colors"/>
+	<arg value="ps"/>
+
+	<config name="minimum_supported_wp_version" value="6.5"/>
+
+	<rule ref="WordPress-Extra">
+		<!-- The plugin deliberately uses PSR-4 class/file names and modern PHP syntax. -->
+		<exclude name="WordPress.Files.FileName"/>
+		<exclude name="WordPress.NamingConventions.ValidFunctionName"/>
+		<exclude name="WordPress.NamingConventions.ValidVariableName"/>
+		<exclude name="WordPress.PHP.YodaConditions"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+
+		<!-- Alignment-only rules would rewrite otherwise unrelated existing code. -->
+		<exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+		<exclude name="WordPress.Arrays.MultipleStatementAlignment"/>
+		<exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+		<exclude name="Universal.WhiteSpace.DisallowInlineTabs"/>
+		<exclude name="Internal.LineEndings"/>
+		<exclude name="Internal.LineEndings.Mixed"/>
+		<exclude name="Generic.Files.LineEndings"/>
+
+		<!-- These reports are false positives for internal exceptions and fluent APIs. -->
+		<exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped"/>
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+		<exclude name="Squiz.PHP.DisallowMultipleAssignments"/>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="cart-relay"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Existing files are normalized by Git; mixed local checkout endings are not executable defects. -->
+	<rule ref="Internal.LineEndings.Mixed">
+		<severity>0</severity>
+	</rule>
+</ruleset>

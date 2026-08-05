@@ -6,19 +6,19 @@
  * @link         https://gilbertrdz.dev
  * @since        1.0.0
  *
- * @package      WoocartBridge
- * @subpackage   WoocartBridge/app/Helpers
+ * @package      CartRelay
+ * @subpackage   CartRelay/app/Helpers
  *
  * @author       Gilbert Rodríguez <gilbertrdz.dev@gmail.com>
  */
 
-namespace WoocartBridge\App\Helpers;
+namespace CartRelay\App\Helpers;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Str
- * @package WoocartBridge\App\Helpers
+ * @package CartRelay\App\Helpers
  */
 class Str {
 
@@ -64,7 +64,6 @@ class Str {
 		}
 
 		return static::$camelCache[ $value ] = lcfirst( static::studly( $value ) );
-
 	}
 
 	/**
@@ -93,7 +92,6 @@ class Str {
 		}
 
 		return $value;
-
 	}
 
 	/**
@@ -119,7 +117,6 @@ class Str {
 		}
 
 		return static::$snakeCache[ $key ][ $delimiter ] = $value;
-
 	}
 
 	/**
@@ -139,7 +136,6 @@ class Str {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -159,7 +155,6 @@ class Str {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -180,7 +175,6 @@ class Str {
 		$value = ucwords( str_replace( [ '-', '_' ], ' ', $value ) );
 
 		return static::$studlyCache[ $key ] = str_replace( ' ', '', $value );
-
 	}
 
 	/**
@@ -199,7 +193,6 @@ class Str {
 		$value = static::lower( $value );
 
 		return static::$ucwordsforceCache[ $key ] = ucwords( $value );
-
 	}
 
 }
