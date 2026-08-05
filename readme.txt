@@ -26,7 +26,7 @@ The plugin provides:
 
 Cart Relay requires WooCommerce. Its automatic cart placement is designed for the classic cart template. The controls can also be placed with `[cart_relay_buttons]`, `[cart_relay_import_form]`, and `[cart_relay_export_button]`.
 
-Human-readable TypeScript and stylesheet sources, dependency manifests, and build instructions are maintained with the plugin source.
+Human-readable TypeScript and stylesheet sources, dependency manifests, and build instructions are available in the [public development repository](https://github.com/GilbertrdzDev/cart-relay).
 
 = Privacy =
 
