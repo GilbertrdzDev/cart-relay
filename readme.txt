@@ -42,6 +42,12 @@ Uploaded CSV files are processed during the current request and are not stored b
 4. Open **WooCommerce > Cart Relay** to configure the cart tools.
 5. Visit the classic WooCommerce cart page or add one of the provided shortcodes to a page.
 
+== Screenshots ==
+
+1. Configure cart import, export, access, labels, and placement from the Cart Relay settings page.
+2. Review validated products, quantities, prices, and subtotals before importing a CSV file.
+3. Confirm a successful import on the WooCommerce cart page with updated products and quantities.
+
 == Frequently Asked Questions ==
 
 = Which CSV columns can I use for imports? =

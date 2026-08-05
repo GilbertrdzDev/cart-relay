@@ -23,7 +23,7 @@
  * Requires at least: 6.5
  * Requires PHP:      8.2
  * Requires Plugins:  woocommerce
- * WC tested up to:   10.9
+ * WC tested up to:   11.0
  * Author:            Gilbert Rodríguez
  * Author URI:        https://gilbertrdz.dev
  * License:           GPL-2.0-or-later

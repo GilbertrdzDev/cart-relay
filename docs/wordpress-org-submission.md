@@ -19,9 +19,9 @@ The public plugin directory currently returns no published plugin for `cart-rela
 2. Allow direct email from `plugins@wordpress.org` during review.
 3. Create the directory artwork listed below without placing it inside the executable plugin package.
 
-## Missing directory assets
+## Directory assets
 
-Store these under `.wordpress-org/` in Git so the deployment workflow can copy them to the top-level WordPress.org SVN `assets/` directory:
+These files are stored under `.wordpress-org/` in Git so the deployment workflow can copy them to the top-level WordPress.org SVN `assets/` directory:
 
 - `banner-772x250.png`: primary directory banner.
 - `banner-1544x500.png`: high-density version of the same banner.
@@ -31,7 +31,7 @@ Store these under `.wordpress-org/` in Git so the deployment workflow can copy t
 - `screenshot-2.png`: import preview on the classic WooCommerce cart page.
 - `screenshot-3.png`: successful cart import result.
 
-Screenshot captions must be added to `readme.txt` only when the corresponding images exist.
+The corresponding screenshot captions are maintained in the `Screenshots` section of `readme.txt`.
 
 ## Pre-submission validation
 
