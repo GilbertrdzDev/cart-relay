@@ -101,6 +101,30 @@ function cart_relay_install_production_dependencies( string $stage ): void {
 }
 
 /**
+ * Removes development-only directories included by production dependencies.
+ *
+ * @param string[] $directory_names Directory basenames to remove.
+ */
+function cart_relay_prune_dependency_directories( string $stage, array $directory_names ): void {
+	$vendor = $stage . DIRECTORY_SEPARATOR . 'vendor';
+
+	if ( ! is_dir( $vendor ) ) {
+		return;
+	}
+
+	$iterator = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $vendor, FilesystemIterator::SKIP_DOTS ),
+		RecursiveIteratorIterator::CHILD_FIRST
+	);
+
+	foreach ( $iterator as $item ) {
+		if ( $item->isDir() && in_array( $item->getFilename(), $directory_names, true ) ) {
+			cart_relay_remove_tree( $item->getPathname(), $stage );
+		}
+	}
+}
+
+/**
  * Returns sorted package-relative file paths.
  *
  * @return string[]
@@ -159,9 +183,10 @@ foreach ( $runtime_paths as $relative_path ) {
 cart_relay_copy_path( $root . DIRECTORY_SEPARATOR . 'composer.json', $stage . DIRECTORY_SEPARATOR . 'composer.json' );
 cart_relay_copy_path( $root . DIRECTORY_SEPARATOR . 'composer.lock', $stage . DIRECTORY_SEPARATOR . 'composer.lock' );
 cart_relay_install_production_dependencies( $stage );
+cart_relay_prune_dependency_directories( $stage, [ '.vscode' ] );
 
 $files     = cart_relay_package_files( $stage );
-$forbidden = '#(^|/)(?:node_modules|tests|tools|\.git|\.github|\.idea|\.claude|\.cocoindex_code|\.phpunit\.cache)(?:/|$)|(?:^|/)(?:phpcs\.xml(?:\.dist)?|phpunit\.xml(?:\.dist)?|AGENTS\.md|CLAUDE\.md)$|\.map$|(?:^|/)\.env(?:\.|$)|\.(?:pem|key)$#i';
+$forbidden = '#(^|/)(?:node_modules|tests|tools|\.git|\.github|\.idea|\.vscode|\.claude|\.cocoindex_code|\.phpunit\.cache)(?:/|$)|(?:^|/)(?:phpcs\.xml(?:\.dist)?|phpunit\.xml(?:\.dist)?|AGENTS\.md|CLAUDE\.md)$|\.map$|(?:^|/)\.env(?:\.|$)|\.(?:pem|key)$#i';
 
 foreach ( $files as $file ) {
 	if ( preg_match( $forbidden, $file ) ) {

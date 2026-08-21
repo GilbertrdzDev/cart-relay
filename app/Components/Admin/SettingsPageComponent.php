@@ -115,9 +115,9 @@ class SettingsPageComponent implements EnqueueScript, HasActions {
 
 	private function active_tab(): string {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The tab controls read-only presentation state.
-		$value = isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ? wp_unslash( $_GET['tab'] ) : '';
+		$value = isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ? sanitize_key( (string) wp_unslash( $_GET['tab'] ) ) : '';
 
-		return sanitize_key( (string) $value );
+		return $value;
 	}
 
 	private function form(): Form {
