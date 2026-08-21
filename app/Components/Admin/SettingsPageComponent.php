@@ -58,7 +58,7 @@ class SettingsPageComponent implements EnqueueScript, HasActions {
 		}
 
 		$compiler = ComponentCompiler::get_instance();
-		$form     = ( new FormRenderer( $compiler ) )->render( $this->form(), Settings::all( true ) );
+		$form     = ( new FormRenderer( $compiler ) )->render( $this->form(), Settings::all( true ), [], $this->active_tab() );
 
 		$page = $compiler->render(
 			'admin.settings-page',
@@ -113,6 +113,13 @@ class SettingsPageComponent implements EnqueueScript, HasActions {
 		);
 	}
 
+	private function active_tab(): string {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- The tab controls read-only presentation state.
+		$value = isset( $_GET['tab'] ) && is_scalar( $_GET['tab'] ) ? sanitize_key( (string) wp_unslash( $_GET['tab'] ) ) : '';
+
+		return $value;
+	}
+
 	private function form(): Form {
 		$form = new Form( 'cart-relay-settings', self::SAVE_ACTION, self::NONCE_ACTION );
 
@@ -120,7 +127,7 @@ class SettingsPageComponent implements EnqueueScript, HasActions {
 			'features',
 			__( 'Cart features', 'cart-relay' ),
 			__( 'Choose which cart tools are available to customers.', 'cart-relay' )
-		);
+		)->tab( 'features', __( 'Features', 'cart-relay' ), 10 );
 		$features->toggle( 'export_enabled' )
 			->label( __( 'Enable cart export', 'cart-relay' ) )
 			->description( __( 'Allow customers to download the current cart as a CSV file.', 'cart-relay' ) )
@@ -144,7 +151,7 @@ class SettingsPageComponent implements EnqueueScript, HasActions {
 			'display',
 			__( 'Labels and behavior', 'cart-relay' ),
 			__( 'Customize labels and control how imported carts are applied.', 'cart-relay' )
-		);
+		)->tab( 'display-behavior', __( 'Display & behavior', 'cart-relay' ), 20 );
 		$display->text( 'export_button_text' )
 			->label( __( 'Export button text', 'cart-relay' ) )
 			->description( __( 'Text displayed on the cart export button.', 'cart-relay' ) )

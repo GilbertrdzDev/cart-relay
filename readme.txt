@@ -2,9 +2,9 @@
 Contributors: gilbertrdzdev
 Tags: woocommerce, cart, csv, import, export
 Requires at least: 6.5
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,11 @@ No. Cart Relay reads the temporary upload during the request and does not retain
 No. The plugin has no telemetry and does not contact an external service.
 
 == Changelog ==
+
+= 1.0.1 =
+
+* Added responsive settings tabs.
+* Excluded development-only dependency metadata from the production package.
 
 = 1.0.0 =
 

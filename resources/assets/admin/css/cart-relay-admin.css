@@ -13,3 +13,37 @@
 .cr-admin [x-cloak] {
   display: none !important;
 }
+
+.cr-admin [data-cr-tab-panel][hidden] {
+  display: none !important;
+}
+
+.cr-admin [data-cr-tab-scroller] {
+  scrollbar-width: thin;
+}
+
+.cr-admin [data-cr-tab] {
+  appearance: none;
+  border: 1px solid transparent;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.cr-admin [data-cr-tab]:hover {
+  border-color: transparent;
+  background: #f1f5f9;
+}
+
+.cr-admin [data-cr-tab][aria-selected="true"],
+.cr-admin [data-cr-tab][aria-selected="true"]:hover {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
+.cr-admin [data-cr-tab]:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: none;
+}
