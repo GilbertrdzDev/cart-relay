@@ -29,7 +29,13 @@ composer package
 
 The PHP application is under `app/`, PHP views are under `resources/views/`, and the TypeScript and stylesheet sources are under `resources/assets/`. Vite writes production assets to `dist/`.
 
-The Git repository is the development source of truth. WordPress.org SVN will be used only for stable distribution after the plugin is approved.
+The Git repository is the development source of truth. WordPress.org SVN is used only for finished stable releases and directory assets.
+
+## Governance
+
+Cart Relay is a maintainer-led project maintained and released by Gilbert Rodríguez. Public issues and pull requests are proposals for review; submitting one does not grant contributor, committer, ownership, or release access, and inclusion is not guaranteed.
+
+Only releases published through the official WordPress.org listing and verified releases from this repository are official Cart Relay releases. See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution and release-control policy.
 
 ## Production package
 
@@ -40,7 +46,7 @@ Run `composer package` after the production build. The packaging command creates
 
 The package includes compiled assets and required production Composer dependencies. It excludes development sources and dependencies such as `node_modules/`, tests, tools, source maps, local configuration, caches, and secrets.
 
-GitHub Actions validates pushes and pull requests. Publishing a non-draft GitHub Release from a version tag on `main` also validates and packages the release. WordPress.org SVN deployment remains disabled until directory approval and explicit repository configuration.
+GitHub Actions validates pushes and pull requests. Publishing a non-draft GitHub Release from a version tag on `main` validates, packages, and publishes the finished release to WordPress.org SVN through the protected `wordpress-org` environment.
 
 ## Shortcodes
 

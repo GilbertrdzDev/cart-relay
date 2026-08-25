@@ -19,7 +19,7 @@
  * @wordpress-plugin
  * Plugin Name:       Cart Relay for WooCommerce
  * Description:       Import and export WooCommerce carts with simple CSV files using SKU and quantity.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Requires at least: 6.5
  * Requires PHP:      8.2
  * Requires Plugins:  woocommerce
@@ -44,7 +44,7 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 
 define( 'CART_RELAY_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CART_RELAY_DIR_URL', plugin_dir_url( __FILE__ ) );
-define( 'CART_RELAY_VERSION', '1.0.1' );
+define( 'CART_RELAY_VERSION', '1.0.2' );
 /**
  * Declares compatibility with WooCommerce High-Performance Order Storage.
  */
