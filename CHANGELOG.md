@@ -15,6 +15,12 @@ All notable changes to Cart Relay are documented in this file.
 - Replaced the previous shortcode identifiers with `cart_relay_*` names.
 - Removed the restrictively licensed Preline dependency.
 
+## [1.0.2] - 2026-08-25
+
+### Changed
+
+- Clarified maintainer-led project governance and control of official releases.
+
 ## [1.0.1] - 2026-08-21
 
 ### Added

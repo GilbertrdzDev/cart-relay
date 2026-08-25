@@ -4,7 +4,7 @@ Tags: woocommerce, cart, csv, import, export
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,12 @@ The plugin provides:
 * Shortcodes for custom placement.
 
 Cart Relay requires WooCommerce. Its automatic cart placement is designed for the classic cart template. The controls can also be placed with `[cart_relay_buttons]`, `[cart_relay_import_form]`, and `[cart_relay_export_button]`.
+
+= Official releases and project governance =
+
+Cart Relay is a maintainer-led project. Gilbert Rodríguez controls the official roadmap, reviews proposed changes, and publishes the releases distributed under the `cart-relay` WordPress.org slug.
+
+The public development repository exists for source transparency and release traceability. Issues and pull requests are proposals for maintainer review: submitting one does not grant contributor, committer, ownership, or release access, and inclusion is not guaranteed. Only versions published through the official WordPress.org listing and verified project releases are official Cart Relay releases.
 
 Human-readable TypeScript and stylesheet sources, dependency manifests, and build instructions are available in the [public development repository](https://github.com/GilbertrdzDev/cart-relay).
 
@@ -70,7 +76,15 @@ No. Cart Relay reads the temporary upload during the request and does not retain
 
 No. The plugin has no telemetry and does not contact an external service.
 
+= Who controls official Cart Relay releases? =
+
+Gilbert Rodríguez maintains the project roadmap and controls official releases. Public issues and pull requests are reviewed at the maintainer's discretion and do not grant a project role or guarantee that a proposed change will be included.
+
 == Changelog ==
+
+= 1.0.2 =
+
+* Clarified maintainer-led project governance and control of official releases.
 
 = 1.0.1 =
 
