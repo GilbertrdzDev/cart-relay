@@ -104,6 +104,21 @@ function cart_relay_install_production_dependencies( string $stage ): void {
  * Verifies that packaged JavaScript and translation files remain extractable.
  */
 function cart_relay_verify_i18n( string $root, string $stage ): void {
+	$translation_process = proc_open(
+		[
+			'node',
+			$root . DIRECTORY_SEPARATOR . 'tools' . DIRECTORY_SEPARATOR . 'build-translations.mjs',
+			'--check',
+			'--package=' . $stage,
+		],
+		[ STDIN, STDOUT, STDERR ],
+		$pipes
+	);
+
+	if ( ! is_resource( $translation_process ) || 0 !== proc_close( $translation_process ) ) {
+		throw new RuntimeException( 'The production package contains missing, incomplete, or stale translation catalogs.' );
+	}
+
 	$process = proc_open(
 		[ 'node', $root . DIRECTORY_SEPARATOR . 'tools' . DIRECTORY_SEPARATOR . 'verify-i18n.mjs', '--package=' . $stage ],
 		[ STDIN, STDOUT, STDERR ],

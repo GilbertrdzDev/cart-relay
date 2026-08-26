@@ -1,699 +1,703 @@
 # Copyright (C) 2026 Gilbert Rodríguez
 # This file is distributed under the GPL-2.0-or-later.
+# Italian translation for Cart Relay for WooCommerce.
 msgid ""
 msgstr ""
 "Project-Id-Version: Cart Relay for WooCommerce 1.0.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cart-relay\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2026-08-25 23:12+0000\n"
+"PO-Revision-Date: 2026-08-26 05:38+0000\n"
+"Last-Translator: Cart Relay contributors\n"
+"Language-Team: Italian\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-25T23:12:26+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Cart Relay translation builder\n"
 "X-Domain: cart-relay\n"
+"\n"
 
 #. Plugin Name of the plugin
 #: cart-relay.php
 msgid "Cart Relay for WooCommerce"
-msgstr ""
+msgstr "Cart Relay per WooCommerce"
 
 #. Description of the plugin
 #: cart-relay.php
 msgid "Import and export WooCommerce carts with simple CSV files using SKU and quantity."
-msgstr ""
+msgstr "Importa ed esporta i carrelli WooCommerce con semplici file CSV usando SKU e quantità."
 
 #. Author of the plugin
 #: cart-relay.php
 msgid "Gilbert Rodríguez"
-msgstr ""
+msgstr "Gilbert Rodríguez"
 
 #. Author URI of the plugin
 #: cart-relay.php
 msgid "https://gilbertrdz.dev"
-msgstr ""
+msgstr "https://gilbertrdz.dev"
 
 #: app/Components/Admin/SettingsPageComponent.php:47
 #: resources/views/components/admin/settings-page.php:15
 msgid "Cart Relay settings"
-msgstr ""
+msgstr "Impostazioni di Cart Relay"
 
 #: app/Components/Admin/SettingsPageComponent.php:48
 msgid "Cart Relay"
-msgstr ""
+msgstr "Cart Relay"
 
 #: app/Components/Admin/SettingsPageComponent.php:57
 #: app/Components/Admin/SettingsPageComponent.php:76
 msgid "You are not allowed to manage these settings."
-msgstr ""
+msgstr "Non hai l’autorizzazione per gestire queste impostazioni."
 
 #: app/Components/Admin/SettingsPageComponent.php:85
 msgid "The request could not be verified. Refresh the page and try again."
-msgstr ""
+msgstr "Non è stato possibile verificare la richiesta. Aggiorna la pagina e riprova."
 
 #: app/Components/Admin/SettingsPageComponent.php:99
 msgid "Review the highlighted fields and try again."
-msgstr ""
+msgstr "Controlla i campi evidenziati e riprova."
 
 #: app/Components/Admin/SettingsPageComponent.php:110
 msgid "Settings saved successfully."
-msgstr ""
+msgstr "Le impostazioni sono state salvate correttamente."
 
 #: app/Components/Admin/SettingsPageComponent.php:128
 msgid "Cart features"
-msgstr ""
+msgstr "Funzionalità del carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:129
 msgid "Choose which cart tools are available to customers."
-msgstr ""
+msgstr "Scegli quali strumenti del carrello rendere disponibili ai clienti."
 
 #: app/Components/Admin/SettingsPageComponent.php:130
 msgid "Features"
-msgstr ""
+msgstr "Funzionalità"
 
 #: app/Components/Admin/SettingsPageComponent.php:132
 msgid "Enable cart export"
-msgstr ""
+msgstr "Abilita l’esportazione del carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:133
 msgid "Allow customers to download the current cart as a CSV file."
-msgstr ""
+msgstr "Consenti ai clienti di scaricare il carrello attuale come file CSV."
 
 #: app/Components/Admin/SettingsPageComponent.php:138
 msgid "Enable cart import"
-msgstr ""
+msgstr "Abilita l’importazione del carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:139
 msgid "Allow customers to add products from a Cart Relay CSV file."
-msgstr ""
+msgstr "Consenti ai clienti di aggiungere prodotti da un file CSV di Cart Relay."
 
 #: app/Components/Admin/SettingsPageComponent.php:144
 msgid "Require an account"
-msgstr ""
+msgstr "Richiedi un account"
 
 #: app/Components/Admin/SettingsPageComponent.php:145
 msgid "Limit import and export actions to logged-in customers."
-msgstr ""
+msgstr "Limita le azioni di importazione ed esportazione ai clienti connessi."
 
 #: app/Components/Admin/SettingsPageComponent.php:152
 msgid "Labels and behavior"
-msgstr ""
+msgstr "Etichette e comportamento"
 
 #: app/Components/Admin/SettingsPageComponent.php:153
 msgid "Customize labels and control how imported carts are applied."
-msgstr ""
+msgstr "Personalizza le etichette e controlla come vengono applicati i carrelli importati."
 
 #: app/Components/Admin/SettingsPageComponent.php:154
 msgid "Display & behavior"
-msgstr ""
+msgstr "Visualizzazione e comportamento"
 
 #: app/Components/Admin/SettingsPageComponent.php:156
 msgid "Export button text"
-msgstr ""
+msgstr "Testo del pulsante di esportazione"
 
 #: app/Components/Admin/SettingsPageComponent.php:157
 msgid "Text displayed on the cart export button."
-msgstr ""
+msgstr "Testo visualizzato sul pulsante di esportazione del carrello."
 
 #: app/Components/Admin/SettingsPageComponent.php:158
 #: app/Components/CartExport/CartExportComponent.php:62
 #: app/Helpers/Settings.php:123
 #: resources/views/components/cart/export-button.php:7
 msgid "Export cart"
-msgstr ""
+msgstr "Esporta carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:164
 msgid "Import button text"
-msgstr ""
+msgstr "Testo del pulsante di importazione"
 
 #: app/Components/Admin/SettingsPageComponent.php:165
 msgid "Text displayed on the cart import button."
-msgstr ""
+msgstr "Testo visualizzato sul pulsante di importazione del carrello."
 
 #: app/Components/Admin/SettingsPageComponent.php:166
 #: app/Components/CartImport/CartImportComponent.php:82
 #: app/Helpers/Settings.php:124
 #: resources/views/components/cart/import-form.php:8
 msgid "Import cart"
-msgstr ""
+msgstr "Importa carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:172
 msgid "Import mode"
-msgstr ""
+msgstr "Modalità di importazione"
 
 #: app/Components/Admin/SettingsPageComponent.php:173
 msgid "Merge with the current cart or replace its contents."
-msgstr ""
+msgstr "Unisci al carrello attuale o sostituiscine il contenuto."
 
 #: app/Components/Admin/SettingsPageComponent.php:176
 msgid "Merge with current cart"
-msgstr ""
+msgstr "Unisci al carrello attuale"
 
 #: app/Components/Admin/SettingsPageComponent.php:177
 msgid "Replace current cart"
-msgstr ""
+msgstr "Sostituisci il carrello attuale"
 
 #: app/Components/Admin/SettingsPageComponent.php:185
 msgid "Cart controls location"
-msgstr ""
+msgstr "Posizione dei controlli del carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:186
 msgid "Choose where the import and export controls appear on the classic cart page."
-msgstr ""
+msgstr "Scegli dove mostrare i controlli di importazione ed esportazione nella pagina classica del carrello."
 
 #: app/Components/Admin/SettingsPageComponent.php:189
 msgid "Before the cart table"
-msgstr ""
+msgstr "Prima della tabella del carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:190
 msgid "After the cart table"
-msgstr ""
+msgstr "Dopo la tabella del carrello"
 
 #: app/Components/Admin/SettingsPageComponent.php:191
 msgid "After the cart totals"
-msgstr ""
+msgstr "Dopo i totali del carrello"
 
 #: app/Components/CartExport/CartExportComponent.php:72
 msgid "Invalid export request."
-msgstr ""
+msgstr "Richiesta di esportazione non valida."
 
 #: app/Components/CartExport/CartExportComponent.php:76
 #: app/Components/CartImport/CartImportComponent.php:177
 msgid "WooCommerce cart is not available."
-msgstr ""
+msgstr "Il carrello WooCommerce non è disponibile."
 
 #: app/Components/CartImport/CartImportComponent.php:95
 #: app/Components/CartImport/CartImportComponent.php:173
 msgid "Invalid request."
-msgstr ""
+msgstr "Richiesta non valida."
 
 #: app/Components/CartImport/CartImportComponent.php:117
 msgid "The CSV is empty or has no importable rows."
-msgstr ""
+msgstr "Il CSV è vuoto o non contiene righe importabili."
 
 #: app/Components/CartImport/CartImportComponent.php:143
 msgid "Product not found."
-msgstr ""
+msgstr "Prodotto non trovato."
 
 #: app/Components/CartImport/CartImportComponent.php:188
 msgid "The import chunk information is invalid."
-msgstr ""
+msgstr "Le informazioni sul blocco di importazione non sono valide."
 
 #: app/Components/CartImport/CartImportComponent.php:201
 msgid "There are no products to import in this chunk."
-msgstr ""
+msgstr "Non ci sono prodotti da importare in questo blocco."
 
 #: app/Components/CartImport/CartImportComponent.php:260
 msgid "Invalid template request."
-msgstr ""
+msgstr "Richiesta di modello non valida."
 
 #: app/Components/CartImport/CartImportComponent.php:301
 msgid "You must select a CSV file."
-msgstr ""
+msgstr "Devi selezionare un file CSV."
 
 #: app/Components/CartImport/CartImportComponent.php:305
 msgid "The CSV file could not be uploaded."
-msgstr ""
+msgstr "Non è stato possibile caricare il file CSV."
 
 #: app/Components/CartImport/CartImportComponent.php:309
 msgid "The CSV file is not valid."
-msgstr ""
+msgstr "Il file CSV non è valido."
 
 #: app/Components/CartImport/CartImportComponent.php:316
 msgid "The CSV file is empty."
-msgstr ""
+msgstr "Il file CSV è vuoto."
 
 #: app/Components/CartImport/CartImportComponent.php:320
 msgid "The CSV file cannot exceed 2 MB."
-msgstr ""
+msgstr "Il file CSV non può superare i 2 MB."
 
 #: app/Components/CartImport/CartImportComponent.php:327
 msgid "The file must use the .csv extension."
-msgstr ""
+msgstr "Il file deve avere l’estensione .csv."
 
 #: app/Components/CartImport/CartImportComponent.php:343
 #: app/Components/CartImport/CartImportComponent.php:357
 msgid "The uploaded file does not contain valid CSV data."
-msgstr ""
+msgstr "Il file caricato non contiene dati CSV validi."
 
 #: app/Components/CartImport/CartImportComponent.php:350
 msgid "The CSV file could not be read."
-msgstr ""
+msgstr "Non è stato possibile leggere il file CSV."
 
 #: app/Components/CartImport/CartImportComponent.php:402
 msgid "The import chunk is too large."
-msgstr ""
+msgstr "Il blocco di importazione è troppo grande."
 
 #. translators: %d: maximum number of products in one import request.
 #: app/Components/CartImport/CartImportComponent.php:416
 #, php-format
 msgid "An import request cannot contain more than %d products."
-msgstr ""
+msgstr "Una richiesta di importazione non può contenere più di %d prodotti."
 
 #. translators: %d: WooCommerce product ID.
 #: app/Components/CartImport/CartImportComponent.php:463
 #, php-format
 msgid "Product %d could not be added to the cart."
-msgstr ""
+msgstr "Non è stato possibile aggiungere il prodotto %d al carrello."
 
 #: app/Components/CartImport/CartImportComponent.php:490
 msgid "No valid products were found in the CSV."
-msgstr ""
+msgstr "Nel CSV non sono stati trovati prodotti validi."
 
 #: app/Components/CartImport/CartImportComponent.php:496
 msgid "Unknown error."
-msgstr ""
+msgstr "Errore sconosciuto."
 
 #. translators: 1: CSV row number, 2: validation error message.
 #: app/Components/CartImport/CartImportComponent.php:501
 #: dist/assets/front-ODdaZ_d0.js:19
 #, php-format,js-format
 msgid "Row %1$d: %2$s"
-msgstr ""
+msgstr "Riga %1$d: %2$s"
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:86
 #, php-format
 msgid "%s is required."
-msgstr ""
+msgstr "%s è obbligatorio."
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:88
 #, php-format
 msgid "%s must be a valid email address."
-msgstr ""
+msgstr "%s deve essere un indirizzo email valido."
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:90
 #, php-format
 msgid "%s must be a valid URL."
-msgstr ""
+msgstr "%s deve essere un URL valido."
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:92
 #, php-format
 msgid "%s must be numeric."
-msgstr ""
+msgstr "%s deve essere un valore numerico."
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:94
 #, php-format
 msgid "%s must be an integer."
-msgstr ""
+msgstr "%s deve essere un numero intero."
 
 #. translators: 1: form field label, 2: minimum value.
 #: app/Components/Forms/Validator.php:96
 #, php-format
 msgid "%1$s must be at least %2$s."
-msgstr ""
+msgstr "%1$s deve essere almeno %2$s."
 
 #. translators: 1: form field label, 2: maximum value.
 #: app/Components/Forms/Validator.php:98
 #, php-format
 msgid "%1$s must not exceed %2$s."
-msgstr ""
+msgstr "%1$s non deve superare %2$s."
 
 #. translators: 1: form field label, 2: minimum character count.
 #: app/Components/Forms/Validator.php:100
 #, php-format
 msgid "%1$s must contain at least %2$s characters."
-msgstr ""
+msgstr "%1$s deve contenere almeno %2$s caratteri."
 
 #. translators: 1: form field label, 2: maximum character count.
 #: app/Components/Forms/Validator.php:102
 #, php-format
 msgid "%1$s must not exceed %2$s characters."
-msgstr ""
+msgstr "%1$s non deve superare %2$s caratteri."
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:104
 #, php-format
 msgid "%s contains an invalid selection."
-msgstr ""
+msgstr "%s contiene una selezione non valida."
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:106
 #, php-format
 msgid "%s must be enabled or disabled."
-msgstr ""
+msgstr "%s deve essere abilitato o disabilitato."
 
 #. translators: %s: form field label.
 #: app/Components/Forms/Validator.php:108
 #, php-format
 msgid "%s is invalid."
-msgstr ""
+msgstr "%s non è valido."
 
 #: app/Components/RequirementsCheck.php:30
 msgid "Cart Relay requires WooCommerce to be installed and active in order to import/export carts."
-msgstr ""
+msgstr "Cart Relay richiede che WooCommerce sia installato e attivo per importare o esportare i carrelli."
 
 #. translators: %d: maximum number of CSV data rows.
 #: app/Helpers/Csv.php:71
 #, php-format
 msgid "The CSV cannot contain more than %d product rows."
-msgstr ""
+msgstr "Il CSV non può contenere più di %d righe di prodotti."
 
 #. translators: %s: duplicated CSV column name.
 #: app/Helpers/Csv.php:138
 #, php-format
 msgid "The CSV contains the duplicate column \"%s\"."
-msgstr ""
+msgstr "Il CSV contiene la colonna duplicata \"%s\"."
 
 #: app/Helpers/Csv.php:148
 msgid "The CSV header row is empty."
-msgstr ""
+msgstr "La riga di intestazione del CSV è vuota."
 
 #: app/Helpers/Csv.php:156
 msgid "The CSV must include a quantity column."
-msgstr ""
+msgstr "Il CSV deve includere una colonna quantity."
 
 #: app/Helpers/Csv.php:161
 msgid "The CSV must include product_id, variation_id, or sku."
-msgstr ""
+msgstr "Il CSV deve includere product_id, variation_id o sku."
 
 #. translators: %d: maximum number of CSV columns.
 #: app/Helpers/Csv.php:171
 #, php-format
 msgid "The CSV cannot contain more than %d columns."
-msgstr ""
+msgstr "Il CSV non può contenere più di %d colonne."
 
 #. translators: %d: maximum CSV cell length in bytes.
 #: app/Helpers/Csv.php:182
 #, php-format
 msgid "CSV values cannot exceed %d bytes."
-msgstr ""
+msgstr "I valori CSV non possono superare %d byte."
 
 #. translators: %d: WooCommerce variation ID.
 #: app/Helpers/ProductResolver.php:90
 #, php-format
 msgid "Variation not found for ID %d."
-msgstr ""
+msgstr "Variazione non trovata per l’ID %d."
 
 #. translators: %d: WooCommerce product ID.
 #: app/Helpers/ProductResolver.php:96
 #, php-format
 msgid "ID %d does not match a variation."
-msgstr ""
+msgstr "L’ID %d non corrisponde a una variazione."
 
 #. translators: 1: WooCommerce variation ID, 2: WooCommerce product ID.
 #: app/Helpers/ProductResolver.php:105
 #, php-format
 msgid "Variation %1$d does not belong to product %2$d."
-msgstr ""
+msgstr "La variazione %1$d non appartiene al prodotto %2$d."
 
 #. translators: %d: WooCommerce product ID.
 #: app/Helpers/ProductResolver.php:119
 #, php-format
 msgid "Product not found for ID %d."
-msgstr ""
+msgstr "Prodotto non trovato per l’ID %d."
 
 #. translators: %s: WooCommerce product SKU.
 #: app/Helpers/ProductResolver.php:132
 #, php-format
 msgid "Product not found for SKU %s."
-msgstr ""
+msgstr "Prodotto non trovato per lo SKU %s."
 
 #: app/Helpers/ProductResolver.php:142
 msgid "The row must include product_id, variation_id, or sku."
-msgstr ""
+msgstr "La riga deve includere product_id, variation_id o sku."
 
 #: app/Helpers/ProductResolver.php:146
 msgid "Variable products require variation_id."
-msgstr ""
+msgstr "I prodotti variabili richiedono variation_id."
 
 #: app/Helpers/ProductResolver.php:152
 #: app/Helpers/ProductResolver.php:189
 msgid "Quantity must be greater than zero."
-msgstr ""
+msgstr "La quantità deve essere maggiore di zero."
 
 #: app/Helpers/ProductResolver.php:177
 msgid "The product does not exist."
-msgstr ""
+msgstr "Il prodotto non esiste."
 
 #: app/Helpers/ProductResolver.php:181
 msgid "The product is not published."
-msgstr ""
+msgstr "Il prodotto non è pubblicato."
 
 #: app/Helpers/ProductResolver.php:185
 msgid "The product cannot be purchased."
-msgstr ""
+msgstr "Il prodotto non può essere acquistato."
 
 #: app/Helpers/ProductResolver.php:193
 msgid "The product is out of stock."
-msgstr ""
+msgstr "Il prodotto è esaurito."
 
 #: app/Helpers/ProductResolver.php:195
 msgid "The product does not have enough stock."
-msgstr ""
+msgstr "Il prodotto non dispone di scorte sufficienti."
 
 #: app/Helpers/ProductResolver.php:199
 msgid "Only simple products or specific variations are supported."
-msgstr ""
+msgstr "Sono supportati solo prodotti semplici o variazioni specifiche."
 
 #: resources/views/components/admin/settings-page.php:12
 msgid "WooCommerce cart tools"
-msgstr ""
+msgstr "Strumenti del carrello WooCommerce"
 
 #: resources/views/components/admin/settings-page.php:18
 msgid "Configure CSV cart import and export without changing your WooCommerce cart templates."
-msgstr ""
+msgstr "Configura l’importazione e l’esportazione dei carrelli CSV senza modificare i template del carrello WooCommerce."
 
 #: resources/views/components/cart/buttons.php:17
 msgid "Import or export cart"
-msgstr ""
+msgstr "Importa o esporta il carrello"
 
 #: resources/views/components/cart/buttons.php:18
 msgid "Save your cart or load it from a CSV file."
-msgstr ""
+msgstr "Salva il carrello o caricalo da un file CSV."
 
 #: resources/views/components/cart/import-form.php:38
 msgid "Select CSV file"
-msgstr ""
+msgstr "Seleziona file CSV"
 
 #: resources/views/components/cart/import-form.php:56
 msgid "Drop your CSV here"
-msgstr ""
+msgstr "Trascina qui il tuo CSV"
 
 #: resources/views/components/cart/import-form.php:57
 msgid "or"
-msgstr ""
+msgstr "oppure"
 
 #: resources/views/components/cart/import-form.php:58
 msgid "click to select"
-msgstr ""
+msgstr "fai clic per selezionare"
 
 #: resources/views/components/cart/import-form.php:61
 msgid "CSV format, up to 2 MB and 500 product rows"
-msgstr ""
+msgstr "Formato CSV, fino a 2 MB e 500 righe di prodotti"
 
 #: resources/views/components/cart/import-form.php:67
 msgid "Ready to import"
-msgstr ""
+msgstr "Pronto per l’importazione"
 
 #: resources/views/components/cart/import-form.php:71
 msgid "Remove"
-msgstr ""
+msgstr "Rimuovi"
 
 #: resources/views/components/cart/import-form.php:92
 msgid "Download CSV template"
-msgstr ""
+msgstr "Scarica modello CSV"
 
 #: resources/views/components/forms/form.php:41
 msgid "Save changes"
-msgstr ""
+msgstr "Salva modifiche"
 
 #: resources/views/components/forms/form.php:42
 msgid "Saving…"
-msgstr ""
+msgstr "Salvataggio…"
 
 #: resources/views/components/forms/tabs.php:13
 msgid "Settings sections"
-msgstr ""
+msgstr "Sezioni delle impostazioni"
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Loading..."
-msgstr ""
+msgstr "Caricamento..."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Not connected. Verify your network connection."
-msgstr ""
+msgstr "Connessione assente. Verifica la connessione di rete."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Requested page not found [404]."
-msgstr ""
+msgstr "Pagina richiesta non trovata [404]."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Internal server error [500]."
-msgstr ""
+msgstr "Errore interno del server [500]."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Requested JSON parse failed."
-msgstr ""
+msgstr "Impossibile analizzare il JSON richiesto."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Timeout error."
-msgstr ""
+msgstr "Errore di timeout."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Ajax request aborted."
-msgstr ""
+msgstr "Richiesta Ajax annullata."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Uncaught error:"
-msgstr ""
+msgstr "Errore non gestito:"
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Review the highlighted issues"
-msgstr ""
+msgstr "Controlla i problemi evidenziati"
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Oops..."
-msgstr ""
+msgstr "Ops..."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Why do I have this issue?"
-msgstr ""
+msgstr "Perché si verifica questo problema?"
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Generating CSV..."
-msgstr ""
+msgstr "Generazione del CSV..."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Cart exported"
-msgstr ""
+msgstr "Carrello esportato"
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Select a valid .csv file."
-msgstr ""
+msgstr "Seleziona un file .csv valido."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Select a CSV file before continuing."
-msgstr ""
+msgstr "Seleziona un file CSV prima di continuare."
 
 #: dist/assets/front-ODdaZ_d0.js:1
 msgid "Reading CSV..."
-msgstr ""
+msgstr "Lettura del CSV..."
 
 #. translators: %d: number of products ready to import.
 #: dist/assets/front-ODdaZ_d0.js:3
 #, js-format
 msgid "Import %d product"
 msgid_plural "Import %d products"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Importa %d prodotto"
+msgstr[1] "Importa %d prodotti"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Importing products..."
-msgstr ""
+msgstr "Importazione dei prodotti..."
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "The request could not be processed."
-msgstr ""
+msgstr "Non è stato possibile elaborare la richiesta."
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Import preview"
-msgstr ""
+msgstr "Anteprima dell’importazione"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Review products before adding them to WooCommerce."
-msgstr ""
+msgstr "Controlla i prodotti prima di aggiungerli a WooCommerce."
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "valid product"
 msgid_plural "valid products"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "prodotto valido"
+msgstr[1] "prodotti validi"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "with issue"
 msgid_plural "with issues"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "con un problema"
+msgstr[1] "con problemi"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "total product"
 msgid_plural "total products"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "prodotto totale"
+msgstr[1] "prodotti totali"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Amount to import"
-msgstr ""
+msgstr "Quantità da importare"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Product"
-msgstr ""
+msgstr "Prodotto"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Product / variation"
-msgstr ""
+msgstr "Prodotto / variazione"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Qty."
-msgstr ""
+msgstr "Qtà"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Price"
-msgstr ""
+msgstr "Prezzo"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Subtotal"
-msgstr ""
+msgstr "Subtotale"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Status"
-msgstr ""
+msgstr "Stato"
 
 #: dist/assets/front-ODdaZ_d0.js:3
 msgid "Ready"
-msgstr ""
+msgstr "Pronto"
 
 #. translators: %d: CSV row number.
 #: dist/assets/front-ODdaZ_d0.js:5
 #, js-format
 msgid "Row %d"
-msgstr ""
+msgstr "Riga %d"
 
 #: dist/assets/front-ODdaZ_d0.js:5
 msgid "With issue"
-msgstr ""
+msgstr "Con un problema"
 
 #: dist/assets/front-ODdaZ_d0.js:5
 msgid "SKU"
-msgstr ""
+msgstr "SKU"
 
 #: dist/assets/front-ODdaZ_d0.js:5
 msgid "All valid products will be included in the import."
-msgstr ""
+msgstr "Tutti i prodotti validi saranno inclusi nell’importazione."
 
 #. translators: %d: number of products that will be skipped.
 #: dist/assets/front-ODdaZ_d0.js:7
 #, js-format
 msgid "%d product with an issue will be skipped during import."
 msgid_plural "%d products with issues will be skipped during import."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d prodotto con un problema verrà ignorato durante l’importazione."
+msgstr[1] "%d prodotti con problemi verranno ignorati durante l’importazione."
 
 #. translators: 1: number of processed products, 2: total number of products.
 #: dist/assets/front-ODdaZ_d0.js:9
 #, js-format
 msgid "Importing products... %1$d / %2$d"
-msgstr ""
+msgstr "Importazione dei prodotti... %1$d / %2$d"
 
 #. translators: %d: number of products added to the cart.
 #: dist/assets/front-ODdaZ_d0.js:11
 #, js-format
 msgid "Added: %d"
-msgstr ""
+msgstr "Aggiunti: %d"
 
 #. translators: %d: number of products with import issues.
 #: dist/assets/front-ODdaZ_d0.js:13
@@ -701,8 +705,8 @@ msgstr ""
 #, js-format
 msgid "With issue: %d"
 msgid_plural "With issues: %d"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Con un problema: %d"
+msgstr[1] "Con problemi: %d"
 
 #. translators: %d: number of products added to the cart.
 #: dist/assets/front-ODdaZ_d0.js:15
@@ -710,37 +714,37 @@ msgstr[1] ""
 #, js-format
 msgid "Product added: %d"
 msgid_plural "Products added: %d"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Prodotto aggiunto: %d"
+msgstr[1] "Prodotti aggiunti: %d"
 
 #: dist/assets/front-ODdaZ_d0.js:15
 msgid "Cart imported"
-msgstr ""
+msgstr "Carrello importato"
 
 #: dist/assets/front-ODdaZ_d0.js:15
 msgid "Import completed with issues"
-msgstr ""
+msgstr "Importazione completata con problemi"
 
 #: dist/assets/front-ODdaZ_d0.js:15
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #: dist/assets/front-ODdaZ_d0.js:15
 msgid "product added"
 msgid_plural "products added"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "prodotto aggiunto"
+msgstr[1] "prodotti aggiunti"
 
 #: dist/assets/front-ODdaZ_d0.js:15
 msgid "issue"
 msgid_plural "issues"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "problema"
+msgstr[1] "problemi"
 
 #: dist/assets/front-ODdaZ_d0.js:15
 msgid "All products were added successfully."
-msgstr ""
+msgstr "Tutti i prodotti sono stati aggiunti correttamente."
 
 #: dist/assets/front-ODdaZ_d0.js:19
 msgid "Import summary"
-msgstr ""
+msgstr "Riepilogo dell’importazione"
