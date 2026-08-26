@@ -278,12 +278,12 @@
 .cr-import-preview-modal__html {
 	margin: 0 !important;
 	padding: 0 !important;
-	text-align: left !important;
+	text-align: start !important;
 }
 
 .cr-import-preview-modal__close {
 	top: 34px !important;
-	right: 28px !important;
+	inset-inline-end: 28px !important;
 	width: 30px !important;
 	height: 30px !important;
 	border-radius: 6px !important;
@@ -351,7 +351,7 @@
 }
 
 .cr-import-preview {
-	text-align: left;
+	text-align: start;
 }
 
 .cr-import-preview__header {
@@ -394,7 +394,7 @@
 .cr-import-preview__amount {
 	display: grid;
 	gap: 4px;
-	text-align: right;
+	text-align: end;
 }
 
 .cr-import-preview__amount span {
@@ -494,35 +494,35 @@
 	font-size: 11px;
 	font-weight: 700;
 	line-height: 1;
-	text-align: right;
+	text-align: end;
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
 }
 
 .cr-import-preview-table th:first-child {
-	padding-left: 28px;
-	text-align: left;
+	padding-inline-start: 28px;
+	text-align: start;
 }
 
 .cr-import-preview-table th:last-child {
-	padding-right: 28px;
+	padding-inline-end: 28px;
 }
 
 .cr-import-preview-table td {
 	padding: 12px;
 	border-bottom: 1px solid #f0f1f2;
 	color: #3c434a;
-	text-align: right;
+	text-align: end;
 	vertical-align: middle;
 }
 
 .cr-import-preview-table td:first-child {
-	padding-left: 28px;
-	text-align: left;
+	padding-inline-start: 28px;
+	text-align: start;
 }
 
 .cr-import-preview-table td:last-child {
-	padding-right: 28px;
+	padding-inline-end: 28px;
 }
 
 .cr-import-preview-table__row--error {
@@ -681,7 +681,7 @@
 .cr-import-summary {
 	margin-top: 1rem;
 	padding: 0.85rem 1rem;
-	border-left: 4px solid #d63638;
+	border-inline-start: 4px solid #d63638;
 	background: #fcf0f1;
 	color: #3c434a;
 }
@@ -727,7 +727,7 @@
 
 .cr-import-result-modal__html {
 	margin: 0 !important;
-	text-align: left !important;
+	text-align: start !important;
 }
 
 .cr-import-result {
@@ -837,7 +837,7 @@
 
 	.cr-import-preview-modal__close {
 		top: 22px !important;
-		right: 18px !important;
+		inset-inline-end: 18px !important;
 	}
 
 	.cr-import-preview-modal__actions {
@@ -862,7 +862,7 @@
 	}
 
 	.cr-import-preview__amount {
-		text-align: left;
+		text-align: start;
 	}
 
 	.cr-import-preview-table {
@@ -871,12 +871,12 @@
 
 	.cr-import-preview-table th:first-child,
 	.cr-import-preview-table td:first-child {
-		padding-left: 18px;
+		padding-inline-start: 18px;
 	}
 
 	.cr-import-preview-table th:last-child,
 	.cr-import-preview-table td:last-child {
-		padding-right: 18px;
+		padding-inline-end: 18px;
 	}
 
 	.cr-import-preview__footer-note {

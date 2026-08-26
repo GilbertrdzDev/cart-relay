@@ -4,16 +4,16 @@ All notable changes to Cart Relay are documented in this file.
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-08-26
+
 ### Added
 
-- WordPress.org publication and maintenance preparation.
-- CSV resource limits and spreadsheet formula protection.
-- Unit coverage for CSV parsing and export safety.
+- A canonical POT catalog and automated translation coverage verification.
+- Complete Spanish (Spain and Colombia), French, Brazilian Portuguese, and Italian translation catalogs for PHP and JavaScript.
 
 ### Changed
 
-- Replaced the previous shortcode identifiers with `cart_relay_*` names.
-- Removed the restrictively licensed Preline dependency.
+- Preserved JavaScript gettext calls through production minification and added RTL-safe layout behavior.
 
 ## [1.0.2] - 2026-08-25
 

@@ -31,9 +31,12 @@ composer validate --strict
 composer test
 npm run typecheck
 npm run build
+npm run check:i18n
 ```
 
 PHP identifiers, documentation, comments, configuration text, and UI copy should be written in English. Use the `CartRelay\App\` namespace and `cart_relay_` for new WordPress-level identifiers.
+
+Every user-facing string must be translatable with the literal `cart-relay` text domain. After changing copy, rebuild the assets, regenerate `languages/cart-relay.pot` as documented in [README.md](README.md), and run the internationalization check. Do not rely on a variable or wrapper default for the domain because WordPress.org must be able to extract the literal call from the production package.
 
 ## Roles and release control
 

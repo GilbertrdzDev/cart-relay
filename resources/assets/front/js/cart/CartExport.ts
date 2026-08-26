@@ -18,8 +18,8 @@ class CartExport {
 
 	constructor( {
 		selector = '[data-cart-relay-export-button]',
-		loadingText = __( 'Generating CSV...' ),
-		successTitle = __( 'Cart exported' ),
+		loadingText = __( 'Generating CSV...', 'cart-relay' ),
+		successTitle = __( 'Cart exported', 'cart-relay' ),
 		successDelay = 800,
 	}: CartExportOptions = {} ) {
 		this.selector = selector;

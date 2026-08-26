@@ -4,7 +4,7 @@ Tags: woocommerce, cart, csv, import, export
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.2
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,12 @@ No. The plugin has no telemetry and does not contact an external service.
 Gilbert Rodríguez maintains the project roadmap and controls official releases. Public issues and pull requests are reviewed at the maintainer's discretion and do not grant a project role or guarantee that a proposed change will be included.
 
 == Changelog ==
+
+= 1.0.3 =
+
+* Added complete Spanish, French, Brazilian Portuguese, and Italian translations for PHP and JavaScript.
+* Added a canonical translation template and deterministic catalog validation.
+* Preserved JavaScript gettext extraction through production minification and improved RTL compatibility.
 
 = 1.0.2 =
 

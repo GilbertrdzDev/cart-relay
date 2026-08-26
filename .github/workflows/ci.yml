@@ -58,6 +58,7 @@ jobs:
           npm audit --audit-level=high
           npm run typecheck
           npm run build
+          npm run check:i18n
 
       - name: Build production package
         run: composer package

@@ -1,6 +1,6 @@
 {
   "name": "cart-relay",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "type": "module",
   "engines": {
@@ -14,6 +14,7 @@
     "sass": "^1.69.7",
     "sweetalert2": "^11.10.2",
     "tailwindcss": "^4.3.2",
+    "terser": "^5.50.0",
     "typescript": "^6.0.3",
     "vite": "^7.3.5"
   },
@@ -21,6 +22,8 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "build": "vite build",
+    "build:i18n": "node tools/build-translations.mjs",
+    "check:i18n": "node tools/build-translations.mjs --check && node tools/verify-i18n.mjs",
     "serve": "vite preview"
   },
   "overrides": {
