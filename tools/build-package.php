@@ -101,6 +101,21 @@ function cart_relay_install_production_dependencies( string $stage ): void {
 }
 
 /**
+ * Verifies that packaged JavaScript and translation files remain extractable.
+ */
+function cart_relay_verify_i18n( string $root, string $stage ): void {
+	$process = proc_open(
+		[ 'node', $root . DIRECTORY_SEPARATOR . 'tools' . DIRECTORY_SEPARATOR . 'verify-i18n.mjs', '--package=' . $stage ],
+		[ STDIN, STDOUT, STDERR ],
+		$pipes
+	);
+
+	if ( ! is_resource( $process ) || 0 !== proc_close( $process ) ) {
+		throw new RuntimeException( 'The production package failed internationalization verification.' );
+	}
+}
+
+/**
  * Removes development-only directories included by production dependencies.
  *
  * @param string[] $directory_names Directory basenames to remove.
@@ -166,6 +181,7 @@ $runtime_paths = [
 	'app',
 	'resources/views',
 	'dist',
+	'languages',
 	'cart-relay.php',
 	'uninstall.php',
 	'readme.txt',
@@ -197,6 +213,12 @@ foreach ( $files as $file ) {
 if ( ! in_array( 'dist/manifest.json', $files, true ) || ! in_array( 'vendor/autoload.php', $files, true ) ) {
 	throw new RuntimeException( 'The production package is missing compiled assets or Composer autoloading.' );
 }
+
+if ( ! in_array( 'languages/cart-relay.pot', $files, true ) ) {
+	throw new RuntimeException( 'The production package is missing its translation template.' );
+}
+
+cart_relay_verify_i18n( $root, $stage );
 
 $source_date_epoch = (int) ( getenv( 'SOURCE_DATE_EPOCH' ) ?: 315532800 );
 $zip               = new ZipArchive();

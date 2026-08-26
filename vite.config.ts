@@ -5,7 +5,16 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig( {
   build: {
+    minify: 'terser',
     sourcemap: false,
+    terserOptions: {
+      format: {
+        comments: /translators:/i,
+      },
+      mangle: {
+        reserved: [ '__', '_x', '_n', '_nx' ],
+      },
+    },
   },
   plugins: [
     tailwindcss(),

@@ -29,6 +29,7 @@
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       cart-relay
+ * Domain Path:       /languages
  */
 use CartRelay\App\Core\Plugin;
 use CartRelay\App\Core\Activator;

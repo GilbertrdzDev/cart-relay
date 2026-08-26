@@ -266,7 +266,7 @@ class CartImport {
 		if ( ! this.isCsvFile( file ) ) {
 			this.renderSummary( form, {
 				added: 0,
-				errors: [ { row: 0, message: __( 'Select a valid .csv file.' ) } ],
+				errors: [ { row: 0, message: __( 'Select a valid .csv file.', 'cart-relay' ) } ],
 			} );
 			return;
 		}
@@ -293,7 +293,7 @@ class CartImport {
 		if ( ! file ) {
 			this.renderSummary( form, {
 				added: 0,
-				errors: [ { row: 0, message: __( 'Select a CSV file before continuing.' ) } ],
+				errors: [ { row: 0, message: __( 'Select a CSV file before continuing.', 'cart-relay' ) } ],
 			} );
 			return;
 		}
@@ -303,7 +303,7 @@ class CartImport {
 		formData.append( 'nonce', this.getDatasetValue( form, 'previewNonce' ) );
 		formData.append( 'csv_file', file );
 
-		CartRelayHelpers.swalShowLoading( __( 'Reading CSV...' ) );
+		CartRelayHelpers.swalShowLoading( __( 'Reading CSV...', 'cart-relay' ) );
 
 		const payload = await this.postFormData<PreviewResponse>( form, formData );
 
@@ -325,10 +325,11 @@ class CartImport {
 			showCancelButton: true,
 			showConfirmButton: canImport,
 			confirmButtonText: sprintf(
-				_n( 'Import %d product', 'Import %d products', response.items.length ),
+				/* translators: %d: number of products ready to import. */
+				_n( 'Import %d product', 'Import %d products', response.items.length, 'cart-relay' ),
 				response.items.length
 			),
-			cancelButtonText: __( 'Cancel' ),
+			cancelButtonText: __( 'Cancel', 'cart-relay' ),
 			buttonsStyling: false,
 			customClass: {
 				popup: 'cr-import-preview-modal',
@@ -352,7 +353,7 @@ class CartImport {
 		const updatedItems: UpdatedCartItem[] = [];
 		let added = 0;
 
-		CartRelayHelpers.swalShowLoading( __( 'Importing products...' ) );
+		CartRelayHelpers.swalShowLoading( __( 'Importing products...', 'cart-relay' ) );
 		this.updateProgress( 0, items.length, added, errors.length );
 
 		for ( let index = 0; index < chunks.length; index++ ) {
@@ -430,7 +431,7 @@ class CartImport {
 				status,
 				responseText,
 				responseJSON: {
-					errors: errors.length > 0 ? errors : [ __( 'The request could not be processed.' ) ],
+					errors: errors.length > 0 ? errors : [ __( 'The request could not be processed.', 'cart-relay' ) ],
 				},
 			},
 			'error'
@@ -464,25 +465,25 @@ class CartImport {
 		return `
 			<div class="cr-import-preview">
 				<div class="cr-import-preview__header">
-					<h2>${__( 'Import preview' )}</h2>
-					<p>${__( 'Review products before adding them to WooCommerce.' )}</p>
+					<h2>${__( 'Import preview', 'cart-relay' )}</h2>
+					<p>${__( 'Review products before adding them to WooCommerce.', 'cart-relay' )}</p>
 				</div>
 				<div class="cr-import-preview__summary">
 					<div class="cr-import-preview__badges">
 						<span class="cr-import-preview__badge cr-import-preview__badge--ok">
 							<span aria-hidden="true"></span>
-							<strong>${response.items.length}</strong> ${__( 'valid' )}
+							<strong>${response.items.length}</strong> ${_n( 'valid product', 'valid products', response.items.length, 'cart-relay' )}
 						</span>
 						<span class="cr-import-preview__badge cr-import-preview__badge--error">
 							<span aria-hidden="true"></span>
-							<strong>${response.errors.length}</strong> ${_n( 'with issue', 'with issues', response.errors.length )}
+							<strong>${response.errors.length}</strong> ${_n( 'with issue', 'with issues', response.errors.length, 'cart-relay' )}
 						</span>
 						<span class="cr-import-preview__badge cr-import-preview__badge--total">
-							<strong>${totalItems}</strong> ${__( 'total' )}
+							<strong>${totalItems}</strong> ${_n( 'total product', 'total products', totalItems, 'cart-relay' )}
 						</span>
 					</div>
 					<div class="cr-import-preview__amount">
-						<span>${__( 'Amount to import' )}</span>
+						<span>${__( 'Amount to import', 'cart-relay' )}</span>
 						<strong>${this.formatCurrency( totalAmount, response.currency )}</strong>
 					</div>
 				</div>
@@ -490,12 +491,12 @@ class CartImport {
 					<table class="cr-import-preview-table">
 						<thead>
 							<tr>
-								<th>${__( 'Product' )}</th>
-								<th>${__( 'Product / variation' )}</th>
-								<th>${__( 'Qty.' )}</th>
-								<th>${__( 'Price' )}</th>
-								<th>${__( 'Subtotal' )}</th>
-								<th>${__( 'Status' )}</th>
+								<th>${__( 'Product', 'cart-relay' )}</th>
+								<th>${__( 'Product / variation', 'cart-relay' )}</th>
+								<th>${__( 'Qty.', 'cart-relay' )}</th>
+								<th>${__( 'Price', 'cart-relay' )}</th>
+								<th>${__( 'Subtotal', 'cart-relay' )}</th>
+								<th>${__( 'Status', 'cart-relay' )}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -521,19 +522,25 @@ class CartImport {
 				<td class="cr-import-preview-table__number">${item.quantity}</td>
 				<td class="cr-import-preview-table__number">${this.formatCurrency( item.price, currency )}</td>
 				<td class="cr-import-preview-table__number"><strong>${this.formatCurrency( item.subtotal, currency )}</strong></td>
-				<td class="cr-import-preview-table__status"><span class="cr-import-status cr-import-status--ok">${__( 'Ready' )}</span></td>
+				<td class="cr-import-preview-table__status"><span class="cr-import-status cr-import-status--ok">${__( 'Ready', 'cart-relay' )}</span></td>
 			</tr>
 		`;
 	}
 
 	private renderPreviewErrorRow( error: RowError ): string {
+		const rowLabel = error.row > 0 ? sprintf(
+			/* translators: %d: CSV row number. */
+			__( 'Row %d', 'cart-relay' ),
+			error.row
+		) : '-';
+
 		return `
 			<tr class="cr-import-preview-table__row--error">
 				<td>
 					<div class="cr-import-preview-product">
 						<span class="cr-import-preview-product__fallback">!</span>
 						<div class="cr-import-preview-product__meta">
-							<strong>${error.row > 0 ? sprintf( __( 'Row %d' ), error.row ) : '-'}</strong>
+							<strong>${rowLabel}</strong>
 							<span class="cr-import-preview-product__error">${CartRelayHelpers.escapeHtml( error.message )}</span>
 						</div>
 					</div>
@@ -542,7 +549,7 @@ class CartImport {
 				<td class="cr-import-preview-table__number">-</td>
 				<td class="cr-import-preview-table__number">-</td>
 				<td class="cr-import-preview-table__number">-</td>
-				<td class="cr-import-preview-table__status"><span class="cr-import-status cr-import-status--error">${__( 'With issue' )}</span></td>
+				<td class="cr-import-preview-table__status"><span class="cr-import-status cr-import-status--error">${__( 'With issue', 'cart-relay' )}</span></td>
 			</tr>
 		`;
 	}
@@ -560,7 +567,7 @@ class CartImport {
 			${this.renderPreviewThumb( item )}
 			<div class="cr-import-preview-product__meta">
 				<strong>${CartRelayHelpers.escapeHtml( item.name )}</strong>
-				<span>SKU ${CartRelayHelpers.escapeHtml( item.sku || '-' )}</span>
+				<span>${__( 'SKU', 'cart-relay' )} ${CartRelayHelpers.escapeHtml( item.sku || '-' )}</span>
 			</div>
 		`;
 
@@ -582,14 +589,16 @@ class CartImport {
 
 	private renderPreviewFooterNote( errorCount: number ): string {
 		if ( errorCount === 0 ) {
-			return __( 'All valid products will be included in the import.' );
+			return __( 'All valid products will be included in the import.', 'cart-relay' );
 		}
 
 		return sprintf(
+			/* translators: %d: number of products that will be skipped. */
 			_n(
 				'%d product with an issue will be skipped during import.',
 				'%d products with issues will be skipped during import.',
-				errorCount
+				errorCount,
+				'cart-relay'
 			),
 			errorCount
 		);
@@ -597,17 +606,33 @@ class CartImport {
 
 	private updateProgress( current: number, total: number, added: number, errorCount: number ): void {
 		const percent = total > 0 ? Math.round( ( current / total ) * 100 ) : 0;
+		const title = sprintf(
+			/* translators: 1: number of processed products, 2: total number of products. */
+			__( 'Importing products... %1$d / %2$d', 'cart-relay' ),
+			current,
+			total
+		);
+		const addedLabel = sprintf(
+			/* translators: %d: number of products added to the cart. */
+			__( 'Added: %d', 'cart-relay' ),
+			added
+		);
+		const issuesLabel = sprintf(
+			/* translators: %d: number of products with import issues. */
+			_n( 'With issue: %d', 'With issues: %d', errorCount, 'cart-relay' ),
+			errorCount
+		);
 
 		Swal.update( {
-			title: sprintf( __( 'Importing products... %1$d / %2$d' ), current, total ),
+			title,
 			html: `
 				<div class="cr-import-progress">
 					<div class="cr-import-progress__track">
 						<div class="cr-import-progress__bar" style="width: ${percent}%"></div>
 					</div>
 					<div class="cr-import-progress__meta">
-						<span>${sprintf( __( 'Added: %d' ), added )}</span>
-						<span>${sprintf( __( 'With issues: %d' ), errorCount )}</span>
+						<span>${addedLabel}</span>
+						<span>${issuesLabel}</span>
 					</div>
 				</div>
 			`,
@@ -616,12 +641,18 @@ class CartImport {
 
 	private async showImportResult( added: number, errors: RowError[] ): Promise<void> {
 		if ( errors.length === 0 ) {
+			const message = sprintf(
+				/* translators: %d: number of products added to the cart. */
+				_n( 'Product added: %d', 'Products added: %d', added, 'cart-relay' ),
+				added
+			);
+
 			await Swal.fire( {
 				toast: true,
 				position: 'top-end',
 				icon: 'success',
-				title: __( 'Cart imported' ),
-				text: sprintf( __( 'Products added: %d' ), added ),
+				title: __( 'Cart imported', 'cart-relay' ),
+				text: message,
 				timer: 5000,
 				timerProgressBar: true,
 				showConfirmButton: false,
@@ -635,9 +666,9 @@ class CartImport {
 
 		await Swal.fire( {
 			icon: 'warning',
-			title: __( 'Import completed with issues' ),
+			title: __( 'Import completed with issues', 'cart-relay' ),
 			html: this.renderImportResultIssues( added, errors ),
-			confirmButtonText: __( 'Close' ),
+			confirmButtonText: __( 'Close', 'cart-relay' ),
 			buttonsStyling: false,
 			customClass: {
 				popup: 'cr-import-result-modal',
@@ -653,11 +684,11 @@ class CartImport {
 				<div class="cr-import-result__stats">
 					<span class="cr-import-result__stat cr-import-result__stat--ok">
 						<strong>${added}</strong>
-						${_n( 'product added', 'products added', added )}
+						${_n( 'product added', 'products added', added, 'cart-relay' )}
 					</span>
 					<span class="cr-import-result__stat cr-import-result__stat--error">
 						<strong>${errors.length}</strong>
-						${_n( 'issue', 'issues', errors.length )}
+						${_n( 'issue', 'issues', errors.length, 'cart-relay' )}
 					</span>
 				</div>
 				<div class="cr-import-result__errors">
@@ -676,13 +707,23 @@ class CartImport {
 
 		const errorsHtml = summary.errors.length > 0
 			? `<ul>${summary.errors.map( ( error ) => `<li>${CartRelayHelpers.escapeHtml( this.formatRowError( error ) )}</li>` ).join( '' )}</ul>`
-			: `<p class="cr-import-summary__success">${__( 'All products were added successfully.' )}</p>`;
+			: `<p class="cr-import-summary__success">${__( 'All products were added successfully.', 'cart-relay' )}</p>`;
+		const productsAdded = sprintf(
+			/* translators: %d: number of products added to the cart. */
+			_n( 'Product added: %d', 'Products added: %d', summary.added, 'cart-relay' ),
+			summary.added
+		);
+		const issues = sprintf(
+			/* translators: %d: number of products with import issues. */
+			_n( 'With issue: %d', 'With issues: %d', summary.errors.length, 'cart-relay' ),
+			summary.errors.length
+		);
 
 		summaryElement.hidden = false;
 		summaryElement.innerHTML = `
-			<h3>${__( 'Import summary' )}</h3>
-			<p>${sprintf( __( 'Products added: %d' ), summary.added )}</p>
-			<p>${sprintf( __( 'With issues: %d' ), summary.errors.length )}</p>
+			<h3>${__( 'Import summary', 'cart-relay' )}</h3>
+			<p>${productsAdded}</p>
+			<p>${issues}</p>
 			${errorsHtml}
 		`;
 	}
@@ -851,7 +892,7 @@ class CartImport {
 	}
 
 	private formatRowError( error: RowError ): string {
-		return error.row > 0 ? sprintf( __( 'Row %1$d: %2$s' ), error.row, error.message ) : error.message;
+		return error.row > 0 ? sprintf( __( 'Row %1$d: %2$s', 'cart-relay' ), error.row, error.message ) : error.message;
 	}
 
 	private getUploadIconPath(): string {

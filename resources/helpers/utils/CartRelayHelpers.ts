@@ -16,7 +16,7 @@ type UrlParameters = Record<string, UrlParameterValue>;
 
 class CartRelayHelpers {
 
-	static swalShowLoading( title = __( 'Loading...' ) ): void {
+	static swalShowLoading( title = __( 'Loading...', 'cart-relay' ) ): void {
 		Swal.fire( {
 			title,
 			didOpen: () => {
@@ -35,19 +35,19 @@ class CartRelayHelpers {
 		let text = '';
 
 		if ( jqXhr.status === 0 ) {
-			text = __( 'Not connected. Verify your network connection.' );
+			text = __( 'Not connected. Verify your network connection.', 'cart-relay' );
 		} else if ( jqXhr.status === 404 ) {
-			text = __( 'Requested page not found [404].' );
+			text = __( 'Requested page not found [404].', 'cart-relay' );
 		} else if ( jqXhr.status === 500 ) {
-			text = __( 'Internal server error [500].' );
+			text = __( 'Internal server error [500].', 'cart-relay' );
 		} else if ( textStatus === 'parsererror' ) {
-			text = __( 'Requested JSON parse failed.' );
+			text = __( 'Requested JSON parse failed.', 'cart-relay' );
 		} else if ( textStatus === 'timeout' ) {
-			text = __( 'Timeout error.' );
+			text = __( 'Timeout error.', 'cart-relay' );
 		} else if ( textStatus === 'abort' ) {
-			text = __( 'Ajax request aborted.' );
+			text = __( 'Ajax request aborted.', 'cart-relay' );
 		} else {
-			text = `${__( 'Uncaught error:' )} ${jqXhr.responseText ?? ''}`;
+			text = `${__( 'Uncaught error:', 'cart-relay' )} ${jqXhr.responseText ?? ''}`;
 		}
 
 		if ( jqXhr.status === 422 ) {
@@ -62,13 +62,13 @@ class CartRelayHelpers {
 						<span class="round round-primary q-round">${index + 1}</span>${CartRelayHelpers.escapeHtml( String( value ) )}
 					</li>
 				`;
-			}, '<ul class="list-group" style="text-align: left">' ) + '</ul>';
+			}, '<ul class="list-group" style="text-align: start">' ) + '</ul>';
 
 			Swal.fire( {
-				title: __( 'Review the highlighted issues' ),
+				title: __( 'Review the highlighted issues', 'cart-relay' ),
 				html: sanitizedErrorsHtml,
 				width: 'auto',
-				confirmButtonText: __( 'OK' ),
+				confirmButtonText: __( 'OK', 'cart-relay' ),
 				icon: 'warning',
 			} );
 
@@ -77,9 +77,9 @@ class CartRelayHelpers {
 
 		Swal.fire( {
 			icon: 'error',
-			title: __( 'Oops...' ),
+			title: __( 'Oops...', 'cart-relay' ),
 			text,
-			footer: `<a href>${__( 'Why do I have this issue?' )}</a>`,
+			footer: `<a href>${__( 'Why do I have this issue?', 'cart-relay' )}</a>`,
 		} );
 	}
 

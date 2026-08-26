@@ -27,12 +27,12 @@ const fallbackSprintf = ( format: string, ...args: Array<number | string> ): str
 	} );
 };
 
-const __ = ( text: string ): string => {
-	return getWpI18n().__?.( text, TEXT_DOMAIN ) ?? text;
+const __ = ( text: string, domain = TEXT_DOMAIN ): string => {
+	return getWpI18n().__?.( text, domain ) ?? text;
 };
 
-const _n = ( single: string, plural: string, count: number ): string => {
-	return getWpI18n()._n?.( single, plural, count, TEXT_DOMAIN ) ?? ( count === 1 ? single : plural );
+const _n = ( single: string, plural: string, count: number, domain = TEXT_DOMAIN ): string => {
+	return getWpI18n()._n?.( single, plural, count, domain ) ?? ( count === 1 ? single : plural );
 };
 
 const sprintf = ( format: string, ...args: Array<number | string> ): string => {
